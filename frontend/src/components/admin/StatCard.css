@@ -1,0 +1,43 @@
+.stat-card {
+    flex: 1;
+    background: #fff;
+    padding: 24px;
+    border-radius: 20px;
+    /* Bo góc card giống Order Summary */
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card h3 {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.5);
+    margin: 0 0 12px 0;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+}
+
+.stat-trend {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 62px;
+    font-weight: 600;
+}
+
+.stat-trend.positive {
+    background-color: #EFFFF4;
+    color: #00AC56;
+}
+
+.stat-trend.negative {
+    background-color: #FFF0F0;
+    color: #FF3333;
+}

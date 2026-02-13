@@ -1,0 +1,53 @@
+/* CheckoutForm.css */
+.checkout-card {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    padding: 24px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.shipping-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input-row {
+    display: flex;
+    gap: 16px;
+}
+
+.auth-input {
+    flex: 1;
+    background-color: #F0F0F0;
+    border: none;
+    border-radius: 62px;
+    padding: 12px 24px;
+    font-size: 16px;
+    outline: none;
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.payment-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    cursor: pointer;
+}
+
+.payment-card.active {
+    border: 2px solid #000;
+}

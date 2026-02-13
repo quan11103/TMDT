@@ -1,0 +1,25 @@
+.btn-checkout-full {
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 62px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    margin-top: 24px;
+}
+
+.btn-checkout-full img {
+    width: 20px;
+    transition: transform 0.3s;
+}
+
+.btn-checkout-full:hover img {
+    transform: translateX(5px);
+}

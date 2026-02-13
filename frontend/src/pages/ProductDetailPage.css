@@ -1,0 +1,93 @@
+.product-detail-page {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 24px 5%;
+    font-family: sans-serif;
+    min-height: 80vh;
+}
+
+/* Container giới hạn chiều rộng chuẩn cho toàn trang */
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+/* Bố cục Gallery (Trái) và Info (Phải) */
+.product-top-section {
+    display: flex;
+    gap: 40px;
+    margin: 50px 0;
+    align-items: flex-start;
+}
+
+/* Gallery chiếm khoảng 50% hoặc cố định chiều rộng */
+.product-top-section>*:first-child {
+    flex: 1.1;
+}
+
+/* Info chiếm phần còn lại */
+.product-top-section>*:last-child {
+    flex: 0.9;
+}
+
+/* Lưới đánh giá: 2 cột trên desktop */
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.load-more-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 36px;
+    margin-bottom: 64px;
+}
+
+/* Tái sử dụng style nút bấm từ HomePage */
+.btn-outline {
+    padding: 16px 54px;
+    border-radius: 62px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: transparent;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: #000;
+    /* Đảm bảo chữ màu đen trên nền trắng/xám */
+}
+
+.btn-outline:hover {
+    background: #f0f0f0;
+}
+
+.section-title {
+    font-size: 40px;
+    font-weight: 800;
+    text-align: center;
+    margin: 20px;
+    text-transform: uppercase;
+}
+
+.selector-group {
+    margin-top: 25px;
+}
+
+/* --- Responsive cho Mobile --- */
+@media (max-width: 1024px) {
+    .product-top-section {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .reviews-grid {
+        grid-template-columns: 1fr;
+        /* 1 cột trên điện thoại */
+    }
+
+    .section-title {
+        font-size: 32px;
+    }
+}

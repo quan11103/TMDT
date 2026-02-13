@@ -1,0 +1,68 @@
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    margin-top: 30px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.btn-nav {
+    padding: 8px 14px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background: #fff;
+    color: #000;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-nav:hover:not(:disabled) {
+    background: #f5f5f5;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.page-numbers button {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.page-numbers button:hover:not(.active):not(:disabled) {
+    color: #000;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.page-numbers button.active {
+    background: rgba(0, 0, 0, 0.06);
+    color: #000;
+}
+
+span.pagination-dots {
+    margin: 0 5px;
+}
+
+/* Style cho nút "..." */
+.page-numbers button:disabled {
+    cursor: default;
+}
+
+.btn-nav:focus {
+    outline: none;
+}

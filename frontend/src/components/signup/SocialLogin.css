@@ -1,0 +1,26 @@
+/* SocialLogin.css */
+.social-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.btn-social {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 62px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: #fff;
+    color: #000;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.btn-social:hover {
+    background-color: #f9f9f9;
+}

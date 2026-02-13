@@ -1,0 +1,52 @@
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.page-title {
+    font-family: 'Integral CF', sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.admin-search {
+    display: flex;
+    align-items: center;
+    background-color: #F0F0F0;
+    padding: 12px 20px;
+    border-radius: 62px;
+    /* Đồng bộ với Promo Code input */
+    width: 350px;
+}
+
+.admin-search img {
+    width: 20px;
+    opacity: 0.4;
+    margin-right: 12px;
+}
+
+.admin-search input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+}
+
+.avatar-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}

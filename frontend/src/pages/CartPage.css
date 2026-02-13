@@ -1,0 +1,67 @@
+/* Container chính bọc nội dung, căn giữa màn hình */
+.cart-page {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 24px 5%;
+    font-family: sans-serif;
+    /* Hoặc font 'Integral CF' của bạn */
+    min-height: 80vh;
+    /* Đảm bảo trang có chiều cao tối thiểu */
+}
+
+/* Breadcrumb điều hướng nhỏ */
+.breadcrumb {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: -20px;
+}
+
+.breadcrumb span {
+    color: #000;
+    font-weight: 500;
+}
+
+/* Tiêu đề YOUR CART to đậm */
+.cart-title {
+    font-size: 40px;
+    font-weight: 900;
+    /* Font đậm như thiết kế */
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    font-family: 'Integral CF', sans-serif;
+}
+
+/* KHUNG LƯỚI QUAN TRỌNG NHẤT */
+.cart-layout {
+    display: grid;
+    /* Chia 2 cột: Cột sản phẩm (1.5 phần) - Cột tổng tiền (1 phần) */
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+    /* Khoảng cách giữa 2 cột */
+    align-items: start;
+    /* Căn nội dung lên trên cùng */
+}
+
+/* Khung chứa danh sách sản phẩm (có viền bao quanh) */
+.items-container {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    padding: 0 24px;
+}
+
+/* Responsive: Khi màn hình nhỏ hơn 1024px thì chuyển về 1 cột dọc */
+@media (max-width: 1024px) {
+    .cart-layout {
+        grid-template-columns: 1fr;
+        /* Chỉ còn 1 cột */
+    }
+
+    .cart-title {
+        font-size: 32px;
+    }
+
+    /* Đảo thứ tự nếu cần: OrderSummary xuống dưới cùng */
+    .summary-container {
+        margin-top: 20px;
+    }
+}

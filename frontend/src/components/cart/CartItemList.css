@@ -1,0 +1,6 @@
+.cart-item-list-container {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    padding: 0 24px;
+    /* Padding trái phải để các đường line bên trong không chạm viền */
+}

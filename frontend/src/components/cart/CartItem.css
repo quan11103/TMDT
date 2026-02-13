@@ -1,0 +1,108 @@
+.cart-item {
+    display: flex;
+    gap: 16px;
+    /* Khoảng cách giữa ảnh và thông tin */
+    padding: 24px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    align-items: stretch;
+    /* Kéo dãn chiều cao để bằng nhau */
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+/* --- XỬ LÝ ẢNH --- */
+.cart-item-img-wrapper {
+    width: 124px;
+    height: 124px;
+    flex-shrink: 0;
+    /* Không cho ảnh bị co lại khi màn hình nhỏ */
+    border-radius: 9px;
+    overflow: hidden;
+    background-color: #F0EEED;
+    /* Màu nền xám giống template */
+}
+
+.cart-item-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Hoặc contain tùy hình của bạn */
+    mix-blend-mode: multiply;
+    /* Mẹo nhỏ: giúp ảnh hòa trộn tốt hơn với nền xám */
+}
+
+/* --- XỬ LÝ CỘT THÔNG TIN --- */
+.cart-item-info {
+    flex: 1;
+    /* Chiếm hết phần không gian còn lại */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* Đẩy Header lên đỉnh, Footer xuống đáy */
+}
+
+/* Header: Tên và Thùng rác */
+.cart-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+}
+
+.item-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+    font-family: 'Integral CF', sans-serif;
+    /* Nếu có */
+    max-width: 80%;
+    /* Giới hạn chiều rộng tên để không đè lên thùng rác */
+}
+
+.btn-delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    /* Để căn giữa icon */
+    align-items: flex-start;
+}
+
+.btn-delete img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Specs: Size và Color */
+.cart-item-specs p {
+    font-size: 14px;
+    margin: 2px 0;
+    color: #000;
+    /* Màu chữ nhãn */
+}
+
+.cart-item-specs .spec-val {
+    color: rgba(0, 0, 0, 0.6);
+    /* Màu chữ giá trị (xám nhạt) */
+    font-weight: 400;
+    margin-left: 4px;
+}
+
+/* Footer: Giá và Số lượng */
+.cart-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Căn giữa theo chiều dọc */
+    margin-top: 12px;
+}
+
+.item-price {
+    font-size: 24px;
+    font-weight: 700;
+    color: #000;
+}

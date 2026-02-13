@@ -1,0 +1,61 @@
+.admin-sidebar {
+    width: 200px;
+    background-color: #fff;
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.admin-logo {
+    font-family: 'Integral CF', sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 48px;
+    padding-left: 12px;
+}
+
+.admin-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border-radius: 62px;
+    /* Style nút đặc trưng của Shop.co */
+    cursor: pointer;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.6);
+    transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+    background-color: #F0F0F0;
+    color: #000;
+}
+
+.nav-item.active {
+    background-color: #000;
+    color: #fff;
+}
+
+.nav-icon {
+    width: 8px;
+    height: 8px;
+    background-color: currentColor;
+    border-radius: 50%;
+}
+
+.logout {
+    color: #FF3333;
+    margin-top: auto;
+}

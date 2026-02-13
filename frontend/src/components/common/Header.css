@@ -1,0 +1,119 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    /* Đảm bảo Header luôn nằm trên các thành phần khác */
+    background-color: #fff;
+    /* Tránh nhìn xuyên thấu khi cuộn */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    /* Đổ bóng nhẹ để tách biệt với nội dung khi cuộn */
+}
+
+.top-bar {
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    padding: 9px 0;
+    font-size: 14px;
+}
+
+.top-bar a {
+    color: #fff;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 5%;
+    background: #fff;
+    color: #000;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: 900;
+    font-family: 'Integral CF', sans-serif;
+    margin-right: 40px;
+    color: #000;
+    text-decoration: none;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 24px;
+    margin-right: auto;
+}
+
+.nav-links li {
+    cursor: pointer;
+    font-size: 16px;
+    color: #000;
+}
+
+.search-bar {
+    background: #F0F0F0;
+    padding: 12px 16px;
+    border-radius: 62px;
+    display: flex;
+    align-items: center;
+    width: 400px;
+    margin-right: 20px;
+}
+
+.search-bar input {
+    border: none;
+    background: transparent;
+    color: #000;
+    outline: none;
+    width: 100%;
+    margin-left: 10px;
+}
+
+.nav-icons {
+    display: flex;
+    gap: 14px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #000;
+}
+
+.icon-img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    object-fit: contain;
+}
+
+.icon-img-small {
+    width: 12px;
+    height: 12px;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+.nav-icons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: #F0F0F0;
+    padding: 12px 16px;
+    border-radius: 62px;
+}
+
+.search-bar img {
+    opacity: 0.4;
+    /* Làm mờ nhẹ icon search giống thiết kế */
+    margin-right: 12px;
+}

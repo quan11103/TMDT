@@ -1,0 +1,25 @@
+/* AuthInput.css */
+.auth-input-group {
+    display: flex;
+    align-items: center;
+    background-color: #F0F0F0;
+    border-radius: 62px;
+    padding: 14px 20px;
+    margin-bottom: 16px;
+}
+
+.auth-icon {
+    width: 20px;
+    height: 20px;
+    opacity: 0.4;
+}
+
+.auth-input-group input {
+    border: none;
+    background: transparent;
+    color: #000;
+    outline: none;
+    padding-left: 12px;
+    width: 100%;
+    font-size: 16px;
+}

@@ -1,0 +1,75 @@
+.style-browse {
+    /* Thêm padding 2 bên (5%) và trên dưới (60px) */
+    padding: 1px 64px 64px 64px;
+    background-color: #F0F0F0;
+    /* Màu nền xám nhạt cho toàn khối */
+    margin: 40px 8%;
+    /* Tạo khoảng cách với lề màn hình nếu muốn khối bo góc */
+    border-radius: 40px;
+    /* Bo góc toàn bộ khối như thiết kế mẫu */
+    box-sizing: border-box;
+}
+
+.style-grid {
+    display: grid;
+    /* Chia lưới thành các phần nhỏ để class long/short có thể chiếm chỗ */
+    grid-template-columns: repeat(10, 1fr);
+    gap: 20px;
+}
+
+/* Kỹ thuật đảo chiều cho hàng thứ 2 */
+.style-grid .long {
+    grid-column: span 6;
+}
+
+.style-grid .short {
+    grid-column: span 4;
+}
+
+.style-card {
+    position: relative;
+    background: #fff;
+    border-radius: 20px;
+    height: 250px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.style-card:hover {
+    /* Nhấc card lên 10px (cao hơn product card một chút vì kích thước khối này lớn hơn) */
+    transform: translateY(-10px);
+
+    /* Đổ bóng đổ đậm hơn để tạo chiều sâu */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.style-card h3 {
+    position: absolute;
+    top: 25px;
+    left: 36px;
+    font-size: 36px;
+    font-weight: 700;
+    z-index: 2;
+    /* Luôn nổi trên ảnh */
+}
+
+.style-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.5s ease;
+}
+
+.style-card:hover img {
+    transform: scale(1.05);
+    /* Ảnh phóng to nhẹ 5% tạo cảm giác sống động */
+}
+
+/* Mobile: Chuyển về 1 cột */
+@media (max-width: 768px) {
+    .style-grid {
+        grid-template-columns: 1fr;
+    }
+}

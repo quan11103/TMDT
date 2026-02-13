@@ -1,0 +1,14 @@
+/* AuthDivider.css */
+.auth-divider {
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    line-height: 0.1em;
+    margin: 20px 0 30px;
+}
+
+.auth-divider span {
+    background: #fff;
+    padding: 0 15px;
+    color: rgba(0, 0, 0, 0.4);
+    font-size: 14px;
+}

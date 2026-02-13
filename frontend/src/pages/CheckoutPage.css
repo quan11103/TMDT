@@ -1,0 +1,213 @@
+.checkout-page {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 24px 5%;
+    font-family: sans-serif;
+    min-height: 80vh;
+}
+
+.checkout-heading {
+    font-family: 'Integral CF', sans-serif;
+    font-size: 40px;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 0;
+}
+
+/* Layout chia đôi */
+.checkout-split-layout {
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+}
+
+.checkout-section {
+    flex: 1;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #000;
+}
+
+/* --- INPUT STYLES (Đã sửa lỗi tràn khung) --- */
+.form-group-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.shop-input {
+    width: 100%;
+    /* Quan trọng: Tính cả padding vào trong width để không bị tràn */
+    box-sizing: border-box;
+    background-color: #F0F0F0;
+    color: #000;
+    border: 1px solid transparent;
+    border-radius: 62px;
+    padding: 14px 24px;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.shop-input:focus {
+    background-color: #fff;
+    border-color: #000;
+}
+
+.shop-input.full-width {
+    margin-bottom: 16px;
+}
+
+/* --- PAYMENT STYLES --- */
+.payment-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    padding: 18px 24px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+    background: #fff;
+}
+
+.payment-option:hover {
+    background-color: #fafafa;
+}
+
+.payment-option.active {
+    border-color: #000;
+    background-color: #F8F8F8;
+    border-width: 2px;
+}
+
+.radio-circle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    margin-right: 16px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.payment-option.active .radio-circle {
+    border-color: #000;
+}
+
+.payment-option.active .radio-circle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    border-radius: 50%;
+}
+
+.payment-label {
+    flex: 1;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.card-details-form {
+    background: #FAFAFA;
+    padding: 24px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+    animation: fadeIn 0.3s ease;
+}
+
+/* --- TOTAL SUMMARY & ACTION (Mới) --- */
+.checkout-action-area {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.checkout-total-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin: 0 200px 20px;
+}
+
+.total-label {
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.total-value {
+    font-size: 25px;
+    font-weight: 900;
+    color: #000;
+    line-height: 1;
+}
+
+.btn-complete-order {
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    padding: 18px;
+    border-radius: 62px;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: transform 0.2s;
+}
+
+.btn-complete-order:hover {
+    background-color: #222;
+    transform: translateY(-2px);
+}
+
+.secure-note {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.payment-logo-img {
+    height: 40px;
+    /* Set chiều cao bằng nhau cho tất cả */
+    width: auto;
+    object-fit: contain;
+    margin-left: 8px;
+}
+
+/* Đảm bảo div chứa cũng không làm thay đổi kích thước */
+.payment-icons {
+    display: flex;
+    align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .checkout-split-layout {
+        flex-direction: column;
+        gap: 40px;
+    }
+}

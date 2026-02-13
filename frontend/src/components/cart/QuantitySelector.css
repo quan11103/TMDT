@@ -1,0 +1,56 @@
+.qty-box {
+    background: #F0F0F0;
+    border-radius: 62px;
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    width: 170px;
+    /* Chiều rộng cố định theo yêu cầu của bạn */
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.qty-box button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: opacity 0.2s;
+    color: #000;
+}
+
+.qty-box button:focus,
+.qty-input:focus {
+    outline: none;
+    /* Đảm bảo tuyệt đối không hiện viền khi focus */
+}
+
+.qty-box button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.qty-input {
+    background: transparent;
+    border: none;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    width: 50px;
+    color: #000;
+    outline: none;
+    /* Tắt mũi tên tăng giảm mặc định của trình duyệt */
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

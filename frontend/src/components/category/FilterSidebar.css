@@ -1,0 +1,247 @@
+.filter-sidebar {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    padding: 24px;
+    width: 295px;
+    background: #fff;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.filter-list {
+    list-style: none;
+    padding: 0;
+}
+
+.filter-list li {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(0, 0, 0, 0.6);
+    padding: 12px 0;
+    cursor: pointer;
+}
+
+.filter-section h4 {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+/* Color Circles */
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin: 5px 0;
+}
+
+.color-circle {
+    width: 37px;
+    height: 37px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    position: relative;
+}
+
+.color-circle:hover {
+    transform: scale(1.1);
+}
+
+.tick {
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.color-circle[style*="background-color: rgb(255, 255, 255)"] .tick,
+.color-circle[style*="background-color: #FFFFFF"] .tick {
+    color: #000 !important;
+}
+
+/* Size Pills */
+.size-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.size-flex button {
+    padding: 10px 20px;
+    border-radius: 62px;
+    border: none;
+    background: #F0F0F0;
+    color: rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+}
+
+.size-flex button.active {
+    background: #000;
+    color: #fff;
+}
+
+.btn-apply {
+    width: 100%;
+    padding: 16px;
+    background: #000;
+    color: #fff;
+    border-radius: 62px;
+    margin-top: 24px;
+    cursor: pointer;
+}
+
+button.btn-icon {
+    background-color: #FFF;
+}
+
+/* Container bọc ngoài Slider */
+.price-slider-wrapper {
+    padding: 0 10px;
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
+
+/* Thanh nền (Rail) */
+.custom-range-slider .rc-slider-rail {
+    background-color: #F0F0F0 !important;
+    height: 6px !important;
+}
+
+/* Thanh hoạt động (Track - đoạn giữa 2 nút) */
+.custom-range-slider .rc-slider-track {
+    background-color: #000 !important;
+    height: 6px !important;
+}
+
+/* Nút kéo (Handle/Thumb) */
+.custom-range-slider .rc-slider-handle {
+    background-color: #000 !important;
+    border: none !important;
+    opacity: 1 !important;
+    width: 20px !important;
+    height: 20px !important;
+    margin-top: -7px !important;
+    /* Căn giữa nút với thanh */
+    box-shadow: none !important;
+}
+
+/* Loại bỏ viền xanh khi nhấn vào nút kéo */
+.custom-range-slider .rc-slider-handle:active,
+.custom-range-slider .rc-slider-handle:focus,
+.custom-range-slider .rc-slider-handle-dragging {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Tùy chỉnh nút kéo để làm vật chứa (container) cho nhãn */
+.custom-range-slider .rc-slider-handle {
+    background-color: #000 !important;
+    border: none !important;
+    opacity: 1 !important;
+    width: 20px !important;
+    height: 20px !important;
+    margin-top: -7px !important;
+    cursor: pointer;
+    /* Cho phép nhãn con hiển thị ra ngoài phạm vi nút */
+    overflow: visible !important;
+}
+
+/* Nhãn giá động */
+.dynamic-price-label {
+    position: absolute;
+    top: 22px;
+    /* Khoảng cách từ nút xuống nhãn */
+    left: 50%;
+    transform: translateX(-50%);
+    /* Luôn căn giữa theo nút */
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+/* Ẩn focus ring mặc định của trình duyệt để đẹp hơn */
+.custom-range-slider .rc-slider-handle:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Header của mỗi phần filter */
+.category-section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-section-title h4 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 20px 0;
+}
+
+span.toggle-icon {
+    cursor: pointer;
+}
+
+.category-section-title h4 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.toggle-icon img {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+}
+
+/* Container bọc nội dung cần ẩn hiện */
+.filter-content-wrapper {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    /* Ngăn tương tác khi đang đóng */
+    padding: 0 6px;
+}
+
+/* Khi section ở trạng thái mở */
+.filter-section.is-open .filter-content-wrapper {
+    max-height: 300px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Hiệu ứng xoay icon mũi tên */
+.toggle-icon img {
+    transition: transform 0.3s ease;
+    transform: rotate(180deg);
+    /* Mặc định là quay xuống (arrow-down) */
+}
+
+.filter-section.is-open .toggle-icon img {
+    transform: rotate(0deg);
+    /* Khi mở thì quay lên (arrow-up) */
+}
+
+/* Chỉnh lại category-section-title để bỏ margin-bottom cứng */
+.category-section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px 0;
+}

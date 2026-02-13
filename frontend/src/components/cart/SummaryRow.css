@@ -1,0 +1,33 @@
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.summary-row .label {
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.summary-row .value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+}
+
+/* Biến màu đỏ cho dòng Discount */
+.summary-row .value.discount {
+    color: #FF3333;
+}
+
+/* Style riêng cho dòng Total cuối cùng */
+.summary-row.total {
+    margin-top: 20px;
+}
+
+.summary-row.total .label,
+.summary-row.total .value {
+    font-size: 24px;
+    color: #000;
+    font-weight: 700;
+}

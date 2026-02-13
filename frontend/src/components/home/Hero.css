@@ -1,0 +1,88 @@
+.hero {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #F2F0F1;
+    padding: 0 5%;
+    min-height: 660px;
+}
+
+.hero-content {
+    flex: 1;
+    max-width: 600px;
+    /* Giới hạn độ rộng để chữ không quá dài */
+    padding-bottom: 0;
+    z-index: 2;
+}
+
+.hero-content h1 {
+    font-size: 64px;
+    line-height: 1;
+    font-weight: 900;
+    margin-bottom: 30px;
+    font-family: 'Integral CF', sans-serif;
+    color: #000;
+}
+
+.hero-content p {
+    color: #00000099;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.shop-now-btn {
+    background: #000;
+    color: #fff;
+    padding: 16px 54px;
+    border-radius: 62px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 40px;
+}
+
+.stats {
+    display: flex;
+    gap: 32px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.stat-item h3 {
+    font-size: 40px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.stat-item p {
+    color: #00000099;
+    font-size: 14px;
+}
+
+.hero-image {
+    position: relative;
+    display: flex;
+    align-self: flex-end;
+    max-width: 50%;
+}
+
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+}
+
+.star-icon {
+    position: absolute;
+    font-size: 40px;
+}
+
+.star-big {
+    top: 10%;
+    right: 10%;
+    font-size: 60px;
+}
+
+.star-small {
+    top: 40%;
+    left: -20px;
+}

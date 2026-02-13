@@ -1,0 +1,43 @@
+/* StarRating.css */
+.star-rating-container {
+    display: inline-flex;
+    gap: 10px;
+}
+
+.star-rating-stars {
+    position: relative;
+    display: inline-block;
+    /* Quan trọng: khung chỉ rộng bằng nội dung bên trong */
+    line-height: 1;
+    font-size: 20px;
+    /* Bạn có thể tăng size ở đây */
+    letter-spacing: 2px;
+    /* Khoảng cách giữa các sao */
+    cursor: default;
+    /* Ép khung chỉ rộng vừa khít 5 ngôi sao */
+    width: fit-content;
+}
+
+.stars-outer {
+    color: #E6E6E6;
+    /* Màu xám nhạt */
+    white-space: nowrap;
+}
+
+.stars-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    /* Cắt phần thừa */
+    color: #FFC107;
+    /* Màu vàng SHOP.CO */
+    transition: width 0.3s ease;
+}
+
+.rating-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.6);
+}

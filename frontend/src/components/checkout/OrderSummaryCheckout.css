@@ -1,0 +1,70 @@
+/* OrderSummaryCheckout.css */
+.summary-card {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    padding: 24px;
+}
+
+.summary-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.mini-item {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.mini-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    background: #F0EEED;
+}
+
+.mini-name {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.divider {
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.summary-row.total {
+    color: #000;
+    margin-top: 20px;
+}
+
+.total-price {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.btn-pay-now {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 62px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+}

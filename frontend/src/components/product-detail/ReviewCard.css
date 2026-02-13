@@ -1,0 +1,17 @@
+.review-card {
+    padding: 28px;
+    border: 1px solid #0000001A;
+    border-radius: 20px;
+    text-align: left;
+}
+
+.verified {
+    color: #01AB31;
+    font-weight: bold;
+}
+
+.date {
+    margin-top: 24px;
+    color: #00000099;
+    font-size: 14px;
+}

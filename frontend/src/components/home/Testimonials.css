@@ -1,0 +1,13 @@
+.testimonials-list {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+}
+
+.review-card {
+    min-width: 300px;
+    border: 1px solid #e0e0e0;
+    padding: 24px;
+    border-radius: 20px;
+}

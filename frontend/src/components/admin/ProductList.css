@@ -1,0 +1,88 @@
+/* ProductList.css */
+.admin-product-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.product-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background: #F0EEED;
+    object-fit: cover;
+}
+
+.btn-add {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 62px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.stock-status {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.in-stock {
+    color: #00AC56;
+}
+
+.out-stock {
+    color: #FF3333;
+}
+
+/* Container bọc 2 nút Action */
+.action-group {
+    display: flex;
+    gap: 8px;
+    /* Khoảng cách giữa 2 nút */
+    align-items: center;
+}
+
+/* Cập nhật lại btn-edit để đồng bộ với SHOP.CO (nền đen) */
+.btn-edit {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 62px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-edit:hover {
+    background-color: #333;
+}
+
+/* Nút Delete với màu đỏ cảnh báo nhẹ nhàng */
+.btn-delete {
+    background-color: #FFF0F0;
+    /* Nền đỏ nhạt pastel */
+    color: #FF3333;
+    /* Chữ đỏ đậm */
+    border: 1px solid #FF3333;
+    border-radius: 62px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-delete:hover {
+    background-color: #FF3333;
+    color: #fff;
+}
+
+/* Đảm bảo ô Action có độ rộng đủ cho 2 nút */
+th:last-child,
+td:last-child {
+    max-width: 80px;
+}

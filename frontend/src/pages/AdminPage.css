@@ -1,0 +1,17 @@
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #F2F0F1;
+    /* Nền xám nhạt đặc trưng */
+}
+
+.admin-content {
+    flex: 1;
+    padding: 40px 40px;
+}
+
+.stats-grid {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+}

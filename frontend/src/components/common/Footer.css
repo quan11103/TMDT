@@ -1,0 +1,175 @@
+.footer {
+    background-color: #F0F0F0;
+    padding: 0 5% 30px;
+    margin-top: 100px;
+    /* Tạo khoảng trống cho Newsletter đè lên */
+    position: relative;
+}
+
+.footer .logo {
+    margin-right: 0;
+}
+
+/* Newsletter đè lên trên */
+.newsletter {
+    background-color: #000;
+    color: #fff;
+    border-radius: 20px;
+    padding: 36px 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    top: -60px;
+    /* Đẩy lên trên */
+}
+
+.newsletter h2 {
+    font-family: 'Integral CF', sans-serif;
+    font-size: 32px;
+    max-width: 500px;
+}
+
+.newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 300px;
+}
+
+.newsletter-form input {
+    padding: 12px;
+    border-radius: 62px;
+    border: none;
+}
+
+.newsletter-form button {
+    padding: 12px;
+    border-radius: 62px;
+    border: none;
+    background: #fff;
+    color: #000;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Footer Content */
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #ddd;
+}
+
+.footer-brand {
+    max-width: 250px;
+}
+
+.footer-brand p {
+    font-size: 14px;
+    color: #00000099;
+    margin: 20px 0;
+}
+
+.footer-links {
+    display: flex;
+    gap: 120px;
+    flex-wrap: wrap;
+    text-align: left;
+}
+
+.footer-links h3 {
+    margin-bottom: 20px;
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 16px;
+    color: #00000099;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: left;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 20px;
+    color: #00000099;
+    font-size: 14px;
+}
+
+.socials span,
+.payments span {
+    margin-right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.payments {
+    display: flex;
+    gap: 12px;
+}
+
+.payment-card:hover {
+    transform: translateY(-2px);
+    /* Nhấc nhẹ card lên */
+    box-shadow: rgba(0, 0, 0, 0.1);
+    /* Đổ bóng nhẹ */
+    border-color: #000;
+    /* Đậm viền lên một chút */
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.socials {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.socials a {
+    width: 28px;
+    height: 28px;
+    background-color: #fff;
+    /* Nền trắng cho icon */
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    /* Tạo hình tròn */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.socials a:hover {
+    background-color: #000;
+    /* Đổi nền đen khi hover */
+}
+
+.social-icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.socials a:hover .social-icon {
+    filter: invert(1);
+    /* Đổi màu icon sang trắng nếu icon gốc là màu đen */
+}
+
+@media (max-width: 768px) {
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+}

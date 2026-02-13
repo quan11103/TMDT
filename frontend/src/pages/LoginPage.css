@@ -1,0 +1,141 @@
+.login-page {
+    background-color: #fff;
+    margin-top: 20px;
+}
+
+.login-card-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 0 40px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+}
+
+.login-title {
+    font-size: 32px;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.login-subtitle {
+    text-align: center;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 32px;
+    font-size: 14px;
+}
+
+/* Input Styles - Thừa hưởng từ thiết kế SHOP.CO */
+.auth-input-group {
+    display: flex;
+    align-items: center;
+    background-color: #F0F0F0;
+    border-radius: 62px;
+    padding: 14px 20px;
+    margin-bottom: 16px;
+}
+
+.auth-icon {
+    width: 20px;
+    height: 20px;
+    opacity: 0.4;
+}
+
+.auth-input-group input {
+    border: none;
+    background: transparent;
+    color: #000;
+    outline: none;
+    padding-left: 12px;
+    width: 100%;
+    font-size: 16px;
+}
+
+.auth-helpers {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 24px;
+    padding: 0 10px;
+}
+
+.forgot-password {
+    color: #000;
+    font-weight: 500;
+}
+
+/* Button Styles - Đen, bo góc cực đại */
+.btn-login-main {
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 62px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-bottom: 24px;
+}
+
+.btn-login-main:hover {
+    background-color: #333;
+}
+
+/* Social Login */
+.social-divider {
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    line-height: 0.1em;
+    margin: 20px 0 30px;
+}
+
+.social-divider span {
+    background: #fff;
+    padding: 0 15px;
+    color: rgba(0, 0, 0, 0.4);
+    font-size: 14px;
+}
+
+.social-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.btn-social {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 62px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: #fff;
+    color: #000;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.btn-social:hover {
+    background-color: #f9f9f9;
+}
+
+.auth-footer {
+    text-align: center;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.auth-footer a {
+    color: #000;
+    font-weight: 600;
+}
