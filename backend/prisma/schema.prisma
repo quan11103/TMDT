@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model categories {
+  id               Int          @id @default(autoincrement())
+  name             String       @db.VarChar(255)
+  slug             String       @unique @db.VarChar(255)
+  parent_id        Int?
+  is_active        Boolean?     @default(true)
+  created_at       DateTime?    @default(now()) @db.Timestamp(6)
+  categories       categories?  @relation("categoriesTocategories", fields: [parent_id], references: [id], onUpdate: NoAction, map: "fk_parent_category")
+  other_categories categories[] @relation("categoriesTocategories")
+  products         products[]
+}
+
+model order_items {
+  id            Int      @id @default(autoincrement())
+  order_id      Int
+  product_id    Int
+  price_at_time Decimal  @db.Decimal(10, 2)
+  quantity      Int
+  orders        orders   @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_item_oder")
+  products      products @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "fk_item_product")
+}
+
+model orders {
+  id           Int           @id @default(autoincrement())
+  user_id      Int
+  status       String        @default("pending") @db.VarChar(30)
+  total_amount Decimal       @default(0) @db.Decimal(12, 2)
+  created_at   DateTime?     @default(now()) @db.Timestamp(6)
+  order_items  order_items[]
+  users        users         @relation(fields: [user_id], references: [id], onUpdate: NoAction, map: "fk_oder_user")
+  payments     payments[]
+}
+
+model payments {
+  id               Int       @id @default(autoincrement())
+  order_id         Int
+  method           String    @db.VarChar(30)
+  amount           Decimal   @db.Decimal(12, 2)
+  status           String    @default("pending") @db.VarChar(30)
+  transaction_code String?   @db.VarChar(255)
+  paid_at          DateTime? @db.Timestamp(6)
+  created_at       DateTime? @default(now()) @db.Timestamp(6)
+  orders           orders    @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_paymen_order")
+}
+
+model product_images {
+  id         Int       @id @default(autoincrement())
+  product_id Int
+  image_url  String
+  is_main    Boolean?  @default(false)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  products   products  @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_image_product")
+}
+
+model products {
+  id             Int              @id @default(autoincrement())
+  name           String           @db.VarChar(255)
+  slug           String           @unique @db.VarChar(255)
+  price          Decimal          @db.Decimal(10, 2)
+  stock          Int              @default(0)
+  description    String?
+  category_id    Int
+  is_active      Boolean?         @default(true)
+  created_at     DateTime?        @default(now()) @db.Timestamp(6)
+  cart_items     cart_items[]
+  order_items    order_items[]
+  product_images product_images[]
+  categories     categories       @relation(fields: [category_id], references: [id], onUpdate: NoAction, map: "fk_product_category")
+}
+
+model users {
+  id         Int          @id @default(autoincrement())
+  email      String       @unique @db.VarChar(255)
+  password   String       @db.VarChar(255)
+  full_name  String?      @db.VarChar(255)
+  created_at DateTime?    @default(now()) @db.Timestamp(6)
+  is_active  Boolean?     @default(true)
+  role_id    Int?
+  cart_items cart_items[]
+  orders     orders[]
+  roles      roles?       @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_role")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model cart_items {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  product_id Int
+  quantity   Int
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  products   products  @relation(fields: [product_id], references: [id], onUpdate: NoAction, map: "fk_cart_product")
+  users      users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_cart_user")
+
+  @@unique([user_id, product_id], map: "unique_cart_item")
+}
+
+model permissions {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique @db.VarChar(100)
+  role_permission role_permission[]
+}
+
+model role_permission {
+  role_id       Int
+  permission_id Int
+  permissions   permissions @relation(fields: [permission_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  roles         roles       @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([role_id, permission_id])
+}
+
+model roles {
+  id              Int               @id @default(autoincrement())
+  role            String            @unique @db.VarChar(50)
+  role_permission role_permission[]
+  users           users[]
+}
