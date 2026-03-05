@@ -1,0 +1,60 @@
+.subtotal-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding-top: 4px;
+    /* pt-1 */
+    padding-bottom: 8px;
+    /* pb-2 */
+}
+
+.subtotal-label {
+    font-weight: bold;
+    color: #333333;
+    /* muji_gray_800 */
+    font-size: 11px;
+    /* text-[11px] */
+    margin: 0;
+}
+
+.subtotal-price {
+    font-weight: bold;
+    margin: 0;
+}
+
+.price-number {
+    font-size: 15px;
+    /* text-[15px] */
+}
+
+.price-unit {
+    font-size: 13px;
+    /* text-[13px] */
+    font-weight: normal;
+}
+
+/* --- Responsive cho Desktop (md: 768px trở lên) --- */
+@media (min-width: 768px) {
+    .subtotal-wrapper {
+        padding: 0;
+        text-align: right;
+        /* md:text-right */
+    }
+
+    .price-number {
+        font-size: 19px;
+        /* md:text-[19px] */
+    }
+
+    .price-unit {
+        font-size: 17px;
+        /* md:text-[17px] */
+    }
+}
+
+/* --- Responsive cho màn hình lớn (lg: 1024px trở lên) --- */
+@media (min-width: 1024px) {
+    .subtotal-label {
+        font-size: 13px;
+        /* lg:text-[13px] */
+    }
+}

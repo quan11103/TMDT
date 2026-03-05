@@ -1,0 +1,117 @@
+.cart-item-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    /* Tăng độ dày lên 2px hoặc 3px nếu cần */
+    border-bottom: 1px solid #BCBCBC;
+    /* Màu xám đậm hơn (#BCBCBC thay vì #E5E7EB) */
+    margin-bottom: 24px;
+}
+
+/* --- Responsive Desktop --- */
+@media (min-width: 768px) {
+    .cart-item-wrapper {
+        gap: 12px;
+        /* Trên Desktop có thể làm đường kẻ đậm hơn để phân rõ các item lớn */
+        border-bottom-width: 1px;
+    }
+}
+
+/* Loại bỏ đường kẻ ở item cuối cùng để giao diện sạch sẽ */
+.cart-item-wrapper:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.cart-item-container {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.item-img-wrapper {
+    position: relative;
+    flex-shrink: 0;
+    width: 105px;
+    height: 105px;
+    overflow: hidden;
+}
+
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Base style cho nút Wishlist */
+.wishlist-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FDFBF7;
+    /* muji_beige_light */
+    border: 1px solid #E0CEAA;
+    /* muji_beige */
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s;
+}
+
+.wishlist-btn:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.heart-svg {
+    fill: white;
+    width: 50%;
+    height: 50%;
+}
+
+.wishlist-btn:hover .heart-svg {
+    fill: #E0CEAA;
+}
+
+/* Điều khiển hiển thị nút theo thiết bị */
+.mobile-only {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 16px;
+    height: 16px;
+}
+
+.desktop-only {
+    display: none;
+    /* Mặc định ẩn trên Mobile */
+}
+
+/* --- Responsive Desktop (768px+) --- */
+@media (min-width: 768px) {
+    .cart-item-container {
+        gap: 24px;
+        /* lg:gap-6 */
+    }
+
+    .item-img-wrapper {
+        width: 184px;
+        height: 184px;
+    }
+
+    .mobile-only {
+        display: none;
+        /* Ẩn nút trên ảnh khi lên Desktop */
+    }
+
+    .desktop-only {
+        display: flex;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 32px;
+        height: 32px;
+    }
+}

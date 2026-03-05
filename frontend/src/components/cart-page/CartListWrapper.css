@@ -1,0 +1,44 @@
+/* Container tổng của giỏ hàng */
+.cart-list-container {
+    width: 100%;
+    padding: 0 15px 24px 15px;
+    /* px-[15px] pb-6 */
+}
+
+/* Header: Mặt hàng & Tạm tính */
+.cart-list-header {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 100%;
+    color: #000;
+    font-size: 15px;
+    line-height: 21px;
+    text-transform: capitalize;
+    font-weight: 700;
+}
+
+.header-title {
+    margin: 0;
+}
+
+.header-label {
+    margin: 0;
+}
+
+/* Vùng chứa danh sách - thay thế cho div con thứ 2 */
+.cart-list-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    /* mt-6 */
+    width: 100%;
+}
+
+/* Responsive cho Tablet/Desktop */
+@media (min-width: 768px) {
+    .cart-list-container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}

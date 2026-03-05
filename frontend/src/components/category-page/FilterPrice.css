@@ -1,0 +1,169 @@
+/* Container và Header (Tái sử dụng style giống FilterCategory) */
+.filter-container {
+    border-bottom: 1px solid #e5e7eb;
+    width: 100%;
+    max-width: 288px;
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+.filter-header {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.price-header-title {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 16px;
+    color: #000;
+}
+
+.currency-unit {
+    font-weight: 400;
+    color: #3C3C43;
+    font-size: 16px;
+}
+
+.chevron-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+}
+
+.filter-header.active .chevron-icon {
+    transform: rotate(180deg);
+}
+
+.price-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 8px;
+}
+
+/* Form nhập giá (2 ô input) */
+.price-inputs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 8px;
+}
+
+.price-input-box {
+    width: 100%;
+    height: 36px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0 8px;
+    font-size: 13px;
+    outline: none;
+    text-align: left;
+    color: #000;
+    background-color: #fff;
+}
+
+.price-input-box:focus {
+    border-color: #7f0019;
+    /* Focus viền đỏ */
+}
+
+/* -------------------------------------
+   Dual Range Slider Custom
+-------------------------------------- */
+.slider-container {
+    position: relative;
+    height: 24px;
+    margin: 0px 3px;
+}
+
+.slider-track {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #f3f4f6;
+    /* Màu xám nhạt */
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 2px;
+}
+
+.slider-range {
+    position: absolute;
+    height: 2px;
+    background-color: #7f0019;
+    /* Dải đỏ kết nối */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Xóa style mặc định của input range */
+.thumb {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    pointer-events: none;
+    /* Quan trọng: Cho phép click xuyên qua để bấm được cả 2 cục */
+    outline: none;
+    margin: 0;
+}
+
+/* Vẽ lại cục Thumb (Nút kéo) 
+   Sử dụng box-shadow để tạo 3 vòng tròn: đỏ -> trắng -> đỏ như thiết kế
+*/
+.thumb::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    pointer-events: all;
+    /* Khôi phục lại sự kiện click cho riêng cục thumb */
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #7f0019;
+    /* Lõi trong cùng */
+    border: 3px solid #fff;
+    /* Lớp trắng ở giữa */
+    box-shadow: 0 0 0 2px #7f0019;
+    /* Viền đỏ ngoài cùng */
+    cursor: pointer;
+    position: relative;
+    z-index: 3;
+}
+
+/* Dành cho Firefox */
+.thumb::-moz-range-thumb {
+    pointer-events: all;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #7f0019;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px #7f0019;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.thumb-right {
+    z-index: 2;
+    /* Để thumb min và max không đè chết nhau khi trùng giá trị */
+}
+
+/* Nhãn giá min/max dưới cùng */
+.price-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #000;
+    margin-bottom: 11px;
+}

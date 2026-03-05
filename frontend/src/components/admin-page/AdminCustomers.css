@@ -1,0 +1,18 @@
+.customer-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-small {
+    width: 28px;
+    height: 28px;
+    background-color: #f0f0f0;
+    border: 1px solid #e5e5e5;
+    border-radius: 50%;
+}
+
+.muji-table td.spent {
+    font-weight: 700;
+    text-align: right;
+}

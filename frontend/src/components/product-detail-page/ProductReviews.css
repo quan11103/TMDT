@@ -1,0 +1,128 @@
+.product-reviews-container {
+    padding: 12px;
+    margin: 40px 56px 56px;
+    font-family: Arial, sans-serif;
+}
+
+/* Header Section */
+.reviews-header {
+    margin-bottom: 32px;
+}
+
+.reviews-title {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 4px;
+}
+
+.reviews-title .count {
+    color: #333;
+}
+
+.summary-rating {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.score-text {
+    font-size: 18px;
+    color: #333;
+}
+
+.max-score {
+    font-size: 14px;
+    font-weight: normal;
+    color: #666;
+}
+
+/* Review List Layout */
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* Responsive: 2 cột trên màn hình lớn (giống web mẫu) */
+@media (min-width: 1024px) {
+    .reviews-list {
+        flex-direction: row;
+        gap: 16px;
+    }
+
+    .review-card {
+        flex: 1;
+    }
+}
+
+/* Individual Review Card */
+.review-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f2f2f2;
+    background-size: cover;
+}
+
+/* Placeholder giả lập avatar MUJI */
+.avatar-female {
+    background-image: url('https://api.iconify.design/ph:user-circle-light.svg');
+}
+
+.avatar-male {
+    background-image: url('https://api.iconify.design/ph:user-circle-gear-light.svg');
+}
+
+.user-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.review-date {
+    font-size: 11px;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Stars */
+.star-rating {
+    display: flex;
+    color: #ccc;
+    /* Sao chưa có điểm */
+    font-size: 14px;
+}
+
+.star.filled {
+    color: #e0ceaa;
+    /* Màu vàng đặc trưng của MUJI */
+}
+
+.comment-section {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #333;
+    padding-right: 8px;
+}
+
+.comment-section p {
+    margin: 0;
+}

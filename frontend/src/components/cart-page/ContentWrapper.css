@@ -1,0 +1,44 @@
+.content-layout {
+    display: flex;
+    flex-direction: column;
+    /* Xếp chồng trên mobile */
+    width: 100%;
+    gap: 24px;
+}
+
+.layout-left {
+    flex: 1;
+    /* Chiếm toàn bộ không gian còn lại bên trái */
+    width: 100%;
+}
+
+.layout-right {
+    flex-shrink: 0;
+    /* Giữ nguyên kích thước cố định của bảng tổng tiền */
+    width: 100%;
+}
+
+/* Responsive cho Desktop */
+@media (min-width: 768px) {
+    .content-layout {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .layout-right {
+        /* Độ rộng cố định theo thiết kế mẫu */
+        width: 300px;
+        position: sticky;
+        top: 90px;
+        /* Chiều cao Header + khoảng cách mong muốn */
+        height: fit-content;
+        /* Ngăn không cho div cha bị kéo dài theo cột trái */
+        z-index: 10;
+    }
+}
+
+@media (min-width: 1024px) {
+    .layout-right {
+        width: 392px;
+    }
+}

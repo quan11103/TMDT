@@ -1,0 +1,90 @@
+/* Container ngoài cùng */
+.muji-section {
+    width: 100%;
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+/* Khung giới hạn chiều rộng 1352px và căn giữa */
+.section-container {
+    max-width: 1352px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header chứa Title và View More */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0 15px;
+}
+
+.section-title {
+    font-weight: bold;
+    color: #333333;
+}
+
+h2.section-title {
+    margin: 0 !important;
+    font-size: 31px;
+}
+
+.section-link {
+    font-size: 20px;
+    font-weight: bold;
+    color: #7f0019;
+    text-decoration: none;
+}
+
+.section-link:hover {
+    text-decoration: underline;
+}
+
+/* Vùng chứa Slider - Xử lý border theo mẫu MUJI */
+.section-content {
+    padding: 0 15px;
+    border-top: 4px solid #f2f2f2;
+    border-bottom: 4px solid #f2f2f2;
+}
+
+/* Responsive cho Tablet và Desktop */
+@media (min-width: 768px) {
+    .section-container {
+        gap: 48px;
+        /* md:gap-12 */
+    }
+
+    .section-header,
+    .section-content {
+        padding: 0 32px;
+        /* md:px-8 */
+    }
+
+    .section-content {
+        border: none;
+        /* md:border-none */
+    }
+}
+
+@media (min-width: 1024px) {
+
+    .section-header,
+    .section-content {
+        padding: 0 64px;
+        /* lg:px-16 */
+    }
+}
+
+/* Responsive cho Mobile */
+@media (max-width: 767px) {
+    .section-title {
+        font-size: 20px;
+    }
+
+    .section-content {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}

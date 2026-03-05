@@ -1,59 +1,42 @@
-// AdminPage.tsx (Cập nhật)
 import React, { useState } from 'react';
-import Sidebar from '../components/admin/AdminSidebar';
-import AdminHeader from '../components/admin/AdminHeader';
-import StatCard from '../components/admin/StatCard';
-import OrderTable from '../components/admin/OrderTable';
-import ProductList from '../components/admin/ProductList'; // Thêm mới
-import OrderManagement from '../components/admin/OrderManagement'; // Thêm mới
-import CustomerList from '../components/admin/CustomerList'; // Thêm mới
-import AnalyticsView from '../components/admin/AnalyticsView'; // Thêm mới
-import Header from '../components/common/Header';
-import Footer from '../components/common/Footer';
+import AdminSidebar from '../components/admin-page/AdminSidebar';
+import AdminHeader from '../components/admin-page/AdminHeader';
+import AdminDashboard from '../components/admin-page/AdminDashboard';
+import AdminProducts from '../components/admin-page/AdminProducts';
+import AdminOrders from '../components/admin-page/AdminOrders';
+import AdminCustomers from '../components/admin-page/AdminCustomers';
 import './AdminPage.css';
 
-const AdminPage: React.FC = () => {
-    const [activeTab, setActiveTab] = useState('Dashboard');
+const AdminLayout: React.FC = () => {
+    // Quản lý trạng thái menu đang được chọn (mặc định là 'Tổng quan')
+    const [activeTab, setActiveTab] = useState('Tổng quan');
 
+    // Hàm render nội dung dựa trên tab đang hoạt động
     const renderContent = () => {
         switch (activeTab) {
-            case 'Dashboard':
-                return (
-                    <>
-                        <div className="stats-grid">
-                            <StatCard label="Total Sales" value="$12,450" trend="+15%" isPositive />
-                            <StatCard label="Total Orders" value="1,250" trend="+5%" isPositive />
-                            <StatCard label="New Customers" value="320" trend="-2%" />
-                        </div>
-                        <OrderTable />
-                    </>
-                );
-            case 'Products':
-                return <ProductList />;
-            case 'Orders':
-                return <OrderManagement />;
-            case 'Customers':
-                return <CustomerList />;
-            case 'Analytics':
-                return <AnalyticsView />;
-            default:
-                return <OrderTable />;
+            case 'Tổng quan': return <AdminDashboard />;
+            case 'Sản phẩm': return <AdminProducts />;
+            case 'Đơn hàng': return <AdminOrders />;
+            case 'Khách hàng': return <AdminCustomers />;
+            default: return <AdminDashboard />;
         }
     };
 
     return (
-        <>
-            <Header />
-            <div className="admin-layout">
-                <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        <div className="admin-layout">
+            {/* Truyền tab hiện tại và hàm thay đổi tab vào Sidebar */}
+            <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+
+            <div className="admin-main">
+                {/* Truyền tiêu đề vào Header để hiển thị đúng tên trang */}
+                <AdminHeader title={activeTab} />
+
                 <main className="admin-content">
-                    <AdminHeader title={activeTab} />
                     {renderContent()}
                 </main>
             </div>
-            <Footer />
-        </>
+        </div>
     );
 };
 
-export default AdminPage;
+export default AdminLayout;

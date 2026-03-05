@@ -1,0 +1,149 @@
+/* PaymentMethod.css - ngắn gọn className, all styles here */
+
+.pm {
+    padding: 16px;
+    box-sizing: border-box;
+    max-width: 520px;
+    background: #fff;
+    color: #111;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+
+.pm-title {
+    font-weight: 700;
+    font-size: 20px;
+    margin: 0 0 14px 0;
+}
+
+/* list wrapper */
+.pm-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+}
+
+/* warning line (red) */
+.pm-warn {
+    color: #dc063a;
+    font-size: 13px;
+    margin: 0 0 6px 0;
+}
+
+/* each payment item */
+.pm-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease, transform 0.08s ease;
+    background: #fff;
+}
+
+/* left area: logo + meta */
+.pm-left {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    min-width: 0;
+}
+
+/* logo */
+.pm-logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+/* meta text */
+.pm-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.pm-titleline {
+    margin: 0;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.pm-sub {
+    margin: 0;
+    font-size: 12px;
+    color: #666;
+}
+
+/* icons row */
+.pm-icons {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-top: 2px;
+}
+
+.pm-icon {
+    width: 24px;
+    height: 16px;
+    object-fit: contain;
+    opacity: 0.95;
+}
+
+/* right: radio custom */
+.pm-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 8px;
+}
+
+/* outer circle */
+.pm-radio-outer {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.6px solid #222;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* dot when selected */
+.pm-radio-dot {
+    width: 10px;
+    height: 10px;
+    background: #222;
+    border-radius: 50%;
+}
+
+/* hover / active styles (only when not inactive) */
+.pm-list:not(.inactive) .pm-item:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+}
+
+/* visual for inactive state */
+.pm-list.inactive .pm-item {
+    opacity: 0.6;
+    pointer-events: none;
+    /* prevent click */
+}
+
+/* show the right-side circle slightly hidden on small screens (like original) */
+@media (max-width: 767px) {
+    .pm-right .pm-radio-outer {
+        border-color: #ccc;
+    }
+}
+
+/* active (selected) item style */
+.pm-item.active {
+    border-color: #c62828;
+    box-shadow: 0 6px 14px rgba(198, 40, 40, 0.08);
+}

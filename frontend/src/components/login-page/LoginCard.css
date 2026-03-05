@@ -1,0 +1,109 @@
+.login-card {
+    padding: 16px 0 40px 0;
+    /* px-0 pt-4 pb-10 */
+    max-width: 408px;
+    margin: 0 auto;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    /* space-y-4 */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    /* space-y-2 */
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+}
+
+input#email {
+    width: stretch;
+}
+
+.form-group input {
+    height: 40px;
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e2e2e2;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    background-color: #fff;
+    color: #000;
+}
+
+.form-group input:focus {
+    border-color: #000;
+}
+
+/* Password wrapper logic */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-password {
+    padding-right: 40px !important;
+}
+
+.eye-icon {
+    position: absolute;
+    right: 12px;
+    cursor: pointer;
+    color: #7e7e7e;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.eye-icon:hover {
+    color: #000;
+}
+
+/* Nút đăng nhập - màu đỏ đặc trưng MUJI */
+.btn-login {
+    margin-top: 40px;
+    /* !mt-10 */
+    height: 56px;
+    width: 100%;
+    background-color: #7F0019;
+    /* Màu đỏ đô MUJI theo image_38cabe.png */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-login:hover {
+    opacity: 0.9;
+}
+
+/* Link quên mật khẩu */
+.forgot-password {
+    margin: 32px 0;
+    text-align: center;
+}
+
+.forgot-password a {
+    color: #000;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}

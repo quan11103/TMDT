@@ -1,7 +1,14 @@
 #root {
     min-width: 100%;
-    margin-top: 104px;
     text-align: left;
+}
+
+/* Nếu bạn muốn sắp xếp theo chiều dọc (cột) */
+.home-page {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    margin-bottom: 60px;
 }
 
 .logo {

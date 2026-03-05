@@ -1,0 +1,67 @@
+/* --- Khung chứa chung --- */
+.product-swiper-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Đảm bảo tất cả các slide có chiều cao tự động bằng nhau (tránh so le) */
+.product-swiper .swiper-slide {
+    height: auto;
+    display: flex;
+}
+
+.product-swiper .swiper-slide>* {
+    flex: 1;
+    /* Bắt ProductItem giãn ra bằng hết chiều cao của slide */
+}
+
+/* --- Tuỳ chỉnh Nút Điều Hướng (Next/Prev) cho Product Swiper --- */
+/* Override lại biến kích thước mũi tên mặc định của Swiper */
+.product-swiper {
+    width: 100%;
+    /* Swiper mặc định đã có overflow hidden, nhưng hãy chắc chắn nó không bị ghi đè */
+    overflow: hidden !important;
+    --swiper-navigation-size: 16px;
+    /* Mũi tên nhỏ, tinh tế */
+}
+
+.product-swiper .swiper-button-next,
+.product-swiper .swiper-button-prev {
+    width: 40px;
+    height: 40px;
+    background-color: #ffffff;
+    /* Nền trắng */
+    color: #333333;
+    /* Mũi tên màu xám đậm/đen */
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    /* Đổ bóng nhẹ để nổi bật lên trên sản phẩm */
+    margin-top: -20px;
+    /* Căn giữa hoàn hảo */
+    transition: all 0.2s ease;
+}
+
+/* Khi hover vào nút điều hướng */
+.product-swiper .swiper-button-next:hover,
+.product-swiper .swiper-button-prev:hover {
+    background-color: #f7f7f7;
+    color: #7f0019;
+    /* Chuyển màu mũi tên sang đỏ đô MUJI */
+    transform: scale(1.05);
+}
+
+/* Định vị nút ra sát lề (hoặc có thể thụt vào tuỳ bạn) */
+.product-swiper .swiper-button-prev {
+    left: 0px;
+}
+
+.product-swiper .swiper-button-next {
+    right: 0px;
+}
+
+/* Ẩn nút điều hướng nếu Swiper bị disable (VD: ít sản phẩm không đủ để trượt) */
+.product-swiper .swiper-button-disabled {
+    opacity: 0;
+    visibility: hidden;
+}

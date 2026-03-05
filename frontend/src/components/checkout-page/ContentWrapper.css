@@ -1,0 +1,75 @@
+/* Layout chung */
+.checkout-wrapper {
+    width: 100%;
+    max-width: 1280px;
+    /* Tương đương max-w-screen-lg của mẫu */
+    margin: 0 auto;
+    padding: 20px 15px;
+    background-color: #fff;
+}
+
+.checkout-container {
+    display: flex;
+    flex-direction: column;
+    /* Mobile mặc định 1 cột */
+    gap: 40px;
+    /* gap-10 tương đương 40px */
+}
+
+.section-card {
+    width: 100%;
+    margin-bottom: 24px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, .25);
+}
+
+/* Cấu trúc Desktop */
+@media (min-width: 768px) {
+    .checkout-container {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .checkout-left {
+        flex: 1;
+        /* Cột trái tự giãn */
+        min-width: 0;
+    }
+
+    .checkout-right {
+        width: 100%;
+        max-width: 496px;
+        /* Khớp với x1:w-[496px] trong code mẫu */
+        flex-shrink: 0;
+    }
+
+    /* Hiệu ứng dính cho toàn bộ cột bên phải */
+    .sticky-content {
+        position: sticky;
+        top: 100px;
+        /* Khoảng cách từ Header xuống, điều chỉnh cho vừa header của bạn */
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+}
+
+/* Style cho các card (theo phong cách MUJI trong ảnh) */
+.section-card {
+    /* Nếu bạn muốn bao khung giống mẫu */
+    background: #fff;
+    /* Có thể thêm border nếu cần, web mẫu thường dùng border rất mảnh hoặc shadow nhẹ */
+}
+
+/* Đặc biệt cho phần Order Summary có nền xám theo mẫu */
+.summary-container {
+    background-color: #f2f2f2;
+    /* muji_gray_100 */
+    padding: 0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Reset margin cho phần tử cuối */
+.section-card:last-child {
+    margin-bottom: 0;
+}

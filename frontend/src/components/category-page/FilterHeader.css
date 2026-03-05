@@ -1,0 +1,44 @@
+.filter-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 15px;
+}
+
+.filter-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 19px;
+    /* text-[19px] */
+    font-weight: 700;
+    margin: 0;
+    color: #000;
+}
+
+.filter-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Nút Đóng cho Mobile */
+.btn-close {
+    display: flex;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s;
+}
+
+.btn-close:hover {
+    color: #7f0019;
+    /* muji_primary */
+}
+
+/* Responsive Logic */
+@media (min-width: 768px) {
+
+    .btn-close {
+        display: none;
+        /* Ẩn nút X trên Desktop */
+    }
+}
