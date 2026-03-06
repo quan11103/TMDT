@@ -1,0 +1,152 @@
+/* Container chính */
+.grid-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Hệ thống Grid đáp ứng */
+.product-grid {
+    display: grid;
+    gap: 16px;
+    /* gap-y-4 md:gap-2 tương đương */
+    grid-template-columns: repeat(2, 1fr);
+    /* Mặc định 2 cột cho mobile */
+}
+
+/* Breakpoints dựa trên ảnh cấu trúc HTML mẫu */
+@media (min-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 1280px) {
+    .product-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (min-width: 1536px) {
+    .product-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+/* Thẻ sản phẩm */
+.product-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    transition: transform 0.2s ease;
+}
+
+.product-image-link {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-color: #f9f9f9;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.product-info {
+    padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.product-name {
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+    line-height: 1.4;
+    height: 40px;
+    /* Giới hạn 2 dòng */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    margin-bottom: 12px;
+}
+
+.product-name:hover {
+    text-decoration: underline;
+}
+
+.product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.product-price {
+    font-size: 16px;
+    font-weight: 700;
+    color: #7f0019;
+    /* Màu đỏ MUJI */
+}
+
+.product-price small {
+    font-size: 10px;
+    font-weight: 400;
+    margin-left: 2px;
+}
+
+/* Nút yêu thích hình tròn */
+.wishlist-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #d1d5db;
+    transition: all 0.2s;
+}
+
+.wishlist-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.wishlist-btn:hover {
+    background-color: #f3f4f6;
+    color: #7f0019;
+    border-color: #7f0019;
+}
+
+/* Nút Mua hàng */
+.buy-button {
+    width: 100%;
+    padding: 8px 0;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    color: #333;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: auto;
+}
+
+.buy-button:hover {
+    background: #333;
+    color: #fff;
+    border-color: #333;
+}

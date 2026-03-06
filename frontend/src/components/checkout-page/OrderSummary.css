@@ -1,0 +1,236 @@
+/* OrderSummary.css - tất cả style tại đây, className ngắn gọn */
+
+.os {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px;
+    background: #fff;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    color: #111;
+}
+
+/* title */
+.os-title {
+    margin: 0 0 12px 0;
+    font-weight: 800;
+    font-size: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e6e6e6;
+}
+
+/* items list */
+.os-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 462px;
+    overflow-y: auto;
+    padding-top: 10px;
+    padding-bottom: 6px;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #d1d1d1 transparent;
+}
+
+/* 1. Độ rộng của thanh cuộn */
+.os-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* 2. Phần nền của thanh cuộn */
+.os-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* 3. Phần tay cầm (nút cuộn) */
+.os-list::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+    /* Màu xám nhạt */
+    border-radius: 20px;
+    /* Bo tròn */
+    border: none;
+}
+
+/* 4. Hiệu ứng khi di chuột vào nút cuộn */
+.os-list::-webkit-scrollbar-thumb:hover {
+    background-color: #a8a8a8;
+    /* Màu đậm hơn một chút khi hover */
+}
+
+/* single item */
+.os-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+/* image */
+.os-imgWrap {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #f7f7f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.os-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* info */
+.os-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.os-name {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.2;
+    max-height: 2.4em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.os-meta {
+    font-size: 13px;
+    color: #333;
+}
+
+.os-meta .muted {
+    color: #6b6b6b;
+    margin-right: 6px;
+    font-weight: 600;
+}
+
+/* price */
+.os-price {
+    font-weight: 700;
+    font-size: 13px;
+    color: #111;
+}
+
+/* summary block */
+.os-summary {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 8px;
+}
+
+/* row */
+.os-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+}
+
+.os-label {
+    color: #7e7e7e;
+}
+
+.os-value {
+    font-weight: 600;
+}
+
+/* total section */
+.os-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 2px solid #e6e6e6;
+    padding-top: 12px;
+    margin-top: 6px;
+}
+
+.os-total-label {
+    font-weight: 800;
+    font-size: 15px;
+}
+
+.os-total-value .big {
+    font-weight: 800;
+    font-size: 16px;
+}
+
+.os-total-value .vat {
+    font-size: 13px;
+    color: #7e7e7e;
+}
+
+/* actions */
+.os-actions {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-checkout {
+    width: 100%;
+    max-width: 320px;
+    height: 48px;
+    background: #3b3b3b;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform .08s ease, box-shadow .12s ease;
+}
+
+.btn-checkout:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-checkout:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* misc */
+.vnd {
+    font-size: 12px;
+    color: #333;
+    margin-left: 4px;
+}
+
+.muted {
+    color: #7e7e7e;
+}
+
+/* responsive */
+@media (min-width: 768px) {
+    .os {
+        padding: 18px;
+    }
+
+    .os-title {
+        font-size: 22px;
+    }
+
+    .os-imgWrap {
+        width: 120px;
+        height: 120px;
+    }
+
+    .os-price {
+        font-size: 14px;
+    }
+}

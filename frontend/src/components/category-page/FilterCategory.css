@@ -1,0 +1,122 @@
+.filter-container {
+    border-bottom: 2px solid #e5e7eb;
+    /* border-muji_gray_300 */
+    width: 100%;
+    max-width: 288px;
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+/* Header Button */
+.filter-header {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    transition: all 0.2s;
+}
+
+.filter-header:hover {
+    text-decoration: underline;
+}
+
+.filter-header:focus {
+    outline: none;
+}
+
+/* Icon xoay khi đóng/mở */
+.chevron-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+}
+
+.filter-header.active .chevron-icon {
+    transform: rotate(180deg);
+}
+
+/* Content Area */
+.filter-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filter-content.show {
+    max-height: 1000px;
+}
+
+/* List Styling */
+.category-list,
+.sub-category-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.category-group {
+    margin-bottom: 12px;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    padding: 4px 0;
+}
+
+/* Căn lề cho danh mục con */
+.sub-item {
+    padding-left: 28px;
+    font-size: 13px;
+}
+
+/* Checkbox Style */
+.custom-checkbox {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #d1d5db;
+    border-radius: 2px;
+    cursor: pointer;
+    accent-color: #7f0019;
+}
+
+.custom-checkbox:hover {
+    border-color: #7f0019;
+}
+
+.custom-checkbox:checked {
+    background-color: #7f0019;
+    border-color: #7f0019;
+}
+
+.custom-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin-left: 5px;
+}
+
+.category-count {
+    color: #9ca3af;
+    /* muji_gray_500 */
+    margin-left: 4px;
+}
+
+.category-name:hover {
+    text-decoration: underline;
+}

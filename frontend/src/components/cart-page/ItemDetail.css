@@ -1,0 +1,136 @@
+.item-detail-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    font-size: 13px;
+    color: #333;
+    justify-content: center;
+}
+
+.product-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.item-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* căn icon lên top */
+    gap: 8px;
+}
+
+.remove-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.trash-icon {
+    width: 30px;
+    height: 30px;
+    color: #9e9e9e;
+    transition: all 0.25s ease;
+}
+
+/* Hover effect */
+.remove-btn:hover {
+    background-color: #ffeaea;
+}
+
+.remove-btn:hover .trash-icon {
+    color: #c62828;
+    transform: scale(1.1);
+}
+
+/* Click animation */
+.remove-btn:active .trash-icon {
+    transform: scale(0.95);
+}
+
+.product-name {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.4;
+    /* Giới hạn 2 dòng chữ, quá dài sẽ hiện dấu ... */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+}
+
+/* Thuộc tính (Màu sắc) */
+.item-attributes {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.attr-row {
+    margin: 0;
+    text-transform: capitalize;
+}
+
+.attr-label {
+    font-weight: 700;
+    margin-right: 8px;
+}
+
+/* Đơn giá */
+.item-unit-price {
+    padding: 4px 0;
+}
+
+.price-wrapper {
+    margin: 0;
+    font-weight: 700;
+    color: #333333;
+    /* muji_gray_800 */
+    line-height: 21px;
+}
+
+.price-num {
+    font-size: 13px;
+}
+
+.price-unit {
+    font-size: 11px;
+    font-weight: 400;
+}
+
+.item-quantity-section {
+    width: 100%;
+}
+
+/* --- Responsive Desktop --- */
+@media (min-width: 768px) {
+    .product-name {
+        padding-right: 40px;
+        /* md:pr-10 */
+    }
+
+    .item-unit-price {
+        padding: 8px 0;
+        /* md:py-2 */
+    }
+
+    .price-num {
+        font-size: 15px;
+        /* md:text-[15px] */
+    }
+
+    .item-attributes {
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+    }
+}

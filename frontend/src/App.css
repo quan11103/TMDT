@@ -1,49 +1,52 @@
-#root {
-  margin: 0 auto;
-  text-align: center;
+/* --- 1. Thiết lập Font chữ & Màu sắc cơ bản --- */
+.main-content-wrapper {
+    font-family: "Noto Sans JP", "Helvetica Neue", Arial, sans-serif;
+    /* Font chuẩn MUJI  */
+    color: #333333;
+    /* Màu chữ xám đen đặc trưng [cite: 296, 297] */
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 }
 
-.logo {
-  will-change: filter;
-  transition: filter 300ms;
+/* --- 2. Khung chứa giới hạn độ rộng (Container) --- */
+/* Dùng class này bọc ngoài cùng nội dung của mọi trang */
+.container {
+    max-width: 1440px;
+    /* Khớp với chiều rộng của Header và Footer */
+    margin: 0 auto;
+    /* Căn giữa toàn bộ nội dung */
+    padding: 0 20px;
+    /* Khoảng hở an toàn khi xem trên điện thoại */
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+/* --- 3. Khoảng cách an toàn với Header/Footer --- */
+.main-content-wrapper {
+    /* Đảm bảo nội dung không bị dính sát vào Header và Footer */
+    padding-top: 40px;
+    padding-bottom: 80px;
+    min-height: 60vh;
+    /* Đảm bảo trang luôn có độ cao tối thiểu để Footer không bị nhảy lên */
 }
 
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* --- 4. Định dạng tiêu đề chung cho các trang --- */
+/* Ví dụ: Tên sản phẩm, Tên danh mục, Tiêu đề bài viết */
+.main-content-wrapper h1,
+.main-content-wrapper h2 {
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #333333;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+/* --- 5. Định dạng hình ảnh mặc định --- */
+.main-content-wrapper img {
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-.section-padding {
-  margin: 40px 5%;
-}
-
-.view-all-container {
-  margin: 20px 0;
+/* --- 6. Ẩn thanh cuộn ngang nếu có lỗi tràn phần tử --- */
+body {
+    overflow-x: hidden;
 }

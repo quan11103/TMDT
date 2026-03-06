@@ -1,0 +1,33 @@
+.admin-header {
+    height: 72px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+}
+
+.header-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-name {
+    font-size: 14px;
+    color: #666;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    background-color: #e5e5e5;
+    border-radius: 50%;
+}

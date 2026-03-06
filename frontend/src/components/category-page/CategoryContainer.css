@@ -1,0 +1,28 @@
+.main-page-wrapper {
+    width: 100%;
+    max-width: 1440px;
+    /* Giới hạn độ rộng chuẩn */
+    margin: 0 auto;
+    padding: 0 16px;
+    /* Mặc định cho mobile */
+    box-sizing: border-box;
+}
+
+/* Cấu hình cho màn hình Desktop (md: 768px trở lên) */
+@media (min-width: 768px) {
+    .main-page-wrapper {
+        padding-top: 12px;
+        /* md:pt-3 tương đương 12px */
+        padding-bottom: 32px;
+        /* md:pb-8 tương đương 32px */
+        padding-left: 24px;
+        /* md:px-6 tương đương 24px */
+        padding-right: 24px;
+    }
+}
+
+/* Đảm bảo khoảng cách giữa Tiêu đề và nội dung bên dưới */
+.main-page-wrapper>*:first-child {
+    margin-bottom: 32px;
+    /* Khoảng cách từ tiêu đề xuống phần lọc/sản phẩm */
+}

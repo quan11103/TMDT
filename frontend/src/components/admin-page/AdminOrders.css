@@ -1,0 +1,28 @@
+.mb-24 {
+    margin-bottom: 24px;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-size: 12px;
+}
+
+.status-badge.success {
+    background-color: #e6f4ea;
+    color: #1e7e34;
+}
+
+.status-badge.waiting {
+    background-color: #fff4e5;
+    color: #664d03;
+}
+
+.muji-table td.customer {
+    text-align: left;
+}
+
+.muji-table td.font-bold {
+    font-weight: 700;
+    text-align: right;
+}

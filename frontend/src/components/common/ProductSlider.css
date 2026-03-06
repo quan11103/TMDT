@@ -1,0 +1,64 @@
+/* ProductSlider.css */
+
+.product-slider-wrapper {
+    position: relative;
+    /* CHÌA KHÓA: Cắt bỏ margin-right thừa của ProductItem cuối cùng */
+    overflow: hidden;
+}
+
+/* Container chứa Swiper có thể cần padding nhẹ để không sát lề trên mobile */
+.inner-swiper-container {
+    width: 100%;
+}
+
+/* Style cho các nút điều hướng tùy chỉnh */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    width: 44px;
+    height: 44px;
+    background-color: white;
+    border: 1px solid #e0ceaa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #333;
+}
+
+.nav-btn:hover {
+    background-color: #fdfaf3;
+    border-color: #920111;
+    color: #920111;
+}
+
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
+    right: 10px;
+}
+
+/* Ẩn nút trên mobile để dùng thao tác vuốt cho chuẩn UX */
+@media (max-width: 768px) {
+    .nav-btn {
+        display: none;
+    }
+
+    .product-slider-wrapper {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+/* Đảm bảo Swiper không chiếm dụng diện tích của Slider */
+.product-swiper {
+    width: 100% !important;
+    overflow: visible !important;
+    /* Cho phép margin-right lòi ra nhưng sẽ bị Slider.css cắt */
+}

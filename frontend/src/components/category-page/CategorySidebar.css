@@ -1,0 +1,28 @@
+.category-sidebar {
+    background-color: #ffffff;
+    width: 100%;
+    /* z-50 để đảm bảo đè lên nội dung khác khi làm menu mobile */
+    z-index: 50;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Cấu trúc trên Desktop (md: màn hình từ 768px trở lên) */
+@media (min-width: 768px) {
+    .category-sidebar {
+        /* w-1/4 */
+        min-width: 192px;
+        /* min-w-48 */
+        max-width: 288px;
+        /* max-w-72 */
+
+        height: fit-content;
+        padding-right: 20px;
+    }
+}
+
+/* Hiệu ứng mượt mà khi xuất hiện */
+.category-sidebar {
+    transition: all 0.3s ease-in-out;
+}

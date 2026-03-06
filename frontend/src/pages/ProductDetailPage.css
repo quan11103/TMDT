@@ -1,9 +1,9 @@
 .product-detail-page {
-    max-width: 1240px;
+    /* max-width: 1240px;
     margin: 0 auto;
     padding: 24px 5%;
     font-family: sans-serif;
-    min-height: 80vh;
+    min-height: 80vh; */
 }
 
 /* Container giới hạn chiều rộng chuẩn cho toàn trang */
@@ -67,8 +67,6 @@
     font-size: 40px;
     font-weight: 800;
     text-align: center;
-    margin: 20px;
-    text-transform: uppercase;
 }
 
 .selector-group {

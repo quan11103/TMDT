@@ -1,0 +1,17 @@
+.cart-item-list {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    padding-top: 16px;
+    /* pt-4 */
+    margin-top: 24px;
+    /* mt-6 */
+    /* Đường kẻ trên cùng của danh sách */
+    border-top: 1px solid #BCBCBC;
+    /* muji_gray_200 nhưng đậm hơn để rõ nét */
+}
+
+/* Đảm bảo item cuối cùng không bị thừa khoảng trống phía dưới */
+.cart-item-list> :last-child {
+    margin-bottom: 0;
+}
