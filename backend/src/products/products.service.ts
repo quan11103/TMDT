@@ -6,15 +6,56 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { QueryProductDto } from './dto/query-product.dto';
 
 @Injectable()
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.products.findMany({
-      where: { is_active: true },
-    });
+  // Search sản phẩm
+  async findAll(query: QueryProductDto) {
+    const { search, category_id, page = 1, limit = 10 } = query;
+    const skip = (page - 1) * limit;
+    const where: any = {
+      is_active: true,
+      ...(search && { name: { contains: search, mode: 'insensitive' } }),
+      ...(category_id && { category_id }),
+    };
+
+    const [data, total] = await Promise.all([
+      this.prisma.products.findMany({
+        where,
+        skip,
+        take: limit,
+        select: {
+          name: true,
+          price: true,
+          slug: true,
+          description: true,
+          stock: true,
+          categories: {
+            select: { id: true, name: true },
+          },
+          product_images: {
+            where: { is_main: true },
+            select: { image_url: true },
+            take: 1,
+          },
+        },
+        orderBy: { created_at: 'desc' },
+      }),
+      this.prisma.products.count({ where }),
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        total_page: Math.ceil(total / page),
+      },
+    };
   }
 
   // Tìm sản phẩm theo id
