@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ScrollToTop from './components/common/ScrollToTop';
 import HomePage from './pages/HomePage';
-import ProductDetail from './pages/ProductDetailPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 import CategoryPage from './pages/CategoryPage';
 import CartPage from './pages/CartPage';
 import LoginPage from './pages/LoginPage';
@@ -11,6 +12,8 @@ import SignUpPage from './pages/SignUpPage';
 function App() {
   return (
     <Router>
+      <ScrollToTop />
+
       <Routes>
         <Route path="/" element={<HomePage />} />
 
@@ -18,7 +21,7 @@ function App() {
 
         <Route path="/signup/" element={<SignUpPage />} />
 
-        <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
 
         <Route path="/category/" element={<CategoryPage />} />
 

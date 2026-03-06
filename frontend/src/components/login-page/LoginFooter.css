@@ -1,0 +1,67 @@
+.register-footer {
+    padding: 32px 0 8px 0;
+    /* pt-8 pb-2 */
+    border-top: 2px solid #e6e6e6;
+    /* border-t-muji_gray_300 */
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    /* gap-6 tương đương 24px */
+    align-items: flex-start;
+}
+
+.footer-title {
+    width: 100%;
+    font-weight: 700;
+    font-size: 15px;
+    color: #000;
+    margin: 0;
+}
+
+.footer-description {
+    font-size: 13px;
+    font-weight: 400;
+    color: #666;
+    /* muji_gray_800 */
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Nút đăng ký (Dạng Outline) */
+.btn-outline-register {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 408px;
+    height: 56px;
+    /* h-14 */
+    background-color: #fff;
+    border: 1px solid #7F0019;
+    /* muji_primary */
+    color: #7F0019;
+    border-radius: 2px;
+    /* rounded-sm */
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+/* Hiệu ứng Hover: Đảo nền đỏ chữ trắng */
+.btn-outline-register:hover {
+    background-color: #7F0019;
+    color: #fff;
+}
+
+/* Responsive: Đảm bảo căn giữa trên mobile nếu cần */
+@media (max-width: 640px) {
+    .register-footer {
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-title {
+        text-align: center;
+    }
+}

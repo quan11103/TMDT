@@ -1,0 +1,40 @@
+/* Sidebar bọc ngoài */
+.filter-sidebar {
+    width: 100%;
+    max-width: 280px;
+    /* Độ rộng tiêu chuẩn cho sidebar */
+    background-color: #ffffff;
+}
+
+/* Wrapper chứa các phần tử con */
+.filter-wrapper {
+    display: flex;
+    flex-direction: column;
+    /* text-[13px] từ mã nguồn */
+    font-size: 13px;
+    color: #333;
+}
+
+/* Loại bỏ đường kẻ ở phần tử cuối cùng */
+.filter-section:last-child {
+    border-bottom: none;
+}
+
+/* Header của mỗi section (nếu component con chưa có padding) */
+.filter-section h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* Responsive: Trên mobile có thể ẩn sidebar hoặc chuyển thành dạng Drawer */
+@media (max-width: 1024px) {
+    .filter-sidebar {
+        max-width: 100%;
+        padding: 0 16px;
+    }
+}

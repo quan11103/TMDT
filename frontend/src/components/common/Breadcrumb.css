@@ -1,0 +1,114 @@
+/* Bao ngoài cùng: Căn giữa và đồng bộ khoảng cách với các section khác */
+.breadcrumb-wrapper {
+    max-width: 1352px;
+    margin: 0 auto;
+    padding: 0 16px;
+    /* Mobile padding */
+}
+
+/* Khung Nav */
+.breadcrumb-nav {
+    margin: 12px 0;
+}
+
+/* Danh sách thẻ (ol) */
+.breadcrumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    word-break: break-word;
+    font-size: 13px;
+    /* Kích thước chữ chuẩn cho breadcrumb */
+    font-weight: 400;
+    color: #6b7280;
+    /* Màu xám nhạt (text-muted-foreground) */
+    gap: 10px;
+    /* Khoảng cách giữa các cụm */
+}
+
+/* Từng thẻ li */
+.breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    /* Khoảng cách giữa chữ và icon mũi tên */
+}
+
+/* Thẻ link <a> */
+.breadcrumb-link {
+    color: #6b7280;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-link:hover {
+    color: #111827;
+    /* Màu đậm hơn khi hover (hover:text-foreground) */
+}
+
+/* Icon mũi tên phân cách */
+.breadcrumb-separator {
+    width: 14px;
+    height: 14px;
+    color: #d1d5db;
+    /* Màu xám mờ cho icon (text-muji_gray_300) */
+}
+
+/* Trang hiện tại (chữ in đậm, màu đỏ MUJI) */
+.breadcrumb-current {
+    font-weight: bold;
+    color: #7f0019;
+    /* text-muji_primary */
+}
+
+/* Giữ nguyên toàn bộ file CSS cũ của bạn */
+
+/* Bổ sung thêm để đảm bảo Link không bị gạch chân mặc định của trình duyệt */
+.breadcrumb-link {
+    text-decoration: none !important;
+    display: inline-block;
+}
+
+/* Đảm bảo icon mũi tên không bị co giãn khi chữ quá dài */
+.breadcrumb-separator {
+    flex-shrink: 0;
+}
+
+/* Nếu bạn muốn chữ cái đầu tiên luôn viết hoa tự động cho các path chưa có trong mapping */
+.breadcrumb-link,
+.breadcrumb-current {
+    text-transform: capitalize;
+}
+
+/* -------------------------------------
+   RESPONSIVE
+-------------------------------------- */
+
+/* Trên điện thoại */
+@media (max-width: 767px) {
+    .breadcrumb-list {
+        font-size: 11px;
+        /* Chữ nhỏ lại trên mobile */
+        gap: 4px;
+        /* Giảm khoảng cách cho khỏi rớt dòng nhiều */
+    }
+}
+
+/* Trên Tablet */
+@media (min-width: 768px) {
+    .breadcrumb-wrapper {
+        padding: 0 32px;
+        /* md:px-8 */
+    }
+}
+
+/* Trên Laptop / Desktop */
+@media (min-width: 1024px) {
+    .breadcrumb-wrapper {
+        padding: 0 64px;
+        /* lg:px-16 */
+    }
+}

@@ -1,0 +1,39 @@
+.category-page-container {
+    display: grid;
+    /* Chia 2 cột: Cột 1 cố định 280px, Cột 2 tự động chiếm phần còn lại */
+    grid-template-columns: 280px 1fr;
+
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    align-items: start;
+    /* Giúp sidebar sticky hoạt động đúng */
+}
+
+/* Đảm bảo sidebar không dùng position: absolute nữa */
+.page-sidebar {
+    width: 100%;
+    position: relative;
+    /* Trả về luồng tài liệu bình thường để không đè lên main */
+}
+
+.page-main {
+    width: 100%;
+    min-width: 0;
+    /* Tránh lỗi vỡ layout khi nội dung bên trong quá rộng */
+}
+
+/* Responsive cho Tablet/Mobile */
+@media (max-width: 1024px) {
+    .category-page-container {
+        /* Chuyển về 1 cột trên màn hình nhỏ */
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .page-sidebar {
+        /* Trên mobile có thể dùng absolute nếu bạn muốn làm menu trượt (drawer) */
+        /* Nếu không, hãy để nó nằm trên ProductGrid */
+        margin-bottom: 20px;
+    }
+}

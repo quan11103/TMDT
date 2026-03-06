@@ -1,0 +1,31 @@
+.cart-item-qty-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* Xếp dọc trên mobile: SubTotal trên, Quantity dưới */
+    gap: 8px;
+}
+
+.qty-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* --- Responsive cho Desktop (md: 768px trở lên) --- */
+@media (min-width: 768px) {
+    .cart-item-qty-container {
+        flex-direction: row-reverse;
+        /* Đảo ngược: SubTotal sang phải, Quantity sang trái */
+        justify-content: space-between;
+        align-items: center;
+        /* Căn giữa các thành phần theo chiều dọc */
+        gap: 0;
+    }
+}
+
+/* Tùy chỉnh nhỏ để QuantitySelector trong giỏ hàng trông gọn hơn nếu cần */
+.cart-item-qty-container .quantity-selector {
+    justify-content: flex-start;
+    /* Trong giỏ hàng thường căn lề trái */
+}

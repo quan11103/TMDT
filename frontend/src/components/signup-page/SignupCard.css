@@ -1,0 +1,144 @@
+.signup-card {
+    padding: 16px 0 40px 0;
+    max-width: 408px;
+    margin: 0 auto;
+}
+
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+}
+
+.form-group input,
+.gender-select {
+    height: 40px;
+    width: stretch;
+    padding: 8px 12px;
+    border: 1px solid #e2e2e2;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+}
+
+/* Calendar icon inside input */
+.calendar-btn {
+    position: absolute;
+    right: 1px;
+    /* Khớp với right-[1px] */
+    top: 25px;
+    /* Khớp với top-[25px] */
+    height: 56px;
+    /* Khớp với h-[38px] */
+    width: 48px;
+    /* Khớp với w-12 (12 * 4px) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    /* Màu nhạt cho icon calendar */
+    padding: 0 8px;
+    /* Khớp với px-2 */
+}
+
+.calendar-btn svg {
+    width: 16px;
+    /* Khớp với h-4 w-4 trong mẫu */
+    height: 16px;
+}
+
+.calendar-btn:focus {
+    outline: none;
+}
+
+/* Đảm bảo input chừa khoảng trống bên phải để icon không đè lên chữ */
+.form-dob {
+    padding-right: 48px !important;
+}
+
+/* Checkbox Styling */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.checkbox-item input {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+}
+
+.checkbox-item a {
+    color: #451CFF;
+    text-decoration: none;
+}
+
+/* Privacy Note */
+.privacy-note {
+    font-size: 11px;
+    line-height: 18px;
+    color: #666;
+    margin: 16px 0;
+}
+
+/* Button Signup */
+.btn-signup {
+    height: 56px;
+    width: 100%;
+    background-color: #7F0019;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-signup:hover {
+    opacity: 0.9;
+}
+
+/* Password eye icon */
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 40px;
+}
+
+.eye-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}

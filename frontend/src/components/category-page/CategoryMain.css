@@ -1,0 +1,28 @@
+.category-main {
+    width: 100%;
+    background-color: #ffffff;
+    /* Đảm bảo nội dung không dính sát mép trên */
+    padding-top: 20px;
+}
+
+.category-container {
+    /* flex-col gap-5 tương đương */
+    display: flex;
+    flex-direction: column;
+
+    /* Căn giữa và giới hạn độ rộng theo HTML mẫu */
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.product-section {
+    width: 100%;
+    /* lg:p-2 tương đương */
+}
+
+.pagination-section {
+    width: 100%;
+    /* my-8 tương đương */
+    margin: 32px 0;
+}

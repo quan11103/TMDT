@@ -1,17 +1,25 @@
 export interface Product {
-    id: number;
+    id: string;
     name: string;
-    image: string;
-    rating: number; // ví dụ: 4.5
     price: number;
-    originalPrice?: number;
-    discountPercent?: number;
+    imageUrl: string;
+    productUrl: string;
+}
+
+export interface CartItem {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    imageUrl: string;
+    productUrl: string;
 }
 
 export interface Review {
     id: number;
-    author: string;
-    content: string;
+    userName: string;
+    date: string;
     rating: number;
-    isVerified: boolean;
+    comment: string;
+    avatarClass: string;
 }

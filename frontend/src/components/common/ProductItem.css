@@ -1,0 +1,160 @@
+/* --- Khung chứa toàn bộ sản phẩm --- */
+.product-item {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: #ffffff;
+    transition: transform 0.2s ease;
+}
+
+/* --- Khung Hình ảnh --- */
+.product-image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    /* Hình vuông chuẩn MUJI */
+    background-color: #f7f7f7;
+}
+
+.product-image-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Nhãn "MỚI" */
+.product-label-new {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background-color: #7f0019;
+    /* Màu đỏ đặc trưng MUJI */
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    line-height: 18px;
+}
+
+/* --- Khung Thông tin --- */
+.product-info-container {
+    padding: 12px 15px 20px 15px;
+    /* Khớp với pt-3 pb-5 px-[15px] */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/* Tên sản phẩm */
+.product-name {
+    margin: 0 0 12px 0;
+}
+
+.product-name a {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* Giới hạn đúng 2 dòng như HTML mẫu */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 42px;
+    /* Cố định chiều cao để các thẻ sản phẩm bằng nhau */
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 21px;
+    color: #333333;
+    /* Màu text-muji_gray_800 */
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.product-name a:hover {
+    color: #7f0019;
+    /* hover:text-muji_primary */
+}
+
+/* Khung Giá & Nút Yêu thích */
+.product-price-wishlist {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    min-height: 42px;
+    margin-bottom: 8px;
+}
+
+/* Giá tiền */
+.product-price {
+    display: flex;
+    align-items: baseline;
+    color: #7f0019;
+    /* Màu chữ đỏ */
+}
+
+.amount {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+}
+
+.currency {
+    font-size: 11px;
+    font-weight: 400;
+    margin-left: 4px;
+}
+
+/* Nút Yêu thích (Trái tim) */
+.wishlist-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #fcfaf5;
+    /* bg-muji_beige_light */
+    border: 1px solid #e0ceaa;
+    /* border-muji_beige */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s;
+}
+
+.wishlist-btn:hover {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.wishlist-btn:hover svg path {
+    fill: #e0ceaa;
+    /* Hiệu ứng hover cho trái tim */
+}
+
+/* Nút Mua Hàng */
+.add-to-cart-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 38px;
+    background-color: #ffffff;
+    color: #333333;
+    border: 1px solid #cccccc;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #f7f7f7;
+    border-color: #333333;
+}

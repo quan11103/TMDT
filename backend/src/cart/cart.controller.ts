@@ -1,10 +1,10 @@
 import { Body, Controller, Get, UseGuards, Post } from '@nestjs/common';
 import { CartService } from './cart.service';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { AddToCartDto } from './dto/add-to-cart.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
-import { Permissions } from 'src/auth/decorators/permissions.decorater';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { Permissions } from 'src/common/decorators/permissions.decorator';
+import { PermissionsGuard } from 'src/common/guards/permissions.guard';
 
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('cart')

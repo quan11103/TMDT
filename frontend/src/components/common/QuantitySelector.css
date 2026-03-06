@@ -1,0 +1,84 @@
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.qty-btn {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #f0dada;
+    /* Màu xám nhạt (muji_gray_300) */
+    color: #333;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    /* Bo góc vừa phải (rounded-md) */
+
+    font-size: 20px;
+    line-height: 1;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s ease;
+}
+
+/* Hiệu ứng khi rê chuột vào nút */
+.qty-btn:hover:not(:disabled) {
+    background-color: #7f0019;
+    /* Màu đỏ MUJI */
+    color: #ffffff;
+    border-color: #7f0019;
+}
+
+/* Trạng thái nút bị vô hiệu hóa (khi số lượng là 1) */
+.qty-btn:disabled {
+    opacity: 0.5;
+    cursor: auto;
+    background-color: #f9f9f9;
+}
+
+.qty-btn:focus {
+    outline: none;
+    /* Xóa đường viền mặc định khi click */
+    box-shadow: none;
+    /* Một số framework như Bootstrap có thể thêm bóng, xóa nó đi */
+}
+
+/* Ô nhập số lượng */
+.qty-input {
+    width: 56px;
+    /* w-14 */
+    height: 40px;
+    /* h-10 */
+
+    text-align: center;
+    background-color: #ffffff;
+    color: #333;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+
+    font-size: 14px;
+    outline: none;
+    appearance: textfield;
+    /* Ẩn mũi tên tăng giảm mặc định của trình duyệt */
+}
+
+/* Ẩn mũi tên tăng giảm trên Chrome, Safari, Edge */
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.quantity-selector input {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border: 1px solid #ccc;
+}

@@ -1,0 +1,47 @@
+.category-header-title {
+    margin-top: 8px;
+    /* mt-2 */
+    padding: 0 16px;
+    /* px-4 */
+    width: 100%;
+}
+
+.page-main-title {
+    font-size: 30px;
+    /* Kích thước h1 tiêu chuẩn */
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    color: #333;
+    padding-left: 40px;
+}
+
+.total-count {
+    margin-left: 8px;
+    /* ml-2 */
+    font-weight: 400;
+    /* font-normal */
+    color: #666;
+    /* Responsive font size từ 11px lên 17px */
+    font-size: 11px;
+}
+
+/* Cấu trúc cho màn hình Desktop (md và lg) */
+@media (min-width: 768px) {
+    .category-header-title {
+        padding: 0;
+        /* md:px-0 */
+        margin-bottom: 32px;
+        /* md:mb-8 */
+        /* Tạo khoảng trống bên phải nếu cần theo web mẫu */
+        padding-right: 0;
+    }
+}
+
+@media (min-width: 1024px) {
+    .total-count {
+        font-size: 17px;
+        /* lg:text-[17px] */
+    }
+}

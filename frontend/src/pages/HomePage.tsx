@@ -1,83 +1,54 @@
 import React from 'react';
-// Import Types
-import type { Product, Review } from '../types';
-
-// Import Components
+import type { Product } from '../types';
 import Header from '../components/common/Header';
-import Hero from '../components/home/Hero';
-import BrandBar from '../components/home/BrandBar';
-import ProductList from '../components/sections/ProductList';
-import { StyleBrowse } from '../components/home/StyleBrowse';
-import Testimonials from '../components/home/Testimonials';
+import BannerSlider from '../components/homepage/BannerSlider';
 import Footer from '../components/common/Footer';
-
-// Import CSS toàn cục
 import './HomePage.css';
+import ProductSection from '../components/common/ProductSection';
+
+const NewArrivals: Product[] = [
+    { id: 'p1', name: 'Bút Bi Bấm 0.5mm - Xanh Dương MUJI', price: 25000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4550002794132_org.jpg', productUrl: '#' },
+    { id: 'p2', name: 'Túi My Bag A6 Vải Sợi Đay', price: 34000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4550344878286_org.jpg', productUrl: '#' },
+    { id: 'p3', name: 'Ruột Bút Mực Smooth Gel 0.5mm - Xanh Dương MUJI', price: 19000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4550002822897_org.jpg', productUrl: '#' },
+    { id: 'p4', name: 'Bút Bi Polycarbonate 0.7mm - Xanh Dương MUJI', price: 25000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4550002186579_org.jpg', productUrl: '#' },
+    { id: 'p5', name: 'Bộ 5 Bao Lì Xì 2026 (Quà tặng không bán)', price: 200000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/l/i/lizi2026.png', productUrl: '#' },
+    { id: 'p6', name: 'Bút Bi Bấm 0.5mm - Đen MUJI', price: 25000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4550002794118_org_1.jpg', productUrl: '#' }
+];
+
+const FeaturedProducts: Product[] = [
+    { id: 'p7', name: 'Nến Thơm Mùi Cây Xô Thơm', price: 97000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4547315275007_org.jpg', productUrl: '#' },
+    { id: 'p8', name: 'Cuộn Lăn Bụi Thay Thế - Xé Chéo (1 cuộn) - Dành cho Cây Lăn Bụi Thảm', price: 38000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4550344131954_org.jpg', productUrl: '#' },
+    { id: 'p9', name: 'Ruột Bút Mực Smooth Gel 0.5mm - Đen MUJI', price: 19000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4550002822873_org.jpg', productUrl: '#' },
+    { id: 'p10', name: 'Kệ Đựng Hồ Sơ Nhựa W10Cm - Xám Trắng', price: 146000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4550002186579_org.jpg', productUrl: '#' },
+    { id: 'p11', name: 'Bông Tẩy Trang Ecru', price: 58000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/l/i/lizi2026.png', productUrl: '#' },
+    { id: 'p12', name: 'Túi My Bag A4 Vải Sợi Đay', price: 68000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4550002794118_org_1.jpg', productUrl: '#' }
+];
+
+const BestSellers: Product[] = [
+    { id: 'p13', name: 'Ruột Bút Mực Gel 0.5mm - Xanh Dương MUJI', price: 19000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4550002814458_org.jpg', productUrl: '#' },
+    { id: 'p14', name: 'Bút Bi Bấm 0.5mm - Xanh Đen MUJI', price: 25000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4550002794200_org.jpg', productUrl: '#' },
+    { id: 'p15', name: 'Túi My Bag A4 (Phở) / Green Màu Xanh Lá', price: 78000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/8/9/8936215241308_1.jpg', productUrl: '#' },
+    { id: 'p16', name: 'MUJI Gối Ôm Polyester Tái Chế (Không Kèm Vỏ Gối)', price: 294000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4550583715533_adjust.png', productUrl: '#' },
+    { id: 'p17', name: 'Bút Bi Bấm 0.5mm - Đỏ MUJI', price: 25000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4550002794149_org.jpg', productUrl: '#' },
+    { id: 'p18', name: 'Ruột Bút Mực Gel 0.5mm - Đen MUJI', price: 19000, imageUrl: 'https://api.muji.com.vn/media/catalog/product/cache/4da93324a1c25b12e9566f761e24b9c9/4/5/4550002814434_org.jpg', productUrl: '#' }
+];
 
 const HomePage: React.FC = () => {
-    // 1. Dữ liệu mẫu cho New Arrivals
-    const newArrivals: Product[] = [
-        { id: 1, name: "T-shirt with Tape Details", price: 120, rating: 4.5, image: "/images/p1.svg" },
-        { id: 2, name: "Skinny Fit Jeans", price: 240, originalPrice: 260, discountPercent: 20, rating: 3.5, image: "/images/p2.svg" },
-        { id: 3, name: "Checkered Shirt", price: 180, rating: 4.5, image: "/images/p3.svg" },
-        { id: 4, name: "Sleeve Striped T-shirt", price: 130, originalPrice: 160, discountPercent: 30, rating: 4.5, image: "/images/p4.svg" },
-    ];
-
-    // 2. Dữ liệu mẫu cho Top Selling
-    const topSelling: Product[] = [
-        { id: 5, name: "Vertical Striped Shirt", price: 212, originalPrice: 232, discountPercent: 20, rating: 5.0, image: "/images/p5.svg" },
-        { id: 6, name: "Courage Graphic T-shirt", price: 145, rating: 4.0, image: "/images/p6.svg" },
-        { id: 7, name: "Loose Fit Bermuda Shorts", price: 80, rating: 3.0, image: "/images/p7.svg" },
-        { id: 8, name: "Faded Skinny Jeans", price: 210, rating: 4.5, image: "/images/p8.svg" },
-    ];
-
-    // 3. Dữ liệu mẫu cho Review
-    const customerReviews: Review[] = [
-        { id: 1, author: "Sarah M.", content: "I'm blown away by the quality and style of the clothes...", rating: 5, isVerified: true },
-        { id: 2, author: "Alex K.", content: "Finding clothes that align with my personal style used to be a challenge...", rating: 5, isVerified: true },
-        { id: 3, author: "James L.", content: "As someone who's always on the lookout for unique fashion pieces...", rating: 5, isVerified: true },
-    ];
-
     return (
-        <div className="homepage-container">
-            {/* 1. Thanh điều hướng & Thông báo */}
+        <>
             <Header />
 
             <main>
-                {/* 2. Phần giới thiệu (Hero) */}
-                <Hero />
-
-                {/* 3. Dải logo thương hiệu */}
-                <BrandBar />
-
-                {/* 4. Danh sách sản phẩm mới */}
-                <section className="section-padding">
-                    <h2 className="section-title">NEW ARRIVALS</h2>
-                    <ProductList products={newArrivals} />
-                    <div className="view-all-container">
-                        <button className="btn-outline">View All</button>
-                    </div>
-                </section>
-
-                {/* 5. Danh sách sản phẩm bán chạy */}
-                <section className="section-padding">
-                    <h2 className="section-title">TOP SELLING</h2>
-                    <ProductList products={topSelling} />
-                    <div className="view-all-container">
-                        <button className="btn-outline">View All</button>
-                    </div>
-                </section>
-
-                {/* 6. Khám phá phong cách (Grid Bento) */}
-                <StyleBrowse />
-
-                {/* 7. Ý kiến khách hàng */}
-                <Testimonials reviews={customerReviews} />
+                <div className="home-page">
+                    <BannerSlider />
+                    <ProductSection products={NewArrivals} title='Sản Phẩm Mới Về' />
+                    <ProductSection products={FeaturedProducts} title='Sản Phẩm Nổi Bật' />
+                    <ProductSection products={BestSellers} title='Sản Phẩm Bán Chạy' />
+                </div>
             </main>
 
-            {/* 8. Chân trang (Bao gồm Newsletter) */}
             <Footer />
-        </div>
+        </>
     );
 };
 
