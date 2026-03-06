@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
-import { Permissions } from 'src/auth/decorators/permissions.decorater';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { Permissions } from 'src/common/decorators/permissions.decorator';
 import { CreateProductDto } from './dto/create-product.dto';
+import { PermissionsGuard } from 'src/common/guards/permissions.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -19,9 +19,9 @@ export class ProductsController {
     return this.productsService.findOne(+id);
   }
 
-  @Post()
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permissions('product.create')
+  @Post()
   create(@Body() dto: CreateProductDto) {
     return this.productsService.create(dto);
   }

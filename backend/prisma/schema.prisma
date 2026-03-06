@@ -35,6 +35,7 @@ model orders {
   status       String        @default("pending") @db.VarChar(30)
   total_amount Decimal       @default(0) @db.Decimal(12, 2)
   created_at   DateTime?     @default(now()) @db.Timestamp(6)
+  updated_at   DateTime?     @updatedAt
   order_items  order_items[]
   users        users         @relation(fields: [user_id], references: [id], onUpdate: NoAction, map: "fk_oder_user")
   payments     payments[]
@@ -71,6 +72,7 @@ model products {
   category_id    Int
   is_active      Boolean?         @default(true)
   created_at     DateTime?        @default(now()) @db.Timestamp(6)
+  updated_at     DateTime?        @updatedAt
   cart_items     cart_items[]
   order_items    order_items[]
   product_images product_images[]
@@ -83,8 +85,9 @@ model users {
   password   String       @db.VarChar(255)
   full_name  String?      @db.VarChar(255)
   created_at DateTime?    @default(now()) @db.Timestamp(6)
+  updated_at DateTime?    @updatedAt
   is_active  Boolean?     @default(true)
-  role_id    Int?
+  role_id    Int // bỏ ? ở đây vì role_id là bắt buộc phải có
   cart_items cart_items[]
   orders     orders[]
   roles      roles?       @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_role")
