@@ -31,7 +31,7 @@ export class OrderService {
       data: {
         user_id: userId,
         total_amount: totalAmount,
-        status: 'pending',
+        status: 'PENDING',
       },
     });
 

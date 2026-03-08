@@ -4,76 +4,69 @@ import * as bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
+  //---PERMISSIONS------------
   await prisma.permissions.createMany({
     data: [
+      // User
       { name: 'user.read' },
       { name: 'user.create' },
       { name: 'user.update' },
       { name: 'user.delete' },
-      { name: 'product.read' },
+      // Roles
+      { name: 'role.read' },
+      { name: 'role.create' },
+      { name: 'role.update' },
+      { name: 'role.delete' },
+      // Categories
+      { name: 'category.create' },
+      { name: 'category.update' },
+      { name: 'category.delete' },
+      //Products
       { name: 'product.create' },
       { name: 'product.update' },
       { name: 'product.delete' },
-      { name: 'order.manage' },
+      // Orders
+      { name: 'order.read' },
+      { name: 'order.update' },
     ],
     skipDuplicates: true,
   });
 
+  const allPermissions = await prisma.permissions.findMany();
+  console.log(`✅ ${allPermissions.length} permissions`);
+  // ─── ROLES ──────────────────────────────────────────────
   const adminRole = await prisma.roles.upsert({
     where: { role: 'admin' },
     update: {},
     create: { role: 'admin' },
   });
 
-  const userRole = await prisma.roles.upsert({
-    where: { role: 'user' },
+  // ← đổi 'user' thành 'customer'
+  const customerRole = await prisma.roles.upsert({
+    where: { role: 'customer' },
     update: {},
-    create: { role: 'user' },
+    create: { role: 'customer' },
   });
 
-  const allPermissions = await prisma.permissions.findMany();
+  console.log(
+    ` ✅ Roles: admin (${adminRole.id}), customer (${customerRole.id})`,
+  );
 
-  for (const p of allPermissions) {
-    await prisma.role_permission.upsert({
-      where: {
-        role_id_permission_id: {
-          role_id: adminRole.id,
-          permission_id: p.id,
-        },
-      },
-      update: {},
-      create: {
-        role_id: adminRole.id,
-        permission_id: p.id,
-      },
-    });
-  }
-
-  const userPermissions = ['product.read', 'order.manage'];
-
-  const permissions = await prisma.permissions.findMany({
-    where: {
-      name: { in: userPermissions },
-    },
+  // ─── ADMIN PERMISSIONS (tất cả) ─────────────────────────
+  // Dùng createMany thay vì loop để tránh N+1 query
+  await prisma.role_permission.createMany({
+    data: allPermissions.map((p) => ({
+      role_id: adminRole.id,
+      permission_id: p.id,
+    })),
+    skipDuplicates: true,
   });
 
-  for (const p of permissions) {
-    await prisma.role_permission.upsert({
-      where: {
-        role_id_permission_id: {
-          role_id: userRole.id,
-          permission_id: p.id,
-        },
-      },
-      update: {},
-      create: {
-        role_id: userRole.id,
-        permission_id: p.id,
-      },
-    });
-  }
-
-  const hashedPassword = await bcrypt.hash('123456', 10);
+  // ─── ADMIN USER ─────────────────────────────────────────
+  const hashedPassword = await bcrypt.hash(
+    process.env.ADMIN_PASSWORD || '123456',
+    10,
+  );
 
   await prisma.users.upsert({
     where: { email: 'admin@gmail.com' },
@@ -85,8 +78,8 @@ async function main() {
       role_id: adminRole.id,
     },
   });
-
-  console.log('SEED DONE');
+  console.log(`✅ Admin user: admin@gmail.com`);
+  console.log('🌱 SEED DONE');
 }
 
 main()
