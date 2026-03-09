@@ -60,7 +60,7 @@ export class AuthService {
     if (existingEmail) throw new ConflictException('Email đã tồn tại');
 
     const userRole = await this.prisma.roles.findUnique({
-      where: { role: 'user' },
+      where: { role: 'customer' },
     });
 
     if (!userRole) throw new InternalServerErrorException('Role không tồn tại');
