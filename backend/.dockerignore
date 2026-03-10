@@ -1,0 +1,15 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+*.log
+npm-debug.log*
+**/*.spec.ts
+**/*.test.ts
+coverage
+.vscode
+.idea
+*.swp

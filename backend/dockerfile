@@ -1,0 +1,26 @@
+# Dùng Node 20
+FROM node:20-alpine
+
+# Thư mục làm việc trong container
+WORKDIR /app
+
+# Copy package trước để tận dụng cache
+COPY package*.json ./
+
+# Cài dependencies
+RUN npm install
+
+# Copy toàn bộ source code
+COPY . .
+
+# Generate Prisma Client
+RUN npx prisma generate
+
+# Build NestJS
+RUN npm run build
+
+# Port app
+EXPOSE 3000
+
+# Start app
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main.js"]

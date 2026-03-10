@@ -1,0 +1,71 @@
+# services = các "hộp" cần chạy
+services:
+
+  # ─── POSTGRESQL DATABASE ─────────────────────────────────
+  db:
+    image: postgres:18-alpine   # dùng Postgres 18
+    container_name: tmdt_db
+    restart: always             # tự restart nếu crash
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: tmdt_db
+
+    ports:
+      - "5432:5432"   # máy_host:container — truy cập DB từ bên ngoài
+
+    volumes:
+      # Lưu data DB ra ngoài container
+      # Nếu không có dòng này → tắt container là mất data!
+      - postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - tmdt_network
+
+  # ─── NESTJS APP ──────────────────────────────────────────
+  app:
+    build:
+      context: .          # build từ thư mục hiện tại
+      dockerfile: Dockerfile
+
+    container_name: tmdt_app
+    restart: always
+
+    # App phụ thuộc DB — chờ DB khởi động xong mới chạy app
+    depends_on:
+      - db
+
+    environment:
+      # Ghi đè .env — dùng tên service 'db' thay vì 'localhost'
+      # Vì trong Docker network, các container gọi nhau bằng tên service
+      DATABASE_URL: postgresql://postgres:12345@db:5432/tmdt_db
+      #                                              ↑
+      #                              'db' = tên service postgres ở trên
+
+      JWT_SECRET: secret
+      JWT_EXPIRES_IN: 1d
+      PORT: 3000
+      FRONTEND_URL: http://localhost:5173
+      ADMIN_PASSWORD: 123456
+
+    ports:
+      - "3000:3000"   # máy_host:container
+
+    # volumes:
+    #   # Mount .env vào container (không cần hardcode env ở trên nếu dùng cách này)
+    #   # - ./.env:/app/.env
+
+    networks:
+      - tmdt_network
+
+# ─── VOLUMES ───────────────────────────────────────────────
+# Nơi lưu data DB trên máy host
+volumes:
+  postgres_data:
+
+# ─── NETWORKS ──────────────────────────────────────────────
+# Mạng nội bộ để các container giao tiếp với nhau
+networks:
+  tmdt_network:
+    driver: bridge
