@@ -1,18 +1,13 @@
+import { payment_method } from '@prisma/client';
 import { IsEnum, IsInt, Min } from 'class-validator';
-
-export enum PaymentMethod {
-  COD = 'cod',
-  VNPAY = 'VNPAY',
-  MOMO = 'MOMO',
-}
 
 export class CreatePaymentDto {
   @IsInt()
   @Min(1)
   order_id: number;
 
-  @IsEnum(PaymentMethod, {
-    message: `Phương thức thanh toán phải là ${Object.values(PaymentMethod).join(', ')}`,
+  @IsEnum(payment_method, {
+    message: `Phương thức thanh toán phải là ${Object.values(payment_method).join(', ')}`,
   })
-  method: PaymentMethod;
+  method: payment_method;
 }
