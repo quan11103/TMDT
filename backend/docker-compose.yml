@@ -11,6 +11,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
       POSTGRES_DB: tmdt_db
+      PGDATA: /var/lib/postgresql/data/pgdata
 
     ports:
       - "5432:5432"   # máy_host:container — truy cập DB từ bên ngoài
@@ -63,6 +64,7 @@ services:
 # Nơi lưu data DB trên máy host
 volumes:
   postgres_data:
+    name: tmdt_postgres_data
 
 # ─── NETWORKS ──────────────────────────────────────────────
 # Mạng nội bộ để các container giao tiếp với nhau
