@@ -107,3 +107,19 @@ input#email {
 .forgot-password a:hover {
     text-decoration: underline;
 }
+
+.error-alert {
+    background-color: #fff0f0;
+    color: #7f0019;
+    /* Màu đỏ Muji */
+    padding: 12px;
+    font-size: 13px;
+    border: 1px solid #7f0019;
+    margin-bottom: 20px;
+    border-radius: 2px;
+}
+
+.btn-login:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

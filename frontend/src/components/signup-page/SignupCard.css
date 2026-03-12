@@ -32,6 +32,7 @@
     border-radius: 6px;
     font-size: 14px;
     background-color: #fff;
+    color: #000;
 }
 
 /* Calendar icon inside input */
@@ -55,6 +56,56 @@
     /* Màu nhạt cho icon calendar */
     padding: 0 8px;
     /* Khớp với px-2 */
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: 'none';
+    border: 'none';
+    cursor: 'pointer'
+}
+
+/* 1. Tạo placeholder giả khi input trống */
+.form-dob:before {
+    content: attr(data-placeholder);
+    color: #aaa;
+    margin-right: 0.5em;
+    position: absolute;
+    left: 12px;
+}
+
+/* 2. Khi có dữ liệu hoặc được chọn, ẩn placeholder giả đi */
+.form-dob:focus:before,
+.form-dob:valid:before {
+    display: none;
+}
+
+/* 3. Ẩn các ký tự dd/mm/yyyy mặc định của trình duyệt nhưng vẫn giữ chức năng */
+.form-dob::-webkit-datetime-edit {
+    display: none;
+}
+
+.form-dob:focus::-webkit-datetime-edit,
+.form-dob:valid::-webkit-datetime-edit {
+    display: block !important;
+}
+
+/* 4. Đảm bảo icon lịch mặc định không đè lên icon của bạn nhưng vẫn cho phép click qua */
+.form-dob::-webkit-calendar-picker-indicator {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 40px;
+    height: 100%;
+    opacity: 0;
+    /* Làm trong suốt nhưng vẫn click được */
+    cursor: pointer;
+    z-index: 2;
+}
+
+.calendar-btn {
+    z-index: 1;
+    /* Icon của bạn nằm dưới vùng click của lịch hệ thống */
 }
 
 .calendar-btn svg {
@@ -141,4 +192,156 @@
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
+}
+
+.form-group.relative {
+    display: flex;
+    flex-direction: column;
+}
+
+.dob-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    /* Căn giữa các thành phần bên trong wrapper */
+    width: 100%;
+}
+
+.form-dob {
+    width: 100%;
+    height: 45px;
+    /* Đặt chiều cao cố định để dễ căn chỉnh */
+    padding: 0 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    position: relative;
+    display: flex;
+    align-items: center;
+    /* Căn giữa nội dung thực của input */
+}
+
+/* Căn giữa placeholder giả */
+.form-dob:before {
+    content: attr(data-placeholder);
+    color: #aaa;
+    position: absolute;
+
+    /* Mẹo căn giữa tuyệt đối theo chiều dọc */
+    top: 50%;
+    transform: translateY(-50%);
+
+    left: 12px;
+    pointer-events: none;
+    /* Để click xuyên qua placeholder vào input */
+    display: block;
+}
+
+/* Khi đã có giá trị hoặc đang focus, ẩn placeholder giả */
+.form-dob:focus:before,
+.form-dob:not([value=""]):before,
+/* Selector này hoạt động nếu bạn bind value */
+.form-dob:valid:before {
+    display: none;
+}
+
+/* Container chứa lịch */
+.calendar-popover {
+    position: absolute;
+    top: 105%;
+    right: 0;
+    z-index: 999;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    /* Giảm padding container */
+    width: fit-content;
+}
+
+/* Thu nhỏ các thành phần bên trong */
+.rdp {
+    /* Mặc định là 40-44px, chúng ta giảm xuống 32-34px */
+    --rdp-cell-size: 34px;
+    --rdp-accent-color: #000000;
+    --rdp-background-color: #f1f5f9;
+    margin: 0;
+    /* Bỏ margin mặc định */
+}
+
+.rdp-dropdowns {
+    margin-left: 8px;
+}
+
+.rdp-chevron {
+    fill: #000;
+}
+
+.rdp-day_button {
+    height: 30px;
+    width: 35px;
+}
+
+.rdp-month_caption,
+.rdp-nav {
+    height: 30px;
+}
+
+.rdp-button_next,
+.rdp-button_previous {
+    width: 20px;
+}
+
+.rdp-button_next:focus,
+.rdp-button_previous:focus {
+    outline: none;
+}
+
+/* Thu nhỏ font chữ của tiêu đề và ngày */
+.rdp-month {
+    font-size: 13px;
+}
+
+.rdp-caption_label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Thu nhỏ các nút bấm ngày */
+.rdp-day {
+    width: var(--rdp-cell-size);
+    height: var(--rdp-cell-size);
+    font-size: 12px;
+}
+
+/* Thu nhỏ phần chọn dropdown Tháng/Năm */
+.rdp-dropdown {
+    font-size: 12px;
+    padding: 1px 4px;
+    height: 28px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.rdp-dropdown::-webkit-scrollbar {
+    display: none;
+}
+
+/* Khoảng cách giữa các hàng ngày */
+.rdp-table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.rdp-head_cell {
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748b;
+    padding-bottom: 8px;
+}
+
+option {
+    background-color: #fff;
+    color: #000;
 }

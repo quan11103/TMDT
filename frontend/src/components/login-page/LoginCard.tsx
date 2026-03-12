@@ -1,22 +1,63 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./LoginCard.css";
 import LoginFooter from "./LoginFooter";
 
 const LoginCard: React.FC = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     const togglePassword = () => {
         setShowPassword(!showPassword);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Xử lý đăng nhập tại đây
+        setLoading(true);
+        setError("");
+
+        try {
+            const response = await axios.post("http://localhost:3000/api/auth/login", {
+                email,
+                password,
+            });
+
+            const { access_token, user } = response.data;
+
+            // 1. Lưu token
+            localStorage.setItem("access_token", access_token);
+
+            // 2. Lưu user (nếu backend có trả về)
+            if (user) {
+                localStorage.setItem("user", JSON.stringify(user));
+            }
+
+            // 3. Chuyển hướng về trang chủ
+            navigate("/");
+
+            // 4. Reload nhẹ trang để Header nhận state mới (hoặc dùng Context)
+            window.location.reload();
+
+        } catch (err: any) {
+            const message = err.response?.data?.message || "Đã có lỗi xảy ra. Vui lòng thử lại.";
+            setError(Array.isArray(message) ? message[0] : message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <div className="login-card">
             <form className="login-form" onSubmit={handleSubmit}>
+                {/* Hiển thị thông báo lỗi nếu có */}
+                {error && <div className="error-alert">{error}</div>}
+
                 {/* Email Field */}
                 <div className="form-group">
                     <label htmlFor="email">Địa chỉ Email *</label>
@@ -24,7 +65,8 @@ const LoginCard: React.FC = () => {
                         className="email"
                         type="email"
                         id="email"
-                        name="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         placeholder="Nhập địa chỉ email"
                         required
                     />
@@ -37,7 +79,8 @@ const LoginCard: React.FC = () => {
                         <input
                             type={showPassword ? "text" : "password"}
                             id="password"
-                            name="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             placeholder="Nhập mật khẩu"
                             className="input-password"
                             required
@@ -52,8 +95,8 @@ const LoginCard: React.FC = () => {
                     </div>
                 </div>
 
-                <button type="submit" className="btn-login">
-                    Đăng nhập
+                <button type="submit" className="btn-login" disabled={loading}>
+                    {loading ? "Đang xử lý..." : "Đăng nhập"}
                 </button>
             </form>
 

@@ -304,6 +304,30 @@
     color: #7F0019;
 }
 
+.user-popup-name {
+    color: #333;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 0 8px;
+    white-space: nowrap;
+    /* Tránh rớt dòng nếu tên quá dài */
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    color: #7f0019;
+    /* Màu đỏ nổi bật cho thao tác nguy hiểm */
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0 8px;
+    font-family: inherit;
+}
+
+.logout-btn:hover {
+    text-decoration: underline;
+}
+
 /* ================= Media Queries (Responsive) ================= */
 
 @media (max-width: 767px) {

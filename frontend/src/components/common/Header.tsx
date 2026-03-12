@@ -2,10 +2,23 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Header.css';
 
+interface User {
+    full_name: string;
+    email?: string;
+}
+
 const Header: React.FC = () => {
     const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
+    const [user, setUser] = useState<User | null>(null);
     const userMenuRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
 
     const handleCartClick = () => {
         navigate(`/cart/`);
@@ -20,6 +33,13 @@ const Header: React.FC = () => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user');
+        setUser(null);
+        setIsUserMenuOpen(false);
+    };
 
     return (
         <header className="header">
@@ -45,7 +65,7 @@ const Header: React.FC = () => {
                         data-nimg="1"
                         className="header-logo"
                         style={{ color: 'transparent' }}
-                        src="https://api.muji.com.vn/media/logo/stores/3/MUJI_Box-header.png"
+                        src="public/logo.jpg"
                     />
                 </a>
 
@@ -121,9 +141,21 @@ const Header: React.FC = () => {
 
                             {isUserMenuOpen && (
                                 <div className="user-popup-menu">
-                                    <a href="/login" className="user-popup-link">Đăng nhập</a>
-                                    <span className="user-popup-divider">|</span>
-                                    <a href="/signup" className="user-popup-link">Đăng kí</a>
+                                    {user ? (
+                                        <>
+                                            <span className="user-popup-name">Xin chào {user.full_name}</span>
+                                            <span className="user-popup-divider">|</span>
+                                            <button onClick={handleLogout} className="user-popup-link logout-btn">
+                                                Đăng xuất
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <a href="/login" className="user-popup-link">Đăng nhập</a>
+                                            <span className="user-popup-divider">|</span>
+                                            <a href="/signup" className="user-popup-link">Đăng kí</a>
+                                        </>
+                                    )}
                                 </div>
                             )}
                         </div>
