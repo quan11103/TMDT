@@ -50,27 +50,6 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
                         <span className="amount">{formattedPrice}</span>
                         <span className="currency">{currency}</span>
                     </div>
-
-                    <button
-                        className="wishlist-btn"
-                        title="Thêm vào danh sách yêu thích"
-                        aria-label="Thêm vào danh sách yêu thích"
-                    >
-                        <svg
-                            fill="none"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            width="16"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                d="M11.7051 1.43839C8.9287 1.09167 8.10676 3.21885 7.96063 3.71551C7.96063 3.74362 7.91497 3.74362 7.90583 3.71551C7.75058 3.21885 6.93776 1.09167 4.16141 1.43839C0.636171 1.87882 -0.0396513 6.38621 1.77776 8.5134C3.01068 9.94714 6.50853 13.5737 7.61359 14.7263C7.78711 14.9043 8.06109 14.9043 8.23461 14.7263C9.33968 13.5737 12.8193 9.91903 14.0796 8.5134C15.8605 6.50803 15.2212 1.87882 11.7051 1.44776V1.43839Z"
-                                fill="white"
-                                stroke="#E0CEAA"
-                                strokeMiterlimit="10"
-                            />
-                        </svg>
-                    </button>
                 </div>
 
                 {/* Nút Mua Hàng */}

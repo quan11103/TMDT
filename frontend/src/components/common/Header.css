@@ -22,16 +22,34 @@
 
 /* ================= Logo ================= */
 .logo {
-    margin-right: 20px;
-    width: 62px;
-    max-height: 40px;
-    display: block;
+    display: flex;
+    /* Sử dụng Flexbox để căn giữa ảnh */
+    align-items: center;
+    /* Căn giữa theo chiều dọc */
+    justify-content: center;
+    /* Căn giữa theo chiều ngang */
+    width: 60px;
+    /* Giới hạn chiều rộng cố định của khung */
+    height: 52px;
+    /* Giới hạn chiều cao cố định của khung */
+    overflow: hidden;
+    /* Cắt bỏ bất kỳ phần nào thò ra ngoài (nếu có) */
+    text-decoration: none;
 }
 
 .header-logo {
-    aspect-ratio: 80 / 52;
-    width: 100%;
+    max-width: 100%;
+    /* Không rộng hơn thẻ a */
+    max-height: 100%;
+    /* Không cao hơn thẻ a */
+    width: auto;
+    /* Tự động điều chỉnh để không bị méo */
     height: auto;
+    /* Tự động điều chỉnh để không bị méo */
+
+    /* Object-fit giúp xử lý khoảng trống */
+    object-fit: contain;
+    display: block;
 }
 
 /* ================= Navigation (Desktop) ================= */
@@ -392,7 +410,7 @@
     }
 
     .logo {
-        min-width: 80px;
+        min-width: 52px;
         max-height: 52px;
     }
 

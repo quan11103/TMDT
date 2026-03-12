@@ -84,9 +84,9 @@
 /* Khung Giá & Nút Yêu thích */
 .product-price-wishlist {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-end;
-    min-height: 42px;
+    min-height: 30px;
     margin-bottom: 8px;
 }
 

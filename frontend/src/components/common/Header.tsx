@@ -59,13 +59,11 @@ const Header: React.FC = () => {
                     <img
                         alt="Welcome to MUJI"
                         fetchPriority="high"
-                        width="80"
-                        height="52"
                         decoding="async"
                         data-nimg="1"
                         className="header-logo"
                         style={{ color: 'transparent' }}
-                        src="public/logo.jpg"
+                        src="/logo-removebg-preview.png"
                     />
                 </a>
 

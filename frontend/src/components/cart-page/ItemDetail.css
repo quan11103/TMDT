@@ -113,10 +113,6 @@
 
 /* --- Responsive Desktop --- */
 @media (min-width: 768px) {
-    .product-name {
-        padding-right: 40px;
-        /* md:pr-10 */
-    }
 
     .item-unit-price {
         padding: 8px 0;
