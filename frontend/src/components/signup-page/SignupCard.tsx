@@ -40,9 +40,11 @@ const SignupCard: React.FC = () => {
         const fullName = formData.get("fullName") as string;
 
         // (Tùy chọn) Lấy các trường khác nếu sau này backend cần
-        // const phone = formData.get("phone") as string;
-        // const gender = formData.get("gender") as string;
-        // const dob = selectedDate; 
+        const phone = formData.get("phone") as string;
+        const gender = formData.get("gender") as string;
+        const dob = formData.get("dob") as string; 
+        console.log(gender);
+        
 
         try {
             // 2. Gọi API đến Backend
@@ -56,7 +58,10 @@ const SignupCard: React.FC = () => {
                 body: JSON.stringify({
                     email,
                     password,
-                    full_name: fullName
+                    full_name: fullName,
+                    phone,
+                    gender,
+                    dob,
                 }),
             });
 
@@ -71,7 +76,7 @@ const SignupCard: React.FC = () => {
             // Nếu thành công
             setMessage({ type: 'success', text: 'Đăng ký tài khoản thành công!' });
             // TODO: Bạn có thể thêm lệnh chuyển hướng người dùng sang trang Đăng nhập tại đây
-            // window.location.href = '/login';
+            window.location.href = '/login';
 
         } catch (error: any) {
             setMessage({ type: 'error', text: error.message });
@@ -139,7 +144,8 @@ const SignupCard: React.FC = () => {
                             readOnly
                             placeholder="dd/mm/yyyy"
                             className="form-dob"
-                            value={selectedDate ? format(selectedDate, "dd/MM/yyyy") : ""}
+                            name="dob"
+                            value={selectedDate ? format(selectedDate, "yyyy-MM-dd") : ""}
                             onClick={() => setIsCalendarOpen(!isCalendarOpen)}
                         />
                         <button
@@ -173,9 +179,9 @@ const SignupCard: React.FC = () => {
                 <div className="form-group mb-large">
                     <label>Giới tính</label>
                     <select name="gender" className="gender-select">
-                        <option value="1">Nam</option>
-                        <option value="2">Nữ</option>
-                        <option value="3">Khác</option>
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                        <option value="Khác">Khác</option>
                     </select>
                 </div>
 

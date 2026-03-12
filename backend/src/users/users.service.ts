@@ -30,6 +30,9 @@ export class UsersService {
         email: dto.email,
         password: hashedPassword,
         full_name: dto.full_name,
+        dob: dto.dob ? new Date(dto.dob) : null,
+        phone: dto.phone,
+        gender: dto.gender,
         role_id: dto.role_id,
       },
     });

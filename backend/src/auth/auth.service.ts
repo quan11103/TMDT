@@ -15,7 +15,7 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwt: JwtService,
-  ) { }
+  ) {}
 
   async login(dto: LoginDto) {
     // 1. tìm user theo email
@@ -51,8 +51,8 @@ export class AuthService {
       user: {
         id: user.id,
         full_name: user.full_name,
-        email: user.email
-      }
+        email: user.email,
+      },
     };
   }
 
@@ -80,6 +80,9 @@ export class AuthService {
         password: hashedPassword,
         full_name: dto.full_name,
         role_id: userRole.id,
+        dob: dto.dob ? new Date(dto.dob) : null,
+        phone: dto.phone,
+        gender: dto.gender,
       },
     });
 
