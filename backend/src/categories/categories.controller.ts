@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -17,7 +18,7 @@ import { Permissions } from 'src/common/decorators/permissions.decorator';
 
 @Controller('categories')
 export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) {}
+  constructor(private readonly categoriesService: CategoriesService) { }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permissions('category.create')
@@ -27,8 +28,8 @@ export class CategoriesController {
   }
 
   @Get()
-  findAll() {
-    return this.categoriesService.findAll();
+  findAll(@Query('search') search?: string) {
+    return this.categoriesService.findAll(search);
   }
 
   @Get(':id')

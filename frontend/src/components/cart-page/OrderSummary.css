@@ -140,7 +140,17 @@
     color: #333;
     font-size: 15px;
     font-weight: 700;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.continue-link:hover {
     text-decoration: underline;
+}
+
+.continue-link:focus {
+    outline: none;
 }
 
 /* Responsive cho Desktop */

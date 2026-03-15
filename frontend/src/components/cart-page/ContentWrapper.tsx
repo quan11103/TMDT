@@ -6,23 +6,35 @@ import OrderSummary from './OrderSummary';
 
 interface Props {
     items: CartItem[];
-    onChangeQuantity: (id: string, quantity: number) => void;
-    onRemoveItem: (id: string) => void;
+    totalAmount: number; // Nhận thêm prop này từ CartPage để hiển thị chính xác
+    onChangeQuantity: (id: number, quantity: number | string) => void;
+    onRemoveItem: (id: number) => void;
 }
 
-const ContentWrapper: React.FC<Props> = ({ items, onChangeQuantity, onRemoveItem }) => {
+const ContentWrapper: React.FC<Props> = ({ items, totalAmount, onChangeQuantity, onRemoveItem }) => {
 
     return (
         <div className="content-layout">
             <div className="layout-left">
-                <CartListWrapper
-                    items={items}
-                    onChangeQuantity={onChangeQuantity}
-                    onRemoveItem={onRemoveItem}
-                />
+                {/* 1. Nếu giỏ hàng trống, hiển thị thông báo thay vì render list */}
+                {items.length === 0 ? (
+                    <div className="empty-cart-msg">
+                        Giỏ hàng của bạn đang trống.
+                    </div>
+                ) : (
+                    <CartListWrapper
+                        items={items}
+                        onChangeQuantity={onChangeQuantity}
+                        onRemoveItem={onRemoveItem}
+                    />
+                )}
             </div>
             <div className="layout-right">
-                <OrderSummary items={items} />
+                {/* 2. Truyền items và totalAmount vào OrderSummary */}
+                <OrderSummary
+                    items={items}
+                    totalAmount={totalAmount}
+                />
             </div>
         </div>
     );

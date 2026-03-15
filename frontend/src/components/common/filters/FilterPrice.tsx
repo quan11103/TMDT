@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import './FilterPrice.css';
 
-const FilterPrice: React.FC = () => {
+interface Props {
+    minPrice: number;
+    maxPrice: number;
+    onFilterPrice: (min: number, max: number) => void;
+}
+
+const FilterPrice: React.FC<Props> = ({ minPrice, maxPrice, onFilterPrice }) => {
     const [isOpen, setIsOpen] = useState(true);
-
-    const minLimit = 9000;
-    const maxLimit = 883000;
-
-    const [minPrice, setMinPrice] = useState(minLimit);
-    const [maxPrice, setMaxPrice] = useState(maxLimit);
+    const minLimit = 0;
+    const maxLimit = 1000000;
 
     const minPercent = ((minPrice - minLimit) / (maxLimit - minLimit)) * 100;
     const maxPercent = ((maxPrice - minLimit) / (maxLimit - minLimit)) * 100;
@@ -19,37 +21,44 @@ const FilterPrice: React.FC = () => {
 
     // --- Logic xử lý cho Thanh trượt (Slider) ---
     const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = Math.min(Number(e.target.value), maxPrice - 1000);
-        setMinPrice(value);
+        const val = Math.min(Number(e.target.value), maxPrice - 1000);
+        onFilterPrice(val, maxPrice);
     };
 
     const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = Math.max(Number(e.target.value), minPrice + 1000);
-        setMaxPrice(value);
+        const val = Math.max(Number(e.target.value), minPrice + 1000);
+        onFilterPrice(minPrice, val);
     };
 
-    // --- Logic xử lý cho Ô nhập liệu (Input Box) ---
+    // --- Logic xử lý khi đang gõ (Chỉ cho phép nhập số) ---
     const handleMinInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // Loại bỏ dấu chấm và ký tự lạ, chỉ giữ lại số
         const value = Number(e.target.value.replace(/\D/g, ''));
-
-        // Cập nhật giá trị (giới hạn không vượt quá maxPrice và không nhỏ hơn 0)
-        if (value >= 0 && value <= maxPrice - 1000) {
-            setMinPrice(value);
-        } else if (value > maxPrice - 1000) {
-            setMinPrice(maxPrice - 1000);
-        }
+        // Cập nhật tạm thời để người dùng thấy con số mình đang gõ
+        onFilterPrice(value, maxPrice);
     };
 
     const handleMaxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number(e.target.value.replace(/\D/g, ''));
+        onFilterPrice(minPrice, value);
+    };
 
-        // Cập nhật giá trị (không nhỏ hơn minPrice và không vượt quá giới hạn tuyệt đối)
-        if (value <= maxLimit && value >= minPrice + 1000) {
-            setMaxPrice(value);
-        } else if (value > maxLimit) {
-            setMaxPrice(maxLimit);
-        }
+    // --- Logic tự động điều chỉnh khi rời khỏi ô nhập (Validation) ---
+    const handleMinBlur = () => {
+        let validatedMin = minPrice;
+
+        if (minPrice < minLimit) validatedMin = minLimit;
+        if (minPrice > maxPrice - 1000) validatedMin = maxPrice - 1000;
+
+        onFilterPrice(validatedMin, maxPrice);
+    };
+
+    const handleMaxBlur = () => {
+        let validatedMax = maxPrice;
+
+        if (maxPrice > maxLimit) validatedMax = maxLimit;
+        if (maxPrice < minPrice + 1000) validatedMax = minPrice + 1000;
+
+        onFilterPrice(minPrice, validatedMax);
     };
 
     return (
@@ -77,6 +86,7 @@ const FilterPrice: React.FC = () => {
                             className="price-input-box"
                             value={formatPrice(minPrice)}
                             onChange={handleMinInputChange}
+                            onBlur={handleMinBlur}
                         />
                         <span className="price-separator">-</span>
                         <input
@@ -84,6 +94,7 @@ const FilterPrice: React.FC = () => {
                             className="price-input-box"
                             value={formatPrice(maxPrice)}
                             onChange={handleMaxInputChange}
+                            onBlur={handleMaxBlur}
                         />
                     </div>
 

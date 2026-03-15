@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ScrollToTop from './components/common/ScrollToTop';
 import HomePage from './pages/HomePage';
+import SearchPage from './pages/SearchPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import CategoryPage from './pages/CategoryPage';
 import CartPage from './pages/CartPage';
@@ -21,9 +22,11 @@ function App() {
 
         <Route path="/signup/" element={<SignUpPage />} />
 
-        <Route path="/product/:id" element={<ProductDetailPage />} />
+        <Route path="/search/" element={<SearchPage />} />
 
-        <Route path="/category/" element={<CategoryPage />} />
+        <Route path="/product/:productId" element={<ProductDetailPage />} />
+
+        <Route path="/category/:categoryId" element={<CategoryPage />} />
 
         <Route path="/cart/" element={<CartPage />} />
 

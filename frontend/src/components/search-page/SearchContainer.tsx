@@ -1,8 +1,8 @@
 import React from 'react';
 import type { PaginationMeta } from '../../types';
-import CategoryFilterTitle from './CategoryFilterTitle';
-import CategoryPageContainer from './CategoryPageContainer';
-import './CategoryContainer.css';
+import CategoryFilterTitle from './SearchFilterTitle';
+import CategoryPageContainer from './SearchPageContainer';
+import './SearchContainer.css';
 
 interface Props {
     title?: string;
@@ -10,15 +10,15 @@ interface Props {
     productIds?: number[];
     paginationMeta?: PaginationMeta;
     onPageChange?: (page: number) => void;
-    currentCategoryId?: number;
     selectedCategoryIds: number[];
     onCategoryToggle: (id: number) => void;
+    searchQuery?: string;
     minPrice: number;
     maxPrice: number;
     onFilterPrice: (min: number, max: number) => void;
 }
 
-const CategoryContainer: React.FC<Props> = ({ title, totalItems, productIds, paginationMeta, onPageChange, currentCategoryId, selectedCategoryIds, onCategoryToggle, minPrice, maxPrice, onFilterPrice }) => {
+const SearchContainer: React.FC<Props> = ({ title, totalItems, productIds, paginationMeta, onPageChange, selectedCategoryIds, onCategoryToggle, searchQuery, minPrice, maxPrice, onFilterPrice }) => {
     return (
         <div className="main-page-wrapper">
             {/* Cấp 1: Tiêu đề trang và số lượng mặt hàng */}
@@ -29,9 +29,9 @@ const CategoryContainer: React.FC<Props> = ({ title, totalItems, productIds, pag
                 productIds={productIds}
                 paginationMeta={paginationMeta}
                 onPageChange={onPageChange}
-                currentCategoryId={currentCategoryId}
                 selectedCategoryIds={selectedCategoryIds}
                 onCategoryToggle={onCategoryToggle}
+                searchQuery={searchQuery}
                 minPrice={minPrice}
                 maxPrice={maxPrice}
                 onFilterPrice={onFilterPrice}
@@ -40,4 +40,4 @@ const CategoryContainer: React.FC<Props> = ({ title, totalItems, productIds, pag
     );
 };
 
-export default CategoryContainer;
+export default SearchContainer;

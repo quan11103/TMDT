@@ -1,6 +1,4 @@
-// SignUpPage.tsx
 import React from 'react';
-import './SignUpPage.css';
 import SignupFormCard from '../components/signup-page/SignupFormCard';
 import Header from '../components/common/Header';
 

@@ -9,7 +9,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class CategoriesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(dto: CreateCategoryDto) {
     const exsitingCategory = await this.prisma.categories.findUnique({
@@ -34,16 +34,46 @@ export class CategoriesService {
     });
   }
 
-  async findAll() {
+  async findAll(search?: string) {
+    // Tạo một bộ lọc dùng chung cho cả cấp cha và cấp con
+    const productFilter = {
+      is_active: true,
+      ...(search && {
+        name: {
+          contains: search,
+          mode: 'insensitive' as const, // Không phân biệt hoa thường
+        },
+      }),
+    };
+
     return this.prisma.categories.findMany({
-      where: { is_active: true, parent_id: null },
+      where: {
+        is_active: true,
+        parent_id: null
+      },
       select: {
         id: true,
         name: true,
         slug: true,
+        // Đếm sản phẩm của danh mục cha theo từ khóa
+        _count: {
+          select: {
+            products: { where: productFilter }
+          },
+        },
         other_categories: {
           where: { is_active: true },
-          select: { id: true, name: true, slug: true },
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            // Đếm sản phẩm của danh mục con theo từ khóa
+            _count: {
+              select: {
+                products: { where: productFilter }
+              },
+            },
+          },
         },
       },
       orderBy: { name: 'asc' },
@@ -57,23 +87,21 @@ export class CategoriesService {
         id: true,
         name: true,
         slug: true,
-        is_active: true,
-        parent_id: true,
-        // danh muc cha
-        categories: { select: { id: true, name: true, slug: true } },
+        // THÊM: Đếm sản phẩm của chính nó
+        _count: { select: { products: true } },
         other_categories: {
           where: { is_active: true },
-          select: { id: true, name: true, slug: true },
-        },
-        _count: {
-          select: { products: true },
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            _count: { select: { products: true } }
+          },
         },
       },
     });
 
-    if (!category || !category.is_active)
-      throw new NotFoundException('Khong ton tai category nay');
-
+    if (!category) throw new NotFoundException('Khong ton tai category nay');
     return category;
   }
 

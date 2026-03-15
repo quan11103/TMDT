@@ -53,8 +53,9 @@
 }
 
 /* inputs & selects */
-.input,
+.shipping-input,
 .select {
+    width: 100%;
     color: #222;
     height: 40px;
     padding: 8px 12px;
@@ -67,11 +68,11 @@
     transition: box-shadow .15s ease, border-color .15s ease;
 }
 
-.input::placeholder {
+.shipping-input::placeholder {
     color: #9ca3af;
 }
 
-.input:focus,
+.shipping-input:focus,
 .select:focus {
     border-color: #c6c6c6;
     box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.02);

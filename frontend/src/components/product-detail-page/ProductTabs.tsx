@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import './ProductTabs.css';
 
-const ProductTabs: React.FC = () => {
-    // State để quản lý tab nào đang hiển thị
+interface Props {
+    description: string;
+}
+
+const ProductTabs: React.FC<Props> = ({ description }) => {
     const [activeTab, setActiveTab] = useState<string>('description');
 
     return (
@@ -27,10 +30,9 @@ const ProductTabs: React.FC = () => {
             <div className="tabs-content">
                 {activeTab === 'description' && (
                     <div className="tab-panel">
-                        <div className="product-description-html">
-                            <p>Dòng bút bấm Gel có thiết kế đặc biệt để có thể dễ dàng thay thế ruột. Thân bút được kết hợp với ruột của bút bấm Gel để mang lại nét viết mượt mà.</p>
-                            <p>Thân Polycacbonat 100%, Trên & Đầu: Abs 100%, Lò Xo, Vít Thép 100%, Khớp Nối Lõi Nhựa Pp 100%</p>
-                            <p>Sản Xuất Tại Nhật Bản</p>
+                        <div className="product-description-html" // Sử dụng dangerouslySetInnerHTML để render HTML nếu có, 
+                            // hoặc hiển thị text thuần từ database
+                            dangerouslySetInnerHTML={{ __html: description || "Đang cập nhật mô tả..." }}>
                         </div>
                     </div>
                 )}
