@@ -67,7 +67,6 @@ export class CategoriesService {
             id: true,
             name: true,
             slug: true,
-            // Đếm sản phẩm của danh mục con theo từ khóa
             _count: {
               select: {
                 products: { where: productFilter },
