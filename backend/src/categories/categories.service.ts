@@ -6,6 +6,7 @@ import {
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { contains } from 'class-validator';
 
 @Injectable()
 export class CategoriesService {
@@ -34,13 +35,30 @@ export class CategoriesService {
     });
   }
 
-  async findAll() {
+  async findAll(search?: string) {
+    const productFilter = {
+      is_active: true,
+      ...(search && {
+        name: {
+          contains: search,
+          mode: 'insensitive' as const,
+        }
+      })
+    }
+
     return this.prisma.categories.findMany({
       where: { is_active: true, parent_id: null },
       select: {
         id: true,
         name: true,
         slug: true,
+        _count: {
+          select:{
+            products:{
+              where: productFilter,
+            }
+          }
+        }
         other_categories: {
           where: { is_active: true },
           select: { id: true, name: true, slug: true },
@@ -59,14 +77,16 @@ export class CategoriesService {
         slug: true,
         is_active: true,
         parent_id: true,
-        // danh muc cha
+        _count: { select: { products: true } },
         categories: { select: { id: true, name: true, slug: true } },
         other_categories: {
           where: { is_active: true },
-          select: { id: true, name: true, slug: true },
-        },
-        _count: {
-          select: { products: true },
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            _count: { select: { products: true} }
+          },
         },
       },
     });

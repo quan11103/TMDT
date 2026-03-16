@@ -14,6 +14,18 @@ export class QueryProductDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
+  @Min(0)
+  min_price: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  max_price: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
   @Min(1)
   page?: number = 1;
 

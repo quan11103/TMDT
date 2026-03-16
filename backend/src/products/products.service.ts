@@ -14,13 +14,44 @@ export class ProductsService {
 
   // Search sản phẩm
   async findAll(query: QueryProductDto) {
-    const { search, category_id, page = 1, limit = 10 } = query;
+    const {
+      search,
+      category_id,
+      min_price,
+      max_price,
+      page = 1,
+      limit = 10,
+    } = query;
     const skip = (page - 1) * limit;
+
     const where: any = {
       is_active: true,
       ...(search && { name: { contains: search, mode: 'insensitive' } }),
-      ...(category_id && { category_id }),
     };
+
+    if (min_price !== undefined || max_price !== undefined) {
+      where.price = {
+        ...(min_price !== undefined && { gte: min_price }),
+        ...(max_price !== undefined && { lte: max_price }),
+      };
+    }
+
+    const parsedCategoryIds = String(category_id)
+      .split(',')
+      .map((id) => parseInt(id.trim()))
+      .filter((id) => !isNaN(id));
+
+    const childCategories = await this.prisma.categories.findMany({
+      where: { id: { in: parsedCategoryIds } },
+      select: { id: true },
+    });
+
+    const allCategoryIds = [
+      ...parsedCategoryIds,
+      ...childCategories.map((item) => item.id),
+    ];
+
+    where.category_id = { in: allCategoryIds };
 
     const [data, total] = await Promise.all([
       this.prisma.products.findMany({
@@ -54,7 +85,7 @@ export class ProductsService {
         total,
         page,
         limit,
-        total_page: Math.ceil(total / page),
+        total_page: Math.ceil(total / limit),
       },
     };
   }
@@ -65,11 +96,7 @@ export class ProductsService {
       where: { id },
       include: {
         categories: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
+          include: { categories: true },
         },
         product_images: {
           select: {
