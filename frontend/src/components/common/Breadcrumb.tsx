@@ -1,69 +1,65 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './Breadcrumb.css';
 
-const Breadcrumb: React.FC = () => {
-    const location = useLocation();
+interface Props {
+    productName?: string;
+    category?: any; // Dữ liệu từ API trả về có cấu trúc { name, categories: { name: ... } }
+}
 
-    // Tách đường dẫn URL thành các mảng, lọc bỏ các phần tử rỗng
-    // Ví dụ: "/vn/signup" -> ["vn", "signup"]
-    const pathnames = location.pathname.split('/').filter((x) => x);
-
-    // Bảng tra cứu tên hiển thị cho các path (Mapping)
-    const breadcrumbLabels: Record<string, string> = {
-        'vn': 'Trang chủ',
-        'login': 'Đăng nhập',
-        'signup': 'Đăng ký',
-        'checkout': 'Thanh toán',
-        'category': 'Danh mục',
-        'product': 'Sản phẩm',
-        'stationery': 'Văn phòng phẩm'
-    };
-
-    // Hàm chuyển đổi slug thành tên hiển thị (nếu không có trong mapping)
-    const getLabel = (path: string) => {
-        return breadcrumbLabels[path] || decodeURIComponent(path).replace(/-/g, ' ');
-    };
-
+const Breadcrumb: React.FC<Props> = ({ productName, category }) => {
     return (
         <div className="breadcrumb-wrapper">
             <nav aria-label="breadcrumb" className="breadcrumb-nav">
                 <ol className="breadcrumb-list">
-                    {/* Luôn hiển thị Trang chủ (vn) nếu pathnames trống hoặc phần tử đầu tiên không phải vn */}
-                    {pathnames[0] !== 'vn' && (
+                    {/* Luôn hiển thị Trang chủ */}
+                    <li className="breadcrumb-item">
+                        <Link to="/" className="breadcrumb-link">Trang chủ</Link>
+                        <svg className="breadcrumb-separator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="m9 18 6-6-6-6"></path>
+                        </svg>
+                    </li>
+
+                    {/* HIỂN THỊ DANH MỤC CHA (Cấp 1 - Giấy & Sổ) */}
+                    {category?.categories && (
                         <li className="breadcrumb-item">
-                            <Link to="/" className="breadcrumb-link">Trang chủ</Link>
+                            <Link to={`/category/${category.categories.id}`} className="breadcrumb-link">
+                                {category.categories.name}
+                            </Link>
                             <svg className="breadcrumb-separator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="m9 18 6-6-6-6"></path>
                             </svg>
                         </li>
                     )}
 
-                    {pathnames.map((value, index) => {
-                        const last = index === pathnames.length - 1;
-                        // Tạo đường dẫn tích lũy: /vn -> /vn/signup
-                        const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-                        const label = getLabel(value);
+                    {/* HIỂN THỊ DANH MỤC CON (Cấp 2 - Giấy in) */}
+                    {category && (
+                        <li className="breadcrumb-item">
+                            {/* Nếu là trang sản phẩm thì cấp này là Link, nếu là trang danh mục thì là text hiện tại */}
+                            {productName ? (
+                                <>
+                                    <Link to={`/category/${category.id}`} className="breadcrumb-link">
+                                        {category.name}
+                                    </Link>
+                                    <svg className="breadcrumb-separator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="m9 18 6-6-6-6"></path>
+                                    </svg>
+                                </>
+                            ) : (
+                                <span className="breadcrumb-current">{category.name}</span>
+                            )}
+                        </li>
+                    )}
 
-                        return (
-                            <li key={to} className="breadcrumb-item">
-                                {last ? (
-                                    <span className="breadcrumb-current" aria-current="page">
-                                        {label}
-                                    </span>
-                                ) : (
-                                    <>
-                                        <Link to={to} className="breadcrumb-link">
-                                            {label}
-                                        </Link>
-                                        <svg className="breadcrumb-separator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="m9 18 6-6-6-6"></path>
-                                        </svg>
-                                    </>
-                                )}
-                            </li>
-                        );
-                    })}
+                    {/* HIỂN THỊ TÊN SẢN PHẨM CUỐI CÙNG */}
+                    {productName && (
+                        <li className="breadcrumb-item">
+                            <span className="breadcrumb-current">{productName}</span>
+                        </li>
+                    )}
+
+                    {/* ẨN TOÀN BỘ PHẦN MAP URL CŨ ĐỂ TRÁNH TRÙNG LẶP */}
+                    {/* (Bạn có thể comment đoạn pathnames.map cũ lại) */}
                 </ol>
             </nav>
         </div>

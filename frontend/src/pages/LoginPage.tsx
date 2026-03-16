@@ -1,5 +1,4 @@
 import React from 'react';
-import './LoginPage.css';
 import Header from '../components/common/Header';
 import LoginFormCard from '../components/login-page/LoginFormCard';
 

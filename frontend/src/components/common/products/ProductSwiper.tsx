@@ -1,20 +1,15 @@
 import React from 'react';
-import type { Product } from '../../types';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
-
-// Nhớ import Component ProductItem bạn đã tạo ở bước trước
 import ProductItem from './ProductItem';
-
-// Import CSS
 import 'swiper/swiper-bundle.css';
 import './ProductSwiper.css';
 
 interface ProductSwiperProps {
-    products: Product[];
+    productsId: number[];
 }
 
-const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
+const ProductSwiper: React.FC<ProductSwiperProps> = ({ productsId }) => {
     return (
         <div className="product-swiper-container">
             <Swiper
@@ -30,10 +25,10 @@ const ProductSwiper: React.FC<ProductSwiperProps> = ({ products }) => {
                 }}
                 className="product-swiper"
             >
-                {products.map((product) => (
+                {productsId.map((productsId) => (
                     // Thẻ SwiperSlide bọc ngoài ProductItem
-                    <SwiperSlide key={product.id}>
-                        <ProductItem product={product} />
+                    <SwiperSlide key={productsId}>
+                        <ProductItem Id={productsId} />
                     </SwiperSlide>
                 ))}
             </Swiper>

@@ -7,9 +7,20 @@ export class QueryProductDto {
   search?: string;
 
   @IsOptional()
+  @IsString()
+  category_id?: string;
+
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
-  category_id?: number;
+  @Min(0)
+  min_price?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  max_price?: number;
 
   @IsOptional()
   @Type(() => Number)

@@ -44,7 +44,7 @@ export class ProductsService {
 
       if (parsedCategoryIds.length > 0) {
         const childCategories = await this.prisma.categories.findMany({
-          where: { id: { in: parsedCategoryIds } },
+          where: { parent_id: { in: parsedCategoryIds } },
           select: { id: true },
         });
 

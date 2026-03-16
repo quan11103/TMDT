@@ -10,6 +10,7 @@ interface User {
 const Header: React.FC = () => {
     const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
     const [user, setUser] = useState<User | null>(null);
+    const [searchTerm, setSearchTerm] = useState<string>('');
     const userMenuRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
@@ -22,6 +23,18 @@ const Header: React.FC = () => {
 
     const handleCartClick = () => {
         navigate(`/cart/`);
+    };
+
+    const handleCategoryClick = (categoryId: number) => {
+        navigate(`/category/${categoryId}`);
+    };
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault(); // Ngăn trang bị reload
+        if (searchTerm.trim()) {
+            // Chuyển sang trang search với query parameter 'q'
+            navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+        }
     };
 
     useEffect(() => {
@@ -59,13 +72,11 @@ const Header: React.FC = () => {
                     <img
                         alt="Welcome to MUJI"
                         fetchPriority="high"
-                        width="80"
-                        height="52"
                         decoding="async"
                         data-nimg="1"
                         className="header-logo"
                         style={{ color: 'transparent' }}
-                        src="public/logo.jpg"
+                        src="/logo-removebg-preview.png"
                     />
                 </a>
 
@@ -76,27 +87,28 @@ const Header: React.FC = () => {
                             <li><a title="Hàng Mới" className="nav-link" href="/en/new-arrivals">Hàng Mới</a></li>
                             <li><a title="Bán chạy" className="nav-link" href="/en/bestseller">Bán chạy</a></li>
                             <li>
-                                <button className="nav-button">
-                                    <a className="category-link" title="Quần Áo" href="/category">Quần Áo</a>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="nav-chevron" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+                                <button className="nav-button" onClick={() => handleCategoryClick(1)}>
+                                    <a className="category-link" title="Bút viết" href="/category/1">Bút viết</a>
                                 </button>
                             </li>
                             <li>
-                                <button className="nav-button">
-                                    <a className="category-link" title="Sức Khỏe &amp; Làm Đẹp" href="/en/category/228-health-beauty">Sức Khỏe &amp; Làm Đẹp</a>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="nav-chevron" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+                                <button className="nav-button" onClick={() => handleCategoryClick(2)}>
+                                    <a className="category-link" title="Giấy &amp; Sổ" href="/category/2">Giấy &amp; Sổ</a>
                                 </button>
                             </li>
                             <li>
-                                <button className="nav-button">
-                                    <a className="category-link" title="Gia Dụng" href="/en/category/43-home">Gia Dụng</a>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="nav-chevron" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+                                <button className="nav-button" onClick={() => handleCategoryClick(5)}>
+                                    <a className="category-link" title="Balo & Túi" href="/category/5">Balo & Túi</a>
                                 </button>
                             </li>
                             <li>
-                                <button className="nav-button">
-                                    <a className="category-link" title="Thực Phẩm" href="/en/category/44-food-drink">Thực Phẩm</a>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="nav-chevron" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+                                <button className="nav-button" onClick={() => handleCategoryClick(4)}>
+                                    <a className="category-link" title="Mực in & Mực máy" href="/category/4">Mực in & Mực máy</a>
+                                </button>
+                            </li>
+                            <li>
+                                <button className="nav-button" onClick={() => handleCategoryClick(3)}>
+                                    <a className="category-link" title="Dụng cụ văn phòng" href="/category/3">Dụng cụ văn phòng</a>
                                 </button>
                             </li>
                         </ul>
@@ -113,8 +125,14 @@ const Header: React.FC = () => {
                                 <svg className="mobile-search-icon" fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M5.94286 0C7.519 0 9.03059 0.62612 10.1451 1.74062C11.2596 2.85512 11.8857 4.36671 11.8857 5.94286C11.8857 7.41486 11.3463 8.768 10.4594 9.81029L10.7063 10.0571H11.4286L16 14.6286L14.6286 16L10.0571 11.4286V10.7063L9.81029 10.4594C8.768 11.3463 7.41486 11.8857 5.94286 11.8857C4.36671 11.8857 2.85512 11.2596 1.74062 10.1451C0.62612 9.03059 0 7.519 0 5.94286C0 4.36671 0.62612 2.85512 1.74062 1.74062C2.85512 0.62612 4.36671 0 5.94286 0ZM5.94286 1.82857C3.65714 1.82857 1.82857 3.65714 1.82857 5.94286C1.82857 8.22857 3.65714 10.0571 5.94286 10.0571C8.22857 10.0571 10.0571 8.22857 10.0571 5.94286C10.0571 3.65714 8.22857 1.82857 5.94286 1.82857Z" fill="white"></path></svg>
                                 <div className="search-input-field" >
                                     <svg className="search-icon-inside" fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M5.94286 0C7.519 0 9.03059 0.62612 10.1451 1.74062C11.2596 2.85512 11.8857 4.36671 11.8857 5.94286C11.8857 7.41486 11.3463 8.768 10.4594 9.81029L10.7063 10.0571H11.4286L16 14.6286L14.6286 16L10.0571 11.4286V10.7063L9.81029 10.4594C8.768 11.3463 7.41486 11.8857 5.94286 11.8857C4.36671 11.8857 2.85512 11.2596 1.74062 10.1451C0.62612 9.03059 0 7.519 0 5.94286C0 4.36671 0.62612 2.85512 1.74062 1.74062C2.85512 0.62612 4.36671 0 5.94286 0ZM5.94286 1.82857C3.65714 1.82857 1.82857 3.65714 1.82857 5.94286C1.82857 8.22857 3.65714 10.0571 5.94286 10.0571C8.22857 10.0571 10.0571 8.22857 10.0571 5.94286C10.0571 3.65714 8.22857 1.82857 5.94286 1.82857Z" fill="black" ></path ></svg>
-                                    <form className="search-form">
-                                        <input type="text" className="search-input" id="search" aria-label="Search" autoComplete="off" placeholder="Bạn đang muốn tìm kiếm gì?" defaultValue="" />
+                                    <form className="search-form" onSubmit={handleSearch}>
+                                        <input
+                                            type="text"
+                                            className="search-input"
+                                            placeholder="Bạn đang muốn tìm kiếm gì?"
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)} // Cập nhật state khi gõ
+                                        />
                                     </form>
                                 </div>
                             </div>

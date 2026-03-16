@@ -5,8 +5,8 @@ import './CartListWrapper.css';
 
 interface Props {
     items: CartItem[];
-    onChangeQuantity: (id: string, quantity: number) => void;
-    onRemoveItem: (id: string) => void;
+    onChangeQuantity: (id: number, quantity: number | string) => void;
+    onRemoveItem: (id: number) => void;
 }
 
 const CartListWrapper: React.FC<Props> = ({ items, onChangeQuantity, onRemoveItem }) => {
@@ -22,7 +22,11 @@ const CartListWrapper: React.FC<Props> = ({ items, onChangeQuantity, onRemoveIte
 
             {/* Vùng chứa danh sách sản phẩm */}
             <div className="cart-list-content">
-                <CartItemList items={items} onChangeQuantity={onChangeQuantity} onRemoveItem={onRemoveItem} />
+                <CartItemList
+                    items={items}
+                    onChangeQuantity={onChangeQuantity}
+                    onRemoveItem={onRemoveItem}
+                />
             </div>
         </div>
     );

@@ -1,12 +1,12 @@
 import React from 'react';
-import './CategoryFilterTitle.css';
+import './SearchFilterTitle.css';
 
 interface Props {
     title?: string;
     totalItems?: number;
 }
 
-const CategoryFilterTitle: React.FC<Props> = ({ title, totalItems}) => {
+const CategoryFilterTitle: React.FC<Props> = ({ title, totalItems }) => {
     return (
         <div className="category-header-title">
             <h1 className="page-main-title">

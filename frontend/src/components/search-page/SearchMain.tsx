@@ -2,7 +2,7 @@ import React from 'react';
 import type { PaginationMeta } from '../../types';
 import ProductGrid from '../common/products/ProductGrid';
 import Pagination from '../common/Pagination';
-import './CategoryMain.css';
+import './SearchMain.css';
 
 interface Props {
     productIds?: number[];

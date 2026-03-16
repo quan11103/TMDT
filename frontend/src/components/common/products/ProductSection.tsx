@@ -1,15 +1,14 @@
 import React from 'react';
-import type { Product } from '../../types';
 import ProductSlider from './ProductSlider';
 import './ProductSection.css';
 
 interface ProductSectionProps {
-    products: Product[];
+    productsId: number[];
     title: string;
 }
 
 // Nhận title thông qua props
-const ProductSection: React.FC<ProductSectionProps> = ({ products, title }) => {
+const ProductSection: React.FC<ProductSectionProps> = ({ title, productsId }) => {
     return (
         <section className="muji-section">
             <div className="section-container">
@@ -21,7 +20,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({ products, title }) => {
                 </header>
 
                 <div className="section-content">
-                    <ProductSlider products={products} />
+                    <ProductSlider productsId={productsId} />
                 </div>
 
             </div>

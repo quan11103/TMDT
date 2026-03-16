@@ -10,14 +10,6 @@ const Footer: React.FC = () => {
 
                     {/* Cột 1: Logo & Chứng nhận */}
                     <div className="footer-brand">
-                        <div className="footer-logo">
-                            <img
-                                src="https://api.muji.com.vn/media/.renditions/wysiwyg/home_block/MUJI-logo-black-105x68.png"
-                                alt="MUJI Viet Nam"
-                                width="105"
-                                height="68"
-                            />
-                        </div>
                         <div className="footer-certificate">
                             <a href="http://online.gov.vn/Home/WebDetails/123273" target="_blank" rel="noreferrer">
                                 <img

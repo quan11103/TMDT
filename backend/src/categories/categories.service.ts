@@ -6,7 +6,6 @@ import {
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { contains } from 'class-validator';
 
 @Injectable()
 export class CategoriesService {
@@ -42,26 +41,39 @@ export class CategoriesService {
         name: {
           contains: search,
           mode: 'insensitive' as const,
-        }
-      })
-    }
+        },
+      }),
+    };
 
     return this.prisma.categories.findMany({
-      where: { is_active: true, parent_id: null },
+      where: {
+        is_active: true,
+        parent_id: null,
+      },
       select: {
         id: true,
         name: true,
         slug: true,
         _count: {
-          select:{
-            products:{
+          select: {
+            products: {
               where: productFilter,
-            }
-          }
-        }
+            },
+          },
+        },
         other_categories: {
           where: { is_active: true },
-          select: { id: true, name: true, slug: true },
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            // Đếm sản phẩm của danh mục con theo từ khóa
+            _count: {
+              select: {
+                products: { where: productFilter },
+              },
+            },
+          },
         },
       },
       orderBy: { name: 'asc' },
@@ -75,25 +87,20 @@ export class CategoriesService {
         id: true,
         name: true,
         slug: true,
-        is_active: true,
-        parent_id: true,
         _count: { select: { products: true } },
-        categories: { select: { id: true, name: true, slug: true } },
         other_categories: {
           where: { is_active: true },
           select: {
             id: true,
             name: true,
             slug: true,
-            _count: { select: { products: true} }
+            _count: { select: { products: true } },
           },
         },
       },
     });
 
-    if (!category || !category.is_active)
-      throw new NotFoundException('Khong ton tai category nay');
-
+    if (!category) throw new NotFoundException('Khong ton tai category nay');
     return category;
   }
 

@@ -90,7 +90,7 @@
     padding: 4px 0;
 }
 
-.price-wrapper {
+.cart-price-wrapper {
     margin: 0;
     font-weight: 700;
     color: #333333;
@@ -113,10 +113,6 @@
 
 /* --- Responsive Desktop --- */
 @media (min-width: 768px) {
-    .product-name {
-        padding-right: 40px;
-        /* md:pr-10 */
-    }
 
     .item-unit-price {
         padding: 8px 0;
