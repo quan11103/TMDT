@@ -36,22 +36,26 @@ export class ProductsService {
       };
     }
 
-    const parsedCategoryIds = String(category_id)
-      .split(',')
-      .map((id) => parseInt(id.trim()))
-      .filter((id) => !isNaN(id));
+    if (category_id) {
+      const parsedCategoryIds = String(category_id)
+        .split(',')
+        .map((id) => parseInt(id.trim()))
+        .filter((id) => !isNaN(id));
 
-    const childCategories = await this.prisma.categories.findMany({
-      where: { id: { in: parsedCategoryIds } },
-      select: { id: true },
-    });
+      if (parsedCategoryIds.length > 0) {
+        const childCategories = await this.prisma.categories.findMany({
+          where: { id: { in: parsedCategoryIds } },
+          select: { id: true },
+        });
 
-    const allCategoryIds = [
-      ...parsedCategoryIds,
-      ...childCategories.map((item) => item.id),
-    ];
+        const allCategoryIds = [
+          ...parsedCategoryIds,
+          ...childCategories.map((item) => item.id),
+        ];
 
-    where.category_id = { in: allCategoryIds };
+        where.category_id = { in: allCategoryIds };
+      }
+    }
 
     const [data, total] = await Promise.all([
       this.prisma.products.findMany({
