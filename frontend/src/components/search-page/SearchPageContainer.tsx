@@ -1,30 +1,30 @@
 import React from 'react';
 import type { PaginationMeta } from '../../types';
-import CategorySidebar from './CategorySidebar';
-import CategoryMain from './CategoryMain';
-import './CategoryPageContainer.css';
+import CategorySidebar from './SearchSidebar';
+import CategoryMain from './SearchMain';
+import './SearchPageContainer.css';
 
 interface Props {
     productIds?: number[];
     paginationMeta?: PaginationMeta;
     onPageChange?: (page: number) => void;
-    currentCategoryId?: number;
     selectedCategoryIds: number[];
     onCategoryToggle: (id: number) => void;
+    searchQuery?: string;
     minPrice: number;
     maxPrice: number;
     onFilterPrice: (min: number, max: number) => void;
 }
 
-const CategoryPageContainer: React.FC<Props> = ({ productIds, paginationMeta, onPageChange, currentCategoryId, selectedCategoryIds, onCategoryToggle, minPrice, maxPrice, onFilterPrice }) => {
+const CategoryPageContainer: React.FC<Props> = ({ productIds, paginationMeta, onPageChange, selectedCategoryIds, onCategoryToggle, searchQuery, minPrice, maxPrice, onFilterPrice }) => {
     return (
         <div className="category-page-container">
             {/* CỘT 1: SIDEBAR (Bên trái) */}
             <aside className="page-sidebar">
                 <CategorySidebar
-                    currentCategoryId={currentCategoryId}
                     selectedCategoryIds={selectedCategoryIds}
                     onCategoryToggle={onCategoryToggle}
+                    searchQuery={searchQuery}
                     minPrice={minPrice}
                     maxPrice={maxPrice}
                     onFilterPrice={onFilterPrice}

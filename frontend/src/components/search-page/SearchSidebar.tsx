@@ -1,18 +1,18 @@
 import React from 'react';
 import FilterHeader from '../common/filters/FilterHeader';
 import FilterContent from '../common/filters/FilterContent';
-import './CategorySidebar.css';
+import './SearchSidebar.css';
 
 interface Props {
-    currentCategoryId?: number;
     selectedCategoryIds: number[];
     onCategoryToggle: (id: number) => void;
+    searchQuery?: string;
     minPrice: number;
     maxPrice: number;
     onFilterPrice: (min: number, max: number) => void;
 }
 
-const CategorySidebar: React.FC<Props> = ({ currentCategoryId, selectedCategoryIds, onCategoryToggle, minPrice, maxPrice, onFilterPrice }) => {
+const CategorySidebar: React.FC<Props> = ({ selectedCategoryIds, onCategoryToggle, searchQuery, minPrice, maxPrice, onFilterPrice }) => {
     return (
         <div className="category-sidebar">
             {/* Header chứa tiêu đề "Bộ lọc" và nút đóng */}
@@ -20,9 +20,9 @@ const CategorySidebar: React.FC<Props> = ({ currentCategoryId, selectedCategoryI
 
             {/* Nội dung chứa các nhóm lọc (Danh mục, Giá, Size) */}
             <FilterContent
-                currentCategoryId={currentCategoryId}
                 selectedCategoryIds={selectedCategoryIds}
                 onCategoryToggle={onCategoryToggle}
+                searchQuery={searchQuery}
                 minPrice={minPrice}
                 maxPrice={maxPrice}
                 onFilterPrice={onFilterPrice}

@@ -1,11 +1,3 @@
-/* Container và Header (Tái sử dụng style giống FilterCategory) */
-.filter-container {
-    border-bottom: 1px solid #e5e7eb;
-    width: 100%;
-    max-width: 288px;
-    font-family: 'Noto Sans JP', sans-serif;
-}
-
 .filter-header {
     display: flex;
     width: 100%;

@@ -1,16 +1,20 @@
 import React from 'react';
+import type { CartItem } from '../../types';
 import CartItemQuantity from './CartItemQty';
 import './ItemDetail.css';
-import type { CartItem } from '../../types';
 
 interface Props {
     item: CartItem;
-    onChangeQuantity: (value: number) => void;
-    onRemoveItem: (id: string) => void;
+    onChangeQuantity: (value: number | string) => void;
+    onRemoveItem: (id: number) => void;
 }
 
 const ItemDetail: React.FC<Props> = ({ item, onChangeQuantity, onRemoveItem }) => {
-    const { name, price, productUrl, quantity } = item;
+    const { name, price, stock } = item.products;
+    const { quantity } = item;
+
+    const productUrl = `/product/${item.products.id}`;
+
     return (
         <div className="item-detail-container">
             <div className="item-header-row">
@@ -22,7 +26,7 @@ const ItemDetail: React.FC<Props> = ({ item, onChangeQuantity, onRemoveItem }) =
 
                 <button
                     className="remove-btn"
-                    onClick={() => onRemoveItem(item.id)}
+                    onClick={() => onRemoveItem(item.id)} // ID ở đây là itemId của giỏ hàng
                     aria-label="Xóa sản phẩm"
                 >
                     <svg
@@ -46,14 +50,16 @@ const ItemDetail: React.FC<Props> = ({ item, onChangeQuantity, onRemoveItem }) =
             {/* Thuộc tính sản phẩm (Màu sắc, kích thước...) */}
             <div className="item-attributes">
                 <p className="attr-row">
-                    <span className="attr-label">Màu sắc</span>
-                    <span className="attr-value">Xanh Dương</span>
+                    <span className="attr-label">Tình trạng:</span>
+                    <span className="attr-value" style={{ color: stock > 0 ? '#28a745' : '#dc3545' }}>
+                        {stock > 0 ? `Còn hàng (${stock})` : 'Hết hàng'}
+                    </span>
                 </p>
             </div>
 
             {/* Đơn giá sản phẩm */}
             <div className="item-unit-price">
-                <p className="price-wrapper">
+                <p className="cart-price-wrapper">
                     <span className="price-num">{price.toLocaleString()}</span>
                     <span className="price-unit"> VND</span>
                 </p>
@@ -61,7 +67,11 @@ const ItemDetail: React.FC<Props> = ({ item, onChangeQuantity, onRemoveItem }) =
 
             {/* Phần số lượng và Tạm tính (Component đã build) */}
             <div className="item-quantity-section">
-                <CartItemQuantity price={price} quantity={quantity} onChangeQuantity={onChangeQuantity} />
+                <CartItemQuantity
+                    price={price}
+                    quantity={quantity}
+                    onChangeQuantity={onChangeQuantity}
+                />
             </div>
         </div>
     );

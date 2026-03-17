@@ -13,8 +13,8 @@
     position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
-    /* Hình vuông chuẩn MUJI */
     background-color: #f7f7f7;
+    overflow: hidden;
 }
 
 .product-image-link {
@@ -27,6 +27,15 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.product-item:hover .product-image {
+    transform: scale(1.1);
+}
+
+.product-image:hover {
+    cursor: pointer;
 }
 
 /* Nhãn "MỚI" */
@@ -55,11 +64,8 @@
 }
 
 /* Tên sản phẩm */
-.product-name {
-    margin: 0 0 12px 0;
-}
-
 .product-name a {
+    margin: 0 0 12px 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     /* Giới hạn đúng 2 dòng như HTML mẫu */
@@ -77,6 +83,7 @@
 }
 
 .product-name a:hover {
+    cursor: pointer;
     color: #7f0019;
     /* hover:text-muji_primary */
 }
@@ -84,9 +91,9 @@
 /* Khung Giá & Nút Yêu thích */
 .product-price-wishlist {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-end;
-    min-height: 42px;
+    min-height: 30px;
     margin-bottom: 8px;
 }
 
@@ -125,15 +132,6 @@
     cursor: pointer;
     padding: 0;
     transition: all 0.2s;
-}
-
-.wishlist-btn:hover {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.wishlist-btn:hover svg path {
-    fill: #e0ceaa;
-    /* Hiệu ứng hover cho trái tim */
 }
 
 /* Nút Mua Hàng */

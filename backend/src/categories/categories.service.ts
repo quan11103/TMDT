@@ -34,16 +34,45 @@ export class CategoriesService {
     });
   }
 
-  async findAll() {
+  async findAll(search?: string) {
+    const productFilter = {
+      is_active: true,
+      ...(search && {
+        name: {
+          contains: search,
+          mode: 'insensitive' as const,
+        },
+      }),
+    };
+
     return this.prisma.categories.findMany({
-      where: { is_active: true, parent_id: null },
+      where: {
+        is_active: true,
+        parent_id: null,
+      },
       select: {
         id: true,
         name: true,
         slug: true,
+        _count: {
+          select: {
+            products: {
+              where: productFilter,
+            },
+          },
+        },
         other_categories: {
           where: { is_active: true },
-          select: { id: true, name: true, slug: true },
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            _count: {
+              select: {
+                products: { where: productFilter },
+              },
+            },
+          },
         },
       },
       orderBy: { name: 'asc' },
@@ -57,23 +86,20 @@ export class CategoriesService {
         id: true,
         name: true,
         slug: true,
-        is_active: true,
-        parent_id: true,
-        // danh muc cha
-        categories: { select: { id: true, name: true, slug: true } },
+        _count: { select: { products: true } },
         other_categories: {
           where: { is_active: true },
-          select: { id: true, name: true, slug: true },
-        },
-        _count: {
-          select: { products: true },
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            _count: { select: { products: true } },
+          },
         },
       },
     });
 
-    if (!category || !category.is_active)
-      throw new NotFoundException('Khong ton tai category nay');
-
+    if (!category) throw new NotFoundException('Khong ton tai category nay');
     return category;
   }
 

@@ -4,16 +4,15 @@ import './CartItemQty.css';
 
 interface Props {
     price: number;
-    quantity: number;
-    onChangeQuantity: (value: number) => void;
+    quantity: number | string;
+    onChangeQuantity: (value: number | string) => void;
 }
 
 const CartItemQuantity: React.FC<Props> = ({ price, quantity, onChangeQuantity }) => {
-    // Chuyển về kiểu string để đồng bộ với QuantitySelector
 
     return (
         <div className="cart-item-qty-container">
-            <SubTotal price={price} quantity={quantity} />
+            <SubTotal price={price} quantity={Number(quantity) || 0} />
             <div className="qty-wrapper">
                 <QuantitySelector
                     quantity={quantity}

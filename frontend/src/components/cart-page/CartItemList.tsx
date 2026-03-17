@@ -1,12 +1,12 @@
 import React from 'react';
+import type { CartItem } from '../../types';
 import CartItemWrapper from './CartItemWrapper';
 import './CartItemList.css';
-import type { CartItem } from '../../types';
 
 interface Props {
     items: CartItem[];
-    onChangeQuantity: (id: string, quantity: number) => void;
-    onRemoveItem: (id: string) => void;
+    onChangeQuantity: (id: number, quantity: number | string) => void;
+    onRemoveItem: (id: number) => void;
 }
 
 const CartItemList: React.FC<Props> = ({ items, onChangeQuantity, onRemoveItem }) => {
@@ -15,10 +15,12 @@ const CartItemList: React.FC<Props> = ({ items, onChangeQuantity, onRemoveItem }
         <div className="cart-item-list">
             {items.map((item) => (
                 <CartItemWrapper
+                    // Sử dụng item.id (ID của cart_items) làm key để tối ưu render
                     key={item.id}
                     item={item}
                     onChangeQuantity={onChangeQuantity}
-                    onRemoveItem={onRemoveItem} />
+                    onRemoveItem={onRemoveItem}
+                />
             ))}
         </div>
     );

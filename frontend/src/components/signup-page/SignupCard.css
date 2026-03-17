@@ -35,6 +35,10 @@
     color: #000;
 }
 
+select.gender-select:focus {
+    outline: none;
+}
+
 /* Calendar icon inside input */
 .calendar-btn {
     position: absolute;
@@ -248,7 +252,7 @@
 /* Container chứa lịch */
 .calendar-popover {
     position: absolute;
-    top: 105%;
+    top: 100%;
     right: 0;
     z-index: 999;
     background: white;
@@ -344,4 +348,24 @@
 option {
     background-color: #fff;
     color: #000;
+}
+
+/* --- TRỊ TẬN GỐC CÁI VIỀN ĐEN TRÊN CHỮ "THÁNG BA" --- */
+
+/* 1. Nhắm trực tiếp vào thẻ span khi nó bị :focus-visible */
+.rdp-caption_label:focus-visible {
+    outline: none !important;
+    outline-offset: 0 !important;
+    box-shadow: none !important;
+}
+
+/* 2. Nhắm thêm vào trạng thái :focus thông thường cho chắc chắn */
+.rdp-caption_label:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* 3. (Tùy chọn) Một số trình duyệt áp dụng highlight trên mobile */
+.rdp-caption_label {
+    -webkit-tap-highlight-color: transparent;
 }

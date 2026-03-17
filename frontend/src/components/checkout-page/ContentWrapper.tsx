@@ -1,26 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './ContentWrapper.css';
-import type { Product } from '../../types';
+import type { ShippingInfo, CartItem } from '../../types';
 import ShippingAddress from './ShippingAddress';
 import PaymentMethod from './PaymentMethod';
 import Coupon from './Coupon';
 import OrderSummary from './OrderSummary';
 
 interface Props {
-    items: Product[];
+    items: CartItem[];
 }
 
 const ContentWrapper: React.FC<Props> = ({ items }) => {
+    const [address, setAddress] = useState<ShippingInfo>({
+        email: "", fullName: "", phone: "", province: "", ward: "", street: "", note: "", addrType: "home"
+    });
+
     return (
         <div className="checkout-wrapper">
             <div className="checkout-container">
 
-                {/* Cột bên trái: Chiếm toàn chiều rộng trên mobile, 50-60% trên desktop */}
                 <div className="checkout-left">
-                    <ShippingAddress />
+                    <ShippingAddress address={address} setAddress={setAddress} />
                 </div>
 
-                {/* Cột bên phải: Chứa Payment, Coupon và Order Summary */}
                 <div className="checkout-right">
                     <div className="sticky-content">
                         <section className="section-card">
@@ -33,7 +35,7 @@ const ContentWrapper: React.FC<Props> = ({ items }) => {
 
                         <section className="section-card">
                             <div className="summary-container">
-                                <OrderSummary items={items} />
+                                <OrderSummary items={items} shippingInfo={address} />
                             </div>
                         </section>
                     </div>
