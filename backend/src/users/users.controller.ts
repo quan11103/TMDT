@@ -27,7 +27,6 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getMyInformation(@CurrentUser() me) {
-    console.log(me.id);
     return this.usersService.findOne(me.id as number);
   }
 
