@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
@@ -9,6 +10,7 @@ import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
+import { randomBytes } from 'node:crypto';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +18,64 @@ export class AuthService {
     private prisma: PrismaService,
     private jwt: JwtService,
   ) {}
+
+  async oauthLogin(profile: {
+    email: string | null;
+    full_name: string;
+    provider: string;
+  }) {
+    if (!profile.email) {
+      throw new BadRequestException(
+        `Không lấy được email từ ${profile.provider}`,
+      );
+    }
+
+    let user = await this.prisma.users.findUnique({
+      where: { email: profile.email },
+    });
+
+    if (!user) {
+      const customerRole = await this.prisma.roles.findUnique({
+        where: { role: 'customer' },
+      });
+
+      if (!customerRole) {
+        throw new InternalServerErrorException('Không tồn tại role này');
+      }
+
+      const randomPassword = randomBytes(32).toString('hex');
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+      user = await this.prisma.users.create({
+        data: {
+          email: profile.email ?? null,
+          full_name: profile.full_name,
+          password: hashedPassword,
+          role_id: customerRole.id,
+        },
+      });
+    }
+
+    if (!user.is_active) {
+      throw new BadRequestException('Tài khoản này đã bị khóa');
+    }
+
+    const payload = {
+      sub: user.id,
+      email: user.email,
+    };
+
+    const accessToken = await this.jwt.signAsync(payload);
+
+    return {
+      access_token: accessToken,
+      user: {
+        id: user.id,
+        full_name: user.full_name,
+        email: user.email,
+      },
+    };
+  }
 
   async login(dto: LoginDto) {
     // 1. tìm user theo email
