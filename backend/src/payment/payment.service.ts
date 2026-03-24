@@ -7,6 +7,9 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePaymentDto } from './dto/create-payment-dto';
 import { order_status, payment_method, payment_status } from '@prisma/client';
+import moment from 'moment';
+import QueryString from 'qs';
+import { createHmac } from 'crypto';
 
 @Injectable()
 export class PaymentService {
@@ -16,355 +19,247 @@ export class PaymentService {
   ) {}
 
   async createPayment(userId: number, dto: CreatePaymentDto) {
-    // 1. tim don hang
     const order = await this.prisma.orders.findFirst({
       where: { user_id: userId, id: dto.order_id },
+      select: { id: true, user_id: true, status: true, total_amount: true },
     });
 
-    if (!order) throw new NotFoundException('Don hang khong ton tai');
+    if (!order) {
+      throw new NotFoundException('Order không tồn tại');
+    }
 
-    // 2. Chi duoc thanh toan neu status la Pending va Confirmed
-    const payalbeStatus: string[] = [
-      order_status.PENDING,
-      order_status.CONFIRMED,
-    ];
-
-    if (!payalbeStatus.includes(order.status))
-      throw new BadRequestException('Khong the thanh toan don hang');
-
-    // 3. Khong the thanh toan don hang da thanh cong SUCCESS
-    const exsitingSuccess = await this.prisma.payments.findFirst({
-      where: { order_id: dto.order_id, status: payment_status.SUCCESS },
-    });
-
-    if (exsitingSuccess)
+    if (!order_status.PENDING.includes(order?.status as any)) {
       throw new BadRequestException(
-        'Don hang nay da duoc thanh toan thanh cong',
+        'Order không ở trạng thái có thể thanh toán',
       );
+    }
 
-    // 4. Chon cac phuong thuc thanh toan
-    if (dto.method === payment_method.COD)
-      return this.handleCOD(order, dto.method);
-    if (dto.method === payment_method.VNPAY)
-      return this.handleVNPay(order, dto.method);
-    if (dto.method === payment_method.MOMO)
-      return this.handleMoMo(order, dto.method);
-  }
-  // ─── RETRY PAYMENT ────────────────────────────────────────
-  // Dùng khi payment trước đó FAILED — thử lại với method mới hoặc cũ
-  async retryPayment(userId: number, dto: CreatePaymentDto) {
-    // 1 tim order can retry va kiem tra xem co du dieu kien retry khong
-    const order = await this.prisma.orders.findFirst({
-      where: { user_id: userId, id: dto.order_id },
-    });
+    switch (dto.method) {
+      case payment_method.COD:
+        return this.createCodPayment(order.id);
 
-    if (!order) throw new NotFoundException('Don hang khong ton tai');
+      case payment_method.VNPAY:
+        return this.createVnPayPayment(order);
 
-    if (['CANCELLED', 'DELIVERED'].includes(order.status))
-      throw new BadRequestException('Don hang nay khong the retry');
+      // case payment_method.MOMO:
+      //   return this.createMomoPayment(order);
 
-    const lastPayment = await this.prisma.payments.findFirst({
-      where: { order_id: dto.order_id },
-      orderBy: { created_at: 'desc' },
-    });
-
-    if (lastPayment?.status === payment_status.SUCCESS)
-      throw new BadRequestException('Don hang da duoc thanh toan thanh cong');
-
-    if (lastPayment?.status === payment_status.PENDING)
-      throw new BadRequestException('Don hang nay dang trong thoi gian xu ly');
-
-    // 2 neu payment undefined thi tao moi khong thi cap nhat lai method
-    if (dto.method === payment_method.COD)
-      return this.handleCOD(order, dto.method);
-    if (dto.method === payment_method.VNPAY)
-      return this.handleVNPay(order, dto.method);
-    if (dto.method === payment_method.MOMO)
-      return this.handleMoMo(order, dto.method);
+      default:
+        throw new BadRequestException('Phương thức thanh toán không hợp lệ');
+    }
   }
 
-  // ─── COD(Thanh toan khi nhan hang) ──────────────────────────────────────────────────
-  // flow: tao pending payment -> giao hang -> admmin confirm -> pending success
-  private async handleCOD(order: any, method: payment_method) {
+  private async createCodPayment(orderId: number) {
+    const now = new Date();
     return this.prisma.$transaction(async (tx) => {
+      const order = await tx.orders.findUnique({
+        where: { id: orderId },
+        select: { total_amount: true },
+      });
+
+      if (!order) {
+        throw new NotFoundException('Không tìm thấy đơn hàng');
+      }
+
       const payment = await tx.payments.create({
         data: {
-          order_id: order.id,
-          method,
-          amount: order.total_amount,
+          order_id: orderId,
           status: payment_status.PENDING,
-          paid_at: null,
+          method: payment_method.COD,
+          transaction_code: 'COD',
+          amount: order.total_amount,
+          paid_at: now,
         },
       });
 
       await tx.orders.update({
-        where: { id: order.id },
-        data: { status: order_status.CONFIRMED },
+        where: { id: orderId },
+        data: {
+          status: order_status.CONFIRMED,
+        },
       });
 
       return {
-        payment,
-        message: 'Dat hang thanh cong! Thanh toan khi nhan hang',
+        payment_id: payment.id,
+        message: 'Đặt hành COD thành công, thanh toán khi nhận hàng',
       };
     });
   }
 
-  // ─── CONFIRM COD ──────────────────────────────────────────
-  // Admin xac nhan don hang da thanh toan
-  async confirmCOD(paymentId: number) {
-    const payment = await this.prisma.payments.findUnique({
-      where: { id: paymentId },
-    });
-
-    if (!payment) throw new NotFoundException('Khong tim thay payment nay');
-
-    if (payment.method !== payment_method.COD)
-      throw new BadRequestException('Chi ap dung thanh toan COD');
-
-    if (payment.status !== payment_status.PENDING)
-      throw new BadRequestException(
-        `Don hang khong the xac nhan o trang thai ${payment.status}`,
-      );
-
-    return this.prisma.$transaction(async (tx) => {
-      const updatePayment = await tx.payments.update({
-        where: { id: payment.id },
-        data: { status: payment_status.SUCCESS, paid_at: new Date() },
-      });
-
-      await tx.orders.update({
-        where: { id: payment.order_id },
-        data: { status: order_status.DELIVERED },
-      });
-
-      return {
-        updatePayment,
-        message: 'Don hang da duoc giao thanh cong, da nhan tien COD',
-      };
-    });
-  }
-
-  // ─── VNPAY ────────────────────────────────────────────────
-  private async handleVNPay(order: any, method: payment_method) {
-    const paymentUrl = this.createVNPayUrl(order);
-
+  private async createVnPayPayment(order: { id: number; total_amount: any }) {
     const payment = await this.prisma.payments.create({
       data: {
         order_id: order.id,
-        status: payment_status.PENDING,
         amount: order.total_amount,
-        method,
+        status: payment_status.PENDING,
+        method: payment_method.VNPAY,
         paid_at: null,
-        // payment_url: paymentUrl,
       },
     });
 
+    const tmnCode = this.config.getOrThrow('VNPAY_TMN_CODE');
+    const hashSecret = this.config.getOrThrow('VNPAY_HASH_SECRET');
+    const baseUrl = this.config.getOrThrow('VNPAY_PAYMENT_URL');
+    const returnUrl = this.config.getOrThrow('VNPAY_RETURN_URL');
+
+    const amountVnd = Math.round(Number(order.total_amount));
+    const vnpAmount = String(amountVnd * 100);
+    const txnRef = String(payment.id);
+    const date = new Date();
+    const createDate = moment(date).format('YYYYMMDDHHmmss');
+
+    let vnpParams: Record<string, string> = {
+      vnp_Version: '2.1.0',
+      vnp_Command: 'pay',
+      vnp_TmnCode: tmnCode,
+      vnp_Amount: vnpAmount,
+      vnp_CreateDate: createDate,
+      vnp_CurrCode: 'VND',
+      vnp_IpAddr: '127.0.0.1',
+      vnp_Locale: 'vn',
+      vnp_OrderType: 'other',
+      vnp_OrderInfo: `${order.id}`,
+      vnp_ReturnUrl: returnUrl,
+      vnp_TxnRef: txnRef,
+    };
+
+    vnpParams = Object.fromEntries(
+      Object.entries(vnpParams).sort(([a], [b]) => a.localeCompare(b)),
+    );
+    const signData = QueryString.stringify(vnpParams, { encode: true });
+    const hmac = createHmac('sha512', hashSecret);
+    const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
+    vnpParams['vnp_SecureHash'] = signed;
+    const paymentUrl = `${baseUrl}?${QueryString.stringify(vnpParams, { encode: true })}`;
+
+    await this.prisma.payments.update({
+      where: { id: payment.id },
+      data: { payment_url: paymentUrl },
+    });
+
     return {
+      message: 'Vui lòng thanh toán qua VNPay',
       payment_id: payment.id,
       payment_url: paymentUrl,
-      message: 'Vui long thanh toan qua VNPay',
     };
   }
 
-  private createVNPayUrl(order: any) {}
+  private verifyVnPaySignature(query: Record<string, string>) {
+    const receivedHash = query.vnp_SecureHash;
+    if (!receivedHash) {
+      throw new BadRequestException('Thiếu chữ ký VNPay');
+    }
 
-  // ─── MOMO ─────────────────────────────────────────────────
-  private async handleMoMo(order: any, method: payment_method) {
-    const payment = await this.prisma.payments.create({
-      data: {
-        order_id: order.id,
-        method,
-        amount: order.total_amount,
-        status: 'PENDING',
-        paid_at: null,
-      },
-    });
+    const hashSecret = this.config.getOrThrow('VNPAY_HASH_SECRET');
 
-    // TODO: Tích hợp MoMo SDK thực tế
-    return {
-      payment,
-      payment_url: `https://test-payment.momo.vn/...?orderId=${order.id}`,
-      message: 'Vui lòng thanh toán qua MoMo',
-    };
+    const paramsForSign: Record<string, string> = {};
+    for (const [key, value] of Object.entries(query)) {
+      if (!key.startsWith('vnp_')) continue;
+      if (key === 'vnp_SecureHash' || key === 'vnp_SecureHashType') continue;
+      if (value === undefined || value === null || value === '') continue;
+      paramsForSign[key] = value;
+    }
+
+    const sortedParams = Object.fromEntries(
+      Object.entries(paramsForSign).sort(([a], [b]) => a.localeCompare(b)),
+    );
+
+    const signData = QueryString.stringify(sortedParams, { encode: true });
+    const caculatedHash = createHmac('sha512', hashSecret)
+      .update(Buffer.from(signData, 'utf-8'))
+      .digest('hex');
+
+    if (caculatedHash.toLowerCase() !== receivedHash) {
+      throw new BadRequestException('Chữ ký VNPay không hợp lệ');
+    }
   }
 
-  // ─── VNPAY CALLBACK ───────────────────────────────────────
-  async handleVNPayReturn(query: Record<string, string>) {
-    const orderId = parseInt(query['vnp_TxnRef']);
-    const responseCode = query['vnp_ResponseCode'];
-    const transactionCode = query['vnp_TransactionNo'];
+  async handleVnPayCallback(query: Record<string, string>) {
+    const txnRef = query.vnp_TxnRef;
+    const responseCode = query.vnp_ResponseCode;
+    const callbackAmount = Number(query.vnp_Amount);
+    const transactionCode = query.vnp_TransactionNo;
+
+    if (!txnRef || !responseCode || !query.vnp_SecureHash) {
+      throw new BadRequestException('Thiếu tham số callback VNPay');
+    }
+
+    const paymentId = Number(txnRef);
+    if (!Number.isInteger(paymentId) || paymentId <= 0) {
+      throw new BadRequestException('vnp_TxnRef không hợp lệ');
+    }
+
+    if (!Number.isFinite(callbackAmount) || callbackAmount <= 0) {
+      throw new BadRequestException('vnp_Amount không hợp lệ');
+    }
+
+    this.verifyVnPaySignature(query);
     const isSuccess = responseCode === '00';
 
     return this.prisma.$transaction(async (tx) => {
-      await tx.payments.updateMany({
-        where: { order_id: orderId, status: 'PENDING' },
-        data: {
-          status: isSuccess ? 'SUCCESS' : 'FAILED',
-          transaction_code: transactionCode,
-          paid_at: isSuccess ? new Date() : null,
+      const payment = await tx.payments.findUnique({
+        where: { id: paymentId },
+        include: {
+          orders: {
+            select: { id: true, status: true },
+          },
         },
       });
 
+      if (!payment) {
+        throw new NotFoundException('Không tìm thấy payment');
+      }
+
+      if (payment.method !== payment_method.VNPAY) {
+        throw new BadRequestException('Payment không thuộc VNPay');
+      }
+
+      const expectedAmount = Math.round(Number(payment.amount)) * 100;
+      if (callbackAmount !== expectedAmount) {
+        throw new BadRequestException('Số tiền callback không khớp');
+      }
+
+      if (payment.status !== payment_status.PENDING) {
+        return {
+          success: payment.status === payment_status.SUCCESS,
+          message: 'Giao dịch đã được xử lý trước đó',
+          payment_id: payment.id,
+          payment_status: payment.status,
+          order_id: payment.orders.id,
+          order_status: payment.orders.status,
+        };
+      }
+
+      const updatePayment = await tx.payments.update({
+        where: { id: payment.id },
+        data: {
+          status: isSuccess ? payment_status.SUCCESS : payment_status.FAILED,
+          paid_at: isSuccess ? new Date() : null,
+          transaction_code: transactionCode,
+        },
+        select: { id: true, order_id: true, status: true },
+      });
+
+      let orderStatus = payment.orders.status;
       if (isSuccess) {
-        await tx.orders.update({
-          where: { id: orderId },
-          data: { status: 'CONFIRMED' },
+        const updateOrder = await tx.orders.update({
+          where: { id: payment.order_id },
+          data: { status: order_status.CONFIRMED },
+          select: { status: true },
         });
+        orderStatus = updateOrder.status;
       }
 
       return {
         success: isSuccess,
-        message: isSuccess ? 'Thanh toán thành công' : 'Thanh toán thất bại',
+        message: isSuccess
+          ? 'Thanh toán VNPay thành công'
+          : 'Thanh toán VNPay thất bại',
+        payment_id: updatePayment.id,
+        payment_status: updatePayment.status,
+        order_id: updatePayment.order_id,
+        order_status: orderStatus,
       };
     });
-  }
-
-  // ─── MOMO CALLBACK ────────────────────────────────────────
-  async handleMoMoCallback(body: Record<string, any>) {
-    const { orderId, resultCode, transId } = body;
-    const isSuccess = resultCode === 0;
-
-    return this.prisma.$transaction(async (tx) => {
-      await tx.payments.updateMany({
-        where: { order_id: orderId, status: 'PENDING' },
-        data: {
-          status: isSuccess ? 'SUCCESS' : 'FAILED',
-          transaction_code: String(transId),
-          paid_at: isSuccess ? new Date() : null,
-        },
-      });
-
-      if (isSuccess) {
-        await tx.orders.update({
-          where: { id: orderId },
-          data: { status: 'CONFIRMED' },
-        });
-      }
-
-      return { success: isSuccess };
-    });
-  }
-
-  // ─── GET PAYMENT BY ORDER ─────────────────────────────────
-  async getPaymentByOrder(userId: number, orderId: number) {
-    const order = await this.prisma.orders.findFirst({
-      where: { id: orderId, user_id: userId },
-    });
-
-    if (!order) throw new NotFoundException('Không tìm thấy đơn hàng');
-
-    const payment = await this.prisma.payments.findFirst({
-      where: { order_id: orderId },
-      orderBy: { created_at: 'desc' },
-      select: {
-        id: true,
-        method: true,
-        amount: true,
-        status: true,
-        paid_at: true,
-        created_at: true,
-        // Không trả về transaction_code — thông tin nội bộ
-      },
-    });
-
-    if (!payment) throw new NotFoundException('Chưa có thông tin thanh toán');
-
-    return payment;
-  }
-
-  // ─── ADMIN: GET ALL PAYMENTS ──────────────────────────────
-  async getAllPayments() {
-    return this.prisma.payments.findMany({
-      orderBy: { created_at: 'desc' },
-      select: {
-        id: true,
-        method: true,
-        amount: true,
-        status: true,
-        transaction_code: true,
-        paid_at: true,
-        created_at: true,
-        orders: {
-          select: {
-            id: true,
-            status: true,
-            users: {
-              select: { id: true, email: true, full_name: true },
-            },
-          },
-        },
-      },
-    });
-  }
-
-  // ─── ADMIN: THỐNG KÊ DOANH THU ────────────────────────────
-  async getStats() {
-    // Chạy song song tất cả queries để tối ưu performance
-    const [totalRevenue, totalOrders, revenueByMethod, revenueByMonth] =
-      await Promise.all([
-        // Tổng doanh thu (chỉ tính payment SUCCESS)
-        this.prisma.payments.aggregate({
-          where: { status: 'SUCCESS' },
-          _sum: { amount: true },
-          _count: { id: true },
-        }),
-
-        // Thống kê đơn hàng theo status
-        this.prisma.orders.groupBy({
-          by: ['status'],
-          _count: { id: true },
-        }),
-
-        // Doanh thu theo phương thức thanh toán
-        this.prisma.payments.groupBy({
-          by: ['method'],
-          where: { status: 'SUCCESS' },
-          _sum: { amount: true },
-          _count: { id: true },
-        }),
-
-        // Doanh thu theo tháng (12 tháng gần nhất)
-        // Dùng raw query vì Prisma không hỗ trợ group by tháng trực tiếp
-        this.prisma.$queryRaw`
-          SELECT
-            TO_CHAR(paid_at, 'YYYY-MM') as month,
-            SUM(amount)::float as revenue,
-            COUNT(id)::int as total_orders
-          FROM payments
-          WHERE status = 'SUCCESS'
-            AND paid_at >= NOW() - INTERVAL '12 months'
-          GROUP BY TO_CHAR(paid_at, 'YYYY-MM')
-          ORDER BY month ASC
-        `,
-      ]);
-
-    return {
-      // Tổng quan
-      summary: {
-        total_revenue: totalRevenue._sum.amount ?? 0,
-        total_paid_orders: totalRevenue._count.id,
-      },
-
-      // Đơn hàng theo trạng thái
-      // reduce để chuyển array → object cho dễ đọc
-      // [{ status: 'PENDING', _count: 5 }] → { PENDING: 5 }
-      orders_by_status: totalOrders.reduce(
-        (acc, item) => {
-          acc[item.status] = item._count.id;
-          return acc;
-        },
-        {} as Record<string, number>,
-      ),
-
-      // Doanh thu theo phương thức thanh toán
-      revenue_by_method: revenueByMethod.map((item) => ({
-        method: item.method,
-        revenue: item._sum.amount ?? 0,
-        count: item._count.id,
-      })),
-
-      // Doanh thu theo tháng
-      revenue_by_month: revenueByMonth,
-    };
   }
 }

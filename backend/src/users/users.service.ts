@@ -151,7 +151,7 @@ export class UsersService {
   }
 
   // Helper loại bỏ password mỗi khi trả về
-  private excludePassword(user: users): Omit<users, 'password'> {
+  private excludePassword(user: users) {
     const { password, ...rest } = user;
     return rest;
   }
