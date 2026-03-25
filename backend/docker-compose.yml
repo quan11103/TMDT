@@ -58,6 +58,15 @@ services:
       FACEBOOK_CLIENT_SECRET: ${FACEBOOK_CLIENT_SECRET}
       FACEBOOK_CALLBACK_URL: http://localhost:3000/api/auth/facebook/callback
 
+      VNPAY_TMN_CODE: YEY6V61K
+      VNPAY_HASH_SECRET: 2RIKR357LM98K3CTQVQOB5EV7JB26FND
+      VNPAY_PAYMENT_URL: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+      VNPAY_RETURN_URL: http://localhost:3000/api/payment/vnpay/callback
+
+      RESEND_API_KEY: re_Shq9eZ2D_KhpurReD7fxsFpbYUB7WfRBQ
+      RESET_TOKEN_TTL_MINUTES: 5
+      FRONTEND_FORGOT_PASSWORD_URL: http://localhost:5173/forgot-password
+
     ports:
       - "3000:3000" # máy_host:container
 
