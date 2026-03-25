@@ -11,6 +11,7 @@ import { PaymentModule } from './payment/payment.module';
 import { AdminModule } from './admin/admin.module';
 import { ConfigModule } from '@nestjs/config';
 import { CategoriesModule } from './categories/categories.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CategoriesModule } from './categories/categories.module';
     PaymentModule,
     AdminModule,
     CategoriesModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

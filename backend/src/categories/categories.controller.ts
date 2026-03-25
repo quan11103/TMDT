@@ -18,7 +18,7 @@ import { Permissions } from 'src/common/decorators/permissions.decorator';
 
 @Controller('categories')
 export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) { }
+  constructor(private readonly categoriesService: CategoriesService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permissions('category.create')

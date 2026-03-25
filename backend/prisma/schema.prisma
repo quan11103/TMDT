@@ -7,27 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum order_status {
-  PENDING
-  CONFIRMED
-  SHIPPING
-  DELIVERED
-  CANCELLED
-}
-
-enum payment_status {
-  PENDING
-  SUCCESS
-  FAILED
-  REFUNDED
-}
-
-enum payment_method {
-  COD
-  VNPAY
-  MOMO
-}
-
 model categories {
   id               Int          @id @default(autoincrement())
   name             String       @db.VarChar(255)
@@ -53,30 +32,30 @@ model order_items {
 model orders {
   id           Int           @id @default(autoincrement())
   user_id      Int
-  status       order_status  @default(PENDING)
   total_amount Decimal       @default(0) @db.Decimal(12, 2)
-  address      String        @db.VarChar(500)
-  phone        String        @db.VarChar(20)
-  note         String?
   created_at   DateTime?     @default(now()) @db.Timestamp(6)
   updated_at   DateTime?     @updatedAt
+  address      String        @db.VarChar(500)
+  note         String?
+  phone        String        @db.VarChar(20)
+  status       order_status  @default(PENDING)
   order_items  order_items[]
   users        users         @relation(fields: [user_id], references: [id], onUpdate: NoAction, map: "fk_oder_user")
   payments     payments[]
 }
 
 model payments {
-  id               Int       @id @default(autoincrement())
+  id               Int            @id @default(autoincrement())
   order_id         Int
+  amount           Decimal        @db.Decimal(12, 2)
+  transaction_code String?        @db.VarChar(255)
+  paid_at          DateTime?      @db.Timestamp(6)
+  created_at       DateTime?      @default(now()) @db.Timestamp(6)
   method           payment_method
-  amount           Decimal   @db.Decimal(12, 2)
-  status           payment_status    @default(PENDING)
-  bank_code        String?    @db.VarChar(50)
+  status           payment_status @default(PENDING)
+  bank_code        String?        @db.VarChar(50)
   payment_url      String?
-  transaction_code String?   @db.VarChar(255)
-  paid_at          DateTime? @db.Timestamp(6)
-  created_at       DateTime? @default(now()) @db.Timestamp(6)
-  orders           orders    @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_paymen_order")
+  orders           orders         @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_paymen_order")
 }
 
 model product_images {
@@ -106,20 +85,21 @@ model products {
 }
 
 model users {
-  id         Int          @id @default(autoincrement())
-  email      String       @unique @db.VarChar(255)
-  password   String       @db.VarChar(255)
-  full_name  String?      @db.VarChar(255)
-  phone      String?      @db.VarChar(20)
-  gender     String?      @db.VarChar(10)
-  dob        DateTime?    @db.Date
-  created_at DateTime?    @default(now()) @db.Timestamp(6)
-  updated_at DateTime?    @updatedAt
-  is_active  Boolean?     @default(true)
-  role_id    Int // bỏ ? ở đây vì role_id là bắt buộc phải có
-  cart_items cart_items[]
-  orders     orders[]
-  roles      roles       @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_role")
+  id                    Int                     @id @default(autoincrement())
+  email                 String                  @unique @db.VarChar(255)
+  password              String                  @db.VarChar(255)
+  full_name             String?                 @db.VarChar(255)
+  created_at            DateTime?               @default(now()) @db.Timestamp(6)
+  is_active             Boolean?                @default(true)
+  role_id               Int
+  updated_at            DateTime?               @updatedAt
+  dob                   DateTime?               @db.Date
+  gender                String?                 @db.VarChar(10)
+  phone                 String?                 @db.VarChar(20)
+  cart_items            cart_items[]
+  orders                orders[]
+  reset_password_tokens reset_password_tokens[]
+  roles                 roles                   @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_role")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -155,4 +135,34 @@ model roles {
   role            String            @unique @db.VarChar(50)
   role_permission role_permission[]
   users           users[]
+}
+
+model reset_password_tokens {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  token_hash String    @unique @db.VarChar(255)
+  expired_at DateTime  @db.Timestamp(6)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  users      users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_resetpassword_user")
+}
+
+enum order_status {
+  PENDING
+  CONFIRMED
+  SHIPPING
+  DELIVERED
+  CANCELLED
+}
+
+enum payment_status {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum payment_method {
+  COD
+  VNPAY
+  MOMO
 }
