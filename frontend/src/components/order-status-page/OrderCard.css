@@ -1,0 +1,104 @@
+.order-card.overview {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #ebebeb;
+    padding: 16px;
+    transition: box-shadow 0.2s;
+}
+
+.order-card.overview:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.order-main-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.order-id {
+    font-weight: bold;
+    color: #333;
+    font-size: 16px;
+}
+
+.order-date {
+    color: #888;
+    font-size: 13px;
+}
+
+.overview-body {
+    flex: 1;
+    padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: flex-start;
+    font-size: 14px;
+    gap: 8px;
+}
+
+.summary-label {
+    color: #777;
+    min-width: 110px;
+}
+
+.summary-value {
+    color: #333;
+    font-weight: 400;
+    /* Giới hạn tên sản phẩm trên 1 dòng nếu quá dài */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.total-amount {
+    color: #7b0f1a;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.order-card-footer {
+    padding-top: 12px;
+    margin-top: 4px;
+}
+
+.order-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.order-actions button {
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.order-card-main-layout {
+    display: flex;
+    justify-content: space-between;
+    /* Đẩy nội dung sang trái, nút sang phải */
+    padding: 12px;
+}
+
+@media (max-width: 600px) {
+    .order-card-main-layout {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .order-card-footer {
+        width: 100%;
+        justify-content: flex-end;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px dashed #eee;
+    }
+}

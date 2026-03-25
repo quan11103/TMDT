@@ -1,0 +1,285 @@
+.order-modal-content {
+    background: white;
+    width: 100%;
+    max-width: 900px;
+    /* Tăng từ 650px lên 900px */
+    max-height: 90vh;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Layout 2 cột */
+.modal-two-columns {
+    display: flex;
+    gap: 30px;
+    padding: 24px;
+}
+
+.modal-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Cột trái: Thông tin & Thanh toán */
+.left-column {
+    flex: 0 0 40%;
+    /* Cột trái chiếm 40% */
+}
+
+/* Cột phải: Danh sách sản phẩm */
+.right-column {
+    flex: 0 0 55%;
+    /* Cột phải chiếm 55% */
+    border-left: 1px solid #eee;
+    padding-left: 25px;
+}
+
+/* Phần thanh toán thu gọn cho cột 1 */
+.payment-summary-box {
+    background: #f9f9f9;
+    border-radius: 6px;
+    margin-top: auto;
+    /* Đẩy xuống cuối cột 1 nếu muốn */
+}
+
+.payment-info-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #eee;
+}
+
+/* Phần tính toán giá tiền */
+.price-breakdown-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Cấu trúc từng hàng: Tạm tính, Phí ship, Tổng cộng */
+.price-breakdown-compact .price-row {
+    display: flex;
+    justify-content: space-between;
+    /* Đẩy text sang trái, số tiền sang phải */
+    align-items: center;
+    width: 100%;
+    /* Đảm bảo chiếm hết chiều rộng cột */
+}
+
+/* Định dạng nhãn (Tạm tính, Tổng cộng) */
+.price-breakdown-compact .price-row span:first-child {
+    color: #666;
+    font-size: 14.5px;
+}
+
+/* Định dạng con số (Số tiền) */
+.price-breakdown-compact .price-row span:last-child {
+    font-weight: 600;
+    color: #222;
+    font-size: 15px;
+    text-align: right;
+    /* Căn lề phải cho nội dung số */
+}
+
+/* Định dạng các dòng trong phần thanh toán giống info-item của phần 1 */
+.payment-info-compact p {
+    display: flex;
+    align-items: center;
+    font-size: 14.5px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Tạo label giả cho thẻ p để thẳng hàng với phần 1 */
+.payment-info-compact p strong,
+.payment-info-compact p span {
+    flex: 1;
+    font-weight: 500;
+    color: #222;
+}
+
+.payment-info-compact p::before {
+    content: attr(data-label);
+    /* Nếu bạn dùng thuộc tính data-label */
+    min-width: 110px;
+    color: #666;
+    font-weight: 400;
+}
+
+.payment-status-tag {
+    color: #7b0f1a;
+    font-weight: 600;
+    background: rgba(123, 15, 26, 0.05);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.price-row.total-row {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #ccc;
+}
+
+.price-row.total-row span:last-child {
+    color: #ee4d2d;
+    /* Màu cam đỏ đặc trưng của giá tiền */
+    font-size: 18px;
+    font-weight: 700 !important;
+}
+
+.final-price {
+    color: #ee4d2d;
+}
+
+/* Danh sách sản phẩm có scroll nếu quá dài ở cột 2 */
+.product-list-scrollable {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.product-row-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.prod-thumb-sm {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 12px;
+}
+
+.prod-info-sm {
+    flex: 1;
+}
+
+.prod-name-sm {
+    font-size: 13.5px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.prod-qty-sm {
+    font-size: 12px;
+    color: #888;
+    margin: 2px 0 0;
+}
+
+.prod-price-sm {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.modal-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid #eee;
+
+    /* Căn chỉnh h3 và close-button trên cùng một hàng */
+    display: flex;
+    justify-content: space-between;
+    /* Đẩy h3 sang trái, button sang phải */
+    align-items: center;
+
+    /* Thêm margin để tạo khoảng cách với nội dung bên dưới */
+    margin-bottom: 10px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+    font-weight: 600;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    /* Kích thước dấu x */
+    cursor: pointer;
+    color: #888;
+    line-height: 1;
+    padding: 5px 10px;
+    transition: color 0.2s;
+
+    /* Đảm bảo nút nằm sát lề phải của padding header */
+    margin-right: -10px;
+}
+
+.close-button:hover {
+    color: #7b0f1a;
+    /* Đổi màu khi hover giống tone màu chủ đạo của bạn */
+}
+
+/* Container chính của phần 1 */
+.detail-section .info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    /* Khoảng cách giữa các dòng thông tin */
+    padding: 5px 0 30px;
+}
+
+/* Từng dòng thông tin (Người nhận, SĐT, Địa chỉ...) */
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    /* Căn lề trên để hỗ trợ địa chỉ dài xuống dòng */
+    font-size: 14.5px;
+    line-height: 1.5;
+}
+
+/* Nhãn bên trái (ví dụ: Người nhận:) */
+.info-label {
+    min-width: 110px;
+    /* Độ rộng cố định để các giá trị bên phải thẳng hàng */
+    color: #666;
+    /* Màu chữ nhạt hơn một chút */
+    font-weight: 700;
+    position: relative;
+}
+
+/* Nội dung bên phải (ví dụ: Nguyễn Văn A) */
+.info-value {
+    flex: 1;
+    /* Tự động chiếm phần không gian còn lại */
+    color: #222;
+    /* Màu chữ đậm để nổi bật thông tin */
+    font-weight: 400;
+    word-break: break-word;
+    /* Tránh việc địa chỉ quá dài làm tràn khung */
+}
+
+/* Tùy chỉnh riêng cho Ghi chú (nếu có) */
+.info-item:has(.info-label:contains("Ghi chú")) {
+    margin-top: 5px;
+    padding: 10px;
+    background-color: #fff9db;
+    /* Màu nền vàng nhạt cho ghi chú */
+    border-left: 3px solid #fadb14;
+    border-radius: 4px;
+}
+
+/* Responsive cho tablet/mobile: Quay về 1 cột */
+@media (max-width: 800px) {
+    .modal-two-columns {
+        flex-direction: column;
+    }
+
+    .left-column,
+    .right-column {
+        flex: 1;
+        width: 100%;
+        border-left: none;
+        padding-left: 0;
+    }
+}

@@ -15,6 +15,8 @@ interface CartData {
 
 const CartPage: React.FC = () => {
     const [cartData, setCartData] = useState<CartData | null>(null);
+    const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const selectedItems = cartData?.items.filter(item => selectedIds.includes(item.id)) || [];
     const [error, setError] = useState("");
 
     const API_URL = "http://localhost:3000/api/cart";
@@ -40,6 +42,24 @@ const CartPage: React.FC = () => {
         }
     }, [token]);
 
+    // Hàm xử lý khi click vào checkbox của từng item
+    const handleToggleSelect = (id: number) => {
+        setSelectedIds(prev =>
+            prev.includes(id)
+                ? prev.filter(itemId => itemId !== id) // Bỏ chọn
+                : [...prev, id] // Thêm vào danh sách chọn
+        );
+    };
+
+    // Hàm chọn tất cả / bỏ chọn tất cả
+    const handleSelectAll = (allIds: number[]) => {
+        if (selectedIds.length === allIds.length) {
+            setSelectedIds([]);
+        } else {
+            setSelectedIds(allIds);
+        }
+    };
+
     // 2. Hàm thay đổi số lượng (PATCH /api/cart/{itemId})
     // Sửa tham số newQuantity từ 'number' thành 'number | string'
     const onChangeQuantity = async (itemId: number, newQuantity: number | string) => {
@@ -52,11 +72,9 @@ const CartPage: React.FC = () => {
             );
 
             // Khi tính tổng tiền, chúng ta dùng Number() để tránh lỗi với chuỗi rỗng
-            const newTotal = updatedItems.reduce((sum, item) => {
-                const qty = Number(item.quantity) || 0;
-                return sum + (item.products.price * qty);
+            const newTotal = selectedItems.reduce((sum, item) => {
+                return sum + (item.products.price * Number(item.quantity));
             }, 0);
-
             setCartData({ ...cartData, items: updatedItems as CartItem[], totalAmount: newTotal });
         }
 
@@ -101,6 +119,8 @@ const CartPage: React.FC = () => {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
+                setSelectedIds(prev => prev.filter(id => id !== itemId));
+
                 fetchCart();
             } catch (err) {
                 Swal.fire(
@@ -111,6 +131,10 @@ const CartPage: React.FC = () => {
             }
         }
     };
+
+    const selectedTotalAmount = selectedItems.reduce((sum, item) => {
+        return sum + (item.products.price * Number(item.quantity || 0));
+    }, 0);
 
     return (
         <>
@@ -124,7 +148,10 @@ const CartPage: React.FC = () => {
                 ) : (
                     <ContentWrapper
                         items={cartData?.items || []}
-                        totalAmount={cartData?.totalAmount || 0}
+                        selectedIds={selectedIds}
+                        onSelect={handleToggleSelect}
+                        onSelectAll={handleSelectAll}
+                        totalAmount={selectedTotalAmount}
                         onChangeQuantity={onChangeQuantity}
                         onRemoveItem={onRemoveItem}
                     />

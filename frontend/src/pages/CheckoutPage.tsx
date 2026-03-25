@@ -3,37 +3,36 @@ import type { CartItem } from '../types';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import ContentWrapper from '../components/checkout-page/ContentWrapper';
+import { useNavigate } from 'react-router-dom';
 import './CheckoutPage.css';
 
 const CheckoutPage: React.FC = () => {
     const [items, setItems] = useState<CartItem[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchCart = async () => {
-            const token = localStorage.getItem('access_token');
+        const savedItems = localStorage.getItem('checkout_items');
 
+        if (savedItems) {
             try {
-                const response = await fetch('http://localhost:3000/api/cart', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
+                const parsedItems: CartItem[] = JSON.parse(savedItems);
 
-                if (!response.ok) {
-                    throw new Error(`Lỗi Server: ${response.status}`);
+                if (parsedItems.length === 0) {
+                    // Nếu mảng rỗng, đẩy về giỏ hàng
+                    navigate('/cart');
+                    return;
                 }
 
-                const data = await response.json();
-                console.log("Dữ liệu nhận được:", data);
-                setItems(data.items || []);
+                setItems(parsedItems);
             } catch (error) {
-                console.error("Lỗi Fetch:", error);
+                console.error("Lỗi parse dữ liệu checkout:", error);
+                navigate('/cart');
             }
-        };
-        fetchCart();
-    }, []);
+        } else {
+            // 2. Nếu không có dữ liệu (user tự ý gõ link /checkout), đẩy về giỏ hàng
+            navigate('/cart');
+        }
+    }, [navigate]);
 
     return (
         <>

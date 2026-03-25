@@ -81,4 +81,5 @@
     height: 40px;
     text-align: center;
     border: 1px solid #ccc;
+    padding: 0 !important
 }

@@ -8,6 +8,70 @@
     margin-bottom: 24px;
 }
 
+/* Hiệu ứng highlight khi item được chọn */
+.cart-item-wrapper.selected {
+    background-color: #fafafa;
+}
+
+.cart-item-container {
+    display: flex;
+    align-items: flex-start;
+    /* Căn lề trên để checkbox ngang hàng với tên SP */
+    gap: 16px;
+    align-items: center;
+}
+
+/* Section Checkbox */
+.item-checkbox-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Ẩn checkbox mặc định của trình duyệt */
+.item-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #BCBCBC;
+    /* Viền xám đồng bộ với border-bottom của bạn */
+    border-radius: 2px;
+    background-color: #FFFFFF;
+    /* Nền trắng */
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+/* Khi được tick: đổi viền sang màu đỏ đậm (hoặc đen) và thêm dấu tích */
+.item-checkbox:checked {
+    background-color: #7b0f1a;
+    /* Hoặc giữ #FFFFFF nếu bạn muốn nền trắng hoàn toàn */
+    border-color: #7b0f1a;
+}
+
+/* Tạo dấu tích (V) màu trắng khi được chọn */
+.item-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin-bottom: 2px;
+}
+
+/* Hiệu ứng khi hover */
+.item-checkbox:hover {
+    border-color: #7b0f1a;
+}
+
 /* --- Responsive Desktop --- */
 @media (min-width: 768px) {
     .cart-item-wrapper {
@@ -38,6 +102,11 @@
     width: 105px;
     height: 105px;
     overflow: hidden;
+}
+
+.item-img-wrapper:hover {
+    cursor: pointer;
+    opacity: 0.9;
 }
 
 .product-img {

@@ -5,10 +5,11 @@ import './CartItemQty.css';
 interface Props {
     price: number;
     quantity: number | string;
+    stock: number;
     onChangeQuantity: (value: number | string) => void;
 }
 
-const CartItemQuantity: React.FC<Props> = ({ price, quantity, onChangeQuantity }) => {
+const CartItemQuantity: React.FC<Props> = ({ price, quantity, stock, onChangeQuantity }) => {
 
     return (
         <div className="cart-item-qty-container">
@@ -16,6 +17,7 @@ const CartItemQuantity: React.FC<Props> = ({ price, quantity, onChangeQuantity }
             <div className="qty-wrapper">
                 <QuantitySelector
                     quantity={quantity}
+                    max={stock}
                     onChange={(value) => onChangeQuantity(value)}
                 />
             </div>

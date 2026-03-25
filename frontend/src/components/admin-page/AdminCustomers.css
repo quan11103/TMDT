@@ -1,18 +1,105 @@
-.customer-info {
+/* Tận dụng lại các style từ AdminProducts.css */
+.admin-section {
+    background: #fff;
+    padding: 24px;
+}
+
+.section-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    margin-bottom: 24px;
 }
 
-.avatar-small {
-    width: 28px;
-    height: 28px;
-    background-color: #f0f0f0;
-    border: 1px solid #e5e5e5;
-    border-radius: 50%;
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
 }
 
-.muji-table td.spent {
-    font-weight: 700;
-    text-align: right;
+/* Muji Table Style */
+.muji-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.muji-table th {
+    text-align: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #333;
+    color: #888;
+    font-weight: 400;
+}
+
+.muji-table td {
+    text-align: center;
+    padding: 16px;
+    border-bottom: 2px solid #eee;
+    color: #333;
+}
+
+.muji-table td.font-medium {
+    text-align: left;
+}
+
+/* Thêm khoảng lùi cho danh mục con */
+.child-indent {
+    padding-left: 20px;
+    color: #666;
+}
+
+.muji-table tr:hover {
+    background-color: #fafafa;
+}
+
+/* Buttons & Badges */
+.btn-primary {
+    background-color: #7f0019;
+    /* Màu đỏ Muji */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    background-color: #f4f4f4;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.table-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.action-badge {
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-block;
+    transition: opacity 0.2s;
+}
+
+.action-badge.edit {
+    background-color: #e6f0f8;
+    color: #0066cc;
+}
+
+.action-badge.delete {
+    background-color: #fff0f0;
+    color: #cc0000;
+}
+
+.loading-text {
+    text-align: center;
+    padding: 40px;
+    color: #888;
 }
