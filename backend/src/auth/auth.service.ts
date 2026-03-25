@@ -187,7 +187,7 @@ export class AuthService {
       },
     });
 
-    const resetLink = `${this.config.getOrThrow('FRONTEND_URL')}?token=${token}`;
+    const resetLink = `${this.config.getOrThrow('FRONTEND_FORGOT_PASSWORD_URL')}?token=${token}`;
     await this.email.sendPasswordResetEmail(hasEmail.email, resetLink);
 
     return {
