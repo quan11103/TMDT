@@ -1,11 +1,10 @@
-# services = các "hộp" cần chạy
 services:
 
   # ─── POSTGRESQL DATABASE ─────────────────────────────────
   db:
-    image: postgres:18-alpine # dùng Postgres 18
+    image: postgres:18-alpine
     container_name: tmdt_db
-    restart: always # tự restart nếu crash
+    restart: always
 
     environment:
       POSTGRES_USER: postgres
@@ -14,11 +13,9 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
 
     ports:
-      - "5432:5432" # máy_host:container — truy cập DB từ bên ngoài
+      - "5432:5432"
 
     volumes:
-      # Lưu data DB ra ngoài container
-      # Nếu không có dòng này → tắt container là mất data!
       - postgres_data:/var/lib/postgresql/data
 
     networks:
@@ -27,22 +24,17 @@ services:
   # ─── NESTJS APP ──────────────────────────────────────────
   app:
     build:
-      context: . # build từ thư mục hiện tại
+      context: .
       dockerfile: Dockerfile
 
     container_name: tmdt_app
     restart: always
 
-    # App phụ thuộc DB — chờ DB khởi động xong mới chạy app
     depends_on:
       - db
 
     environment:
-      # Ghi đè .env — dùng tên service 'db' thay vì 'localhost'
-      # Vì trong Docker network, các container gọi nhau bằng tên service
       DATABASE_URL: postgresql://postgres:12345@db:5432/tmdt_db
-      #                                              ↑
-      #                              'db' = tên service postgres ở trên
 
       JWT_SECRET: secret
       JWT_EXPIRES_IN: 1d
@@ -52,39 +44,31 @@ services:
 
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-      GOOGLE_CALLBACK_URL: http://localhost:3000/api/auth/google/callback
+      GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL}
 
       FACEBOOK_CLIENT_ID: ${FACEBOOK_CLIENT_ID}
       FACEBOOK_CLIENT_SECRET: ${FACEBOOK_CLIENT_SECRET}
-      FACEBOOK_CALLBACK_URL: http://localhost:3000/api/auth/facebook/callback
+      FACEBOOK_CALLBACK_URL: ${FACEBOOK_CALLBACK_URL}
 
-      VNPAY_TMN_CODE: YEY6V61K
-      VNPAY_HASH_SECRET: 2RIKR357LM98K3CTQVQOB5EV7JB26FND
-      VNPAY_PAYMENT_URL: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-      VNPAY_RETURN_URL: http://localhost:3000/api/payment/vnpay/callback
+      VNPAY_TMN_CODE: ${VNPAY_TMN_CODE}
+      VNPAY_HASH_SECRET: ${VNPAY_HASH_SECRET}
+      VNPAY_PAYMENT_URL: ${VNPAY_PAYMENT_URL}
+      VNPAY_RETURN_URL: ${VNPAY_RETURN_URL}
 
-      RESEND_API_KEY: re_Shq9eZ2D_KhpurReD7fxsFpbYUB7WfRBQ
-      RESET_TOKEN_TTL_MINUTES: 5
-      FRONTEND_FORGOT_PASSWORD_URL: http://localhost:5173/forgot-password
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      RESET_TOKEN_TTL_MINUTES: $RESET_TOKEN_TTL_MINUTES
+      FRONTEND_FORGOT_PASSWORD_URL: ${FRONTEND_FORGOT_PASSWORD_URL}
 
     ports:
-      - "3000:3000" # máy_host:container
-
-    # volumes:
-    #   # Mount .env vào container (không cần hardcode env ở trên nếu dùng cách này)
-    #   # - ./.env:/app/.env
+      - "3000:3000"
 
     networks:
       - tmdt_network
 
-# ─── VOLUMES ───────────────────────────────────────────────
-# Nơi lưu data DB trên máy host
 volumes:
   postgres_data:
     name: tmdt_postgres_data
 
-# ─── NETWORKS ──────────────────────────────────────────────
-# Mạng nội bộ để các container giao tiếp với nhau
 networks:
   tmdt_network:
     driver: bridge
