@@ -3,9 +3,9 @@ services:
 
   # ─── POSTGRESQL DATABASE ─────────────────────────────────
   db:
-    image: postgres:18-alpine   # dùng Postgres 18
+    image: postgres:18-alpine # dùng Postgres 18
     container_name: tmdt_db
-    restart: always             # tự restart nếu crash
+    restart: always # tự restart nếu crash
 
     environment:
       POSTGRES_USER: postgres
@@ -14,7 +14,7 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
 
     ports:
-      - "5432:5432"   # máy_host:container — truy cập DB từ bên ngoài
+      - "5432:5432" # máy_host:container — truy cập DB từ bên ngoài
 
     volumes:
       # Lưu data DB ra ngoài container
@@ -27,7 +27,7 @@ services:
   # ─── NESTJS APP ──────────────────────────────────────────
   app:
     build:
-      context: .          # build từ thư mục hiện tại
+      context: . # build từ thư mục hiện tại
       dockerfile: Dockerfile
 
     container_name: tmdt_app
@@ -59,7 +59,7 @@ services:
       FACEBOOK_CALLBACK_URL: http://localhost:3000/api/auth/facebook/callback
 
     ports:
-      - "3000:3000"   # máy_host:container
+      - "3000:3000" # máy_host:container
 
     # volumes:
     #   # Mount .env vào container (không cần hardcode env ở trên nếu dùng cách này)
