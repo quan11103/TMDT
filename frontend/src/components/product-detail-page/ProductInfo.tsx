@@ -11,7 +11,7 @@ interface Props {
 const ProductInfo: React.FC<Props> = ({ product }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [quantity, setQuantity] = useState<number | string>(1);
-    const [isAdding, setIsAdding] = useState(false);
+    const [isAdded, setIsAdded] = useState(false);
 
     const formattedPrice = new Intl.NumberFormat('vi-VN').format(product.price);
 
@@ -24,8 +24,6 @@ const ProductInfo: React.FC<Props> = ({ product }) => {
             alert("Vui lòng đăng nhập để mua hàng!");
             return;
         }
-
-        setIsAdding(true);
 
         try {
             // 2. Gửi request tới API (khớp với AddToCartDto ở Backend)
@@ -41,17 +39,16 @@ const ProductInfo: React.FC<Props> = ({ product }) => {
                     }
                 }
             );
-
-            // 3. Thông báo thành công
-            alert(`Đã thêm thành công ${finalQuantity} sản phẩm vào giỏ hàng!`);
-
+            window.dispatchEvent(new Event('cartUpdated'));
+            setTimeout(() => {
+                setIsAdded(false);
+            }, 3000);
+            setIsAdded(true);
         } catch (err: any) {
             // 4. Xử lý lỗi (ví dụ: kho không đủ, sản phẩm hết hàng)
             console.error("Lỗi thêm vào giỏ:", err.response?.data);
             const errorMsg = err.response?.data?.message || "Có lỗi xảy ra khi thêm vào giỏ hàng.";
             alert(Array.isArray(errorMsg) ? errorMsg[0] : errorMsg);
-        } finally {
-            setIsAdding(false);
         }
     };
 
@@ -106,15 +103,21 @@ const ProductInfo: React.FC<Props> = ({ product }) => {
                     <QuantitySelector
                         quantity={quantity}
                         onChange={setQuantity}
+                        max={product.stock}
                     />
 
                     <div className="action-buttons">
                         <button
-                            className={`btn-add-cart ${isAdding ? 'loading' : ''}`}
-                            disabled={product.stock <= 0 || isAdding}
+                            // Cập nhật class để nhận style giống ProductItem
+                            className={`btn-add-cart ${isAdded ? 'added' : ''}`}
+                            // Disabled khi đang loading, khi đã thêm, hoặc khi hết hàng
+                            disabled={product.stock <= 0 || isAdded}
                             onClick={handleAddToCart}
                         >
-                            {isAdding ? "Đang xử lý..." : (product.stock > 0 ? "Thêm vào giỏ hàng" : "Hết hàng")}
+                            {isAdded
+                                ? "Đã thêm vào giỏ"
+                                : (product.stock > 0 ? "Thêm vào giỏ hàng" : "Hết hàng")
+                            }
                         </button>
                     </div>
                 </div>

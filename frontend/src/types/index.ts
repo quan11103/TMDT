@@ -49,11 +49,18 @@ export interface ShippingInfo {
     email: string;
     fullName: string;
     phone: string;
+    // Cấp 1: Tỉnh/Thành
     province: string;
+    provinceCode: string;
+    // Cấp 2: Quận/Huyện/Thành phố thuộc tỉnh (Tên chung trong Code vẫn nên là district)
+    district: string;
+    districtCode: string;
+    // Cấp 3: Phường/Xã
     ward: string;
+    wardCode: string;
     street: string;
     note: string;
-    addrType: "home" | "office" | "other";
+    addrType: 'home' | 'office' | 'other';
 }
 
 export interface CategoryData {
@@ -71,6 +78,30 @@ export interface PaginationMeta {
     page: number;
     limit: number;
     total_page: number;
+}
+
+export interface Order {
+    id: number;
+    total_amount: number;
+    status: string;
+    created_at: string;
+    users: {
+        full_name: string;
+        email: string;
+    } | null;
+    order_items: any[];
+    payments: any[];
+}
+
+export interface User {
+    id: number;
+    email: string;
+    full_name: string;
+    is_active: boolean;
+    created_at: string;
+    roles: {
+        role: string;
+    };
 }
 
 export interface Review {

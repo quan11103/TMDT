@@ -1,17 +1,17 @@
 import React from 'react';
 import './QuantitySelector.css';
 
-interface QuantitySelectorProps {
+interface Props {
     quantity: number | string;
     onChange: (value: number | string) => void;
+    max: number; // Thêm giới hạn tối đa vào interface
 }
 
-const QuantitySelector: React.FC<QuantitySelectorProps> = ({ quantity, onChange }) => {
+const QuantitySelector: React.FC<Props> = ({ quantity, onChange, max }) => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
 
-        // Nếu là chuỗi rỗng, cho phép cập nhật để người dùng xóa được số
         if (val === '') {
             onChange('');
             return;
@@ -19,22 +19,31 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({ quantity, onChange 
 
         const numValue = parseInt(val, 10);
         if (!isNaN(numValue)) {
-            // Không chặn value < 1 ở đây để tránh giật lag khi gõ
+            // Cho phép gõ tự do, sẽ chuẩn hóa khi click ra ngoài (Blur)
             onChange(numValue);
         }
+        window.dispatchEvent(new Event('cartUpdated'));
     };
 
-    // Hàm quan trọng: Khi người dùng bấm ra ngoài, nếu đang trống hoặc < 1 thì đưa về 1
+    // Chỉnh sửa hàm handleBlur để xử lý cả trường hợp > tồn kho
     const handleBlur = () => {
-        if (quantity === '' || Number(quantity) < 1) {
+        let val = Number(quantity);
+
+        if (quantity === '' || val < 1) {
             onChange(1);
+        } else if (val > max) {
+            onChange(max); // Nếu lớn hơn tồn kho thì tự động đưa về max
         }
     };
 
     const adjustment = (step: number) => {
         const currentQty = typeof quantity === 'string' ? 0 : quantity;
-        const nextValue = Math.max(1, currentQty + step);
-        onChange(nextValue);
+        const nextValue = currentQty + step;
+
+        // Đảm bảo nút +/- không vượt quá giới hạn [1, max]
+        if (nextValue >= 1 && nextValue <= max) {
+            onChange(nextValue);
+        }
     };
 
     return (
@@ -53,14 +62,16 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({ quantity, onChange 
                 className="qty-input"
                 value={quantity}
                 min={1}
+                max={max} // Thêm thuộc tính max cho input
                 onChange={handleInputChange}
-                onBlur={handleBlur} // Thêm sự kiện onBlur
+                onBlur={handleBlur}
             />
 
             <button
                 type="button"
                 className="qty-btn"
                 onClick={() => adjustment(1)}
+                disabled={Number(quantity) >= max} // Disable nút + khi đã đạt trần tồn kho
             >
                 +
             </button>

@@ -76,6 +76,7 @@ const ProductItem: React.FC<Props> = ({ Id }) => {
                     Authorization: `Bearer ${token}`
                 }
             });
+            window.dispatchEvent(new Event('cartUpdated'));
 
             setIsAdded(true);
 

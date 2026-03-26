@@ -12,7 +12,21 @@ interface Props {
 
 const ContentWrapper: React.FC<Props> = ({ items }) => {
     const [address, setAddress] = useState<ShippingInfo>({
-        email: "", fullName: "", phone: "", province: "", ward: "", street: "", note: "", addrType: "home"
+        email: "",
+        fullName: "",
+        phone: "",
+        // Cấp 1
+        province: "",
+        provinceCode: "", // Thêm mới
+        // Cấp 2
+        district: "",     // Thêm mới
+        districtCode: "", // Thêm mới
+        // Cấp 3
+        ward: "",
+        wardCode: "",     // Thêm mới
+        street: "",
+        note: "",
+        addrType: "home"
     });
 
     return (

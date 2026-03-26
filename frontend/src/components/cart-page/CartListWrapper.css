@@ -10,6 +10,7 @@
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
+    align-items: flex-end;
     width: 100%;
     color: #000;
     font-size: 15px;
@@ -18,12 +19,45 @@
     font-weight: 700;
 }
 
+.header-left-section {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    /* Khoảng cách giữa chữ Mặt hàng và checkbox */
+}
+
 .header-title {
     margin: 0;
 }
 
 .header-label {
     margin: 0;
+}
+
+.select-all-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 400;
+    /* Để chữ "Chọn tất cả" mảnh hơn tiêu đề */
+    font-size: 14px;
+}
+
+.item-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #7b0f1a;
+}
+
+.select-all-label {
+    cursor: pointer;
+    user-select: none;
+}
+
+.header-label {
+    margin: 0;
+    text-transform: capitalize;
 }
 
 /* Vùng chứa danh sách - thay thế cho div con thứ 2 */

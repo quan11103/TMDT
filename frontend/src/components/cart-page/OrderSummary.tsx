@@ -1,29 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import './OrderSummary.css';
 import type { CartItem } from '../../types';
 
 interface Props {
-    items: CartItem[];
+    selectedItems: CartItem[];
     totalAmount: number;
 }
 
-const OrderSummary: React.FC<Props> = ({ items, totalAmount }) => {
+const OrderSummary: React.FC<Props> = ({ selectedItems, totalAmount }) => {
     const navigate = useNavigate();
 
     const handleCheckoutClick = () => {
+        if (selectedItems.length === 0) {
+            Swal.fire({
+                title: 'Đơn hàng trống!',
+                text: 'Vui lòng chọn ít nhất một sản phẩm để thanh toán.',
+                icon: 'warning',
+                confirmButtonColor: '#7b0f1a', // Màu đỏ Muji của bạn
+                confirmButtonText: 'Đã hiểu'
+            });
+            return;
+        }
+        // Lưu tạm các item được chọn vào kho lưu trữ
+        localStorage.setItem('checkout_items', JSON.stringify(selectedItems));
         navigate('/checkout');
     };
 
-    const itemCount = items.reduce((acc, item) => acc + (Number(item.quantity) || 0), 0);
+    const itemCount = selectedItems.reduce((acc, item) => acc + (Number(item.quantity) || 0), 0);
 
     const FREE_SHIPPING_THRESHOLD = 500000;
     const moreToFreeShipping = FREE_SHIPPING_THRESHOLD - totalAmount;
 
+    useEffect(() => {
+        // Chỉ phát tín hiệu khi giỏ hàng có dữ liệu hoặc thay đổi
+        // Điều này giúp Header cập nhật đúng con số 'itemCount' mà bạn thấy ở row-label
+        window.dispatchEvent(new Event('cartUpdated'));
+    }, [itemCount]); // Chỉ chạy lại khi tổng số lượng món hàng thay đổi
+
     return (
         <aside className="order-summary-container">
             <div className="order-summary-card">
-                <h3 className="summary-title">Thông tin đơn hàng ({items.length})</h3>
+                <h3 className="summary-title">Thông tin đơn hàng ({selectedItems.length})</h3>
 
                 <div className="summary-details">
                     {/* Tạm tính */}
@@ -77,7 +96,6 @@ const OrderSummary: React.FC<Props> = ({ items, totalAmount }) => {
                         <button
                             className="checkout-btn"
                             onClick={handleCheckoutClick}
-                            disabled={items.length === 0} // Không cho thanh toán nếu giỏ trống
                         >
                             Thanh toán
                         </button>

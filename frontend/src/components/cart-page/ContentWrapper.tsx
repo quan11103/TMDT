@@ -6,12 +6,16 @@ import OrderSummary from './OrderSummary';
 
 interface Props {
     items: CartItem[];
-    totalAmount: number; // Nhận thêm prop này từ CartPage để hiển thị chính xác
+    selectedIds: number[];
+    onSelect: (id: number) => void;
+    onSelectAll: (allIds: number[]) => void;
+    totalAmount: number;
     onChangeQuantity: (id: number, quantity: number | string) => void;
     onRemoveItem: (id: number) => void;
 }
 
-const ContentWrapper: React.FC<Props> = ({ items, totalAmount, onChangeQuantity, onRemoveItem }) => {
+const ContentWrapper: React.FC<Props> = ({ items, selectedIds, onSelect, onSelectAll, totalAmount, onChangeQuantity, onRemoveItem }) => {
+    const selectedItems = items.filter(item => selectedIds.includes(item.id));
 
     return (
         <div className="content-layout">
@@ -24,6 +28,9 @@ const ContentWrapper: React.FC<Props> = ({ items, totalAmount, onChangeQuantity,
                 ) : (
                     <CartListWrapper
                         items={items}
+                        selectedIds={selectedIds}
+                        onSelect={onSelect}
+                        onSelectAll={onSelectAll}
                         onChangeQuantity={onChangeQuantity}
                         onRemoveItem={onRemoveItem}
                     />
@@ -32,7 +39,7 @@ const ContentWrapper: React.FC<Props> = ({ items, totalAmount, onChangeQuantity,
             <div className="layout-right">
                 {/* 2. Truyền items và totalAmount vào OrderSummary */}
                 <OrderSummary
-                    items={items}
+                    selectedItems={selectedItems}
                     totalAmount={totalAmount}
                 />
             </div>

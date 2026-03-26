@@ -12,14 +12,13 @@ interface Props {
 }
 
 const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount = 0 }) => {
-    console.log("Items nhận được trong OrderSummary:", items);
     if (!items || items.length === 0) {
         return <div className="os-empty">Giỏ hàng của bạn đang trống.</div>;
     }
 
     const navigate = useNavigate();
 
-    const { email, fullName, phone, province, ward, street } = shippingInfo;
+    const { email, fullName, phone, province, district, ward, street } = shippingInfo;
     const itemCount = items.reduce((acc, it) => acc + (it.quantity || 0), 0);
     const subtotal = items.reduce(
         (acc, item) => acc + Number(item.products.price) * item.quantity,
@@ -30,7 +29,7 @@ const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount
 
     const handleConfirmOrder = async () => {
         // 1. Kiểm tra validation địa chỉ
-        if (!email || !fullName || !phone || !province || !ward || !street) {
+        if (!email || !fullName || !phone || !province || !district || !ward || !street) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Thông tin chưa đầy đủ',
@@ -52,7 +51,7 @@ const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount
         // 3. Chuẩn bị dữ liệu theo CreateOrderDto của Backend
         const orderPayload = {
             cart_item_ids: items.map(it => it.id), // Lấy danh sách ID các item trong giỏ
-            address: `${street}, ${ward}, ${province}`, // Ghép chuỗi địa chỉ đầy đủ
+            address: `${street}, ${ward}, ${district}, ${province}`, // Ghép chuỗi địa chỉ đầy đủ
             phone: phone,
             note: shippingInfo.note || ""
         };

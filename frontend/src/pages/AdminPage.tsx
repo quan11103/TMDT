@@ -5,6 +5,7 @@ import AdminDashboard from '../components/admin-page/AdminDashboard';
 import AdminProducts from '../components/admin-page/AdminProducts';
 import AdminOrders from '../components/admin-page/AdminOrders';
 import AdminCustomers from '../components/admin-page/AdminCustomers';
+import AdminCategories from '../components/admin-page/AdminCategories';
 import './AdminPage.css';
 
 const AdminLayout: React.FC = () => {
@@ -18,6 +19,7 @@ const AdminLayout: React.FC = () => {
             case 'Sản phẩm': return <AdminProducts />;
             case 'Đơn hàng': return <AdminOrders />;
             case 'Khách hàng': return <AdminCustomers />;
+            case 'Danh mục': return <AdminCategories />;
             default: return <AdminDashboard />;
         }
     };

@@ -24,7 +24,7 @@ services:
   # ─── NESTJS APP ──────────────────────────────────────────
   app:
     build:
-      context: .          
+      context: .
       dockerfile: Dockerfile
 
     container_name: tmdt_app

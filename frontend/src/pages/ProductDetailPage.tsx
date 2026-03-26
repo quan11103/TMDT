@@ -14,13 +14,12 @@ const ProductDetail: React.FC = () => {
     const { productId } = useParams<{ productId: string }>();
 
     const [product, setProduct] = useState<ProductDetailType | null>(null);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchProduct = async () => {
             if (!productId) return;
-
             setLoading(true);
             try {
                 const response = await axios.get(`http://localhost:3000/api/products/${productId}`);
@@ -36,7 +35,7 @@ const ProductDetail: React.FC = () => {
         fetchProduct();
     }, [productId]);
 
-    if (loading) return <div className="loading-screen">Đang tải sản phẩm...</div>;
+    if (loading) return <div className="loading-screen" style={{ color: '#fff' }}>Đang tải...</div>;
     if (error || !product) return <div className="error-screen">{error || "Sản phẩm không tồn tại"}</div>;
 
     return (
