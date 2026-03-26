@@ -11,7 +11,6 @@ const OrderStatusTabs: React.FC<OrderStatusTabsProps> = ({ activeTab, onTabChang
 
     // Danh sách các tab tương ứng với enum trong Prisma
     const tabs = [
-        { id: 'ALL', label: 'Tất cả' },
         { id: 'PENDING', label: 'Chờ xác nhận' },
         { id: 'CONFIRMED', label: 'Đã xác nhận' },
         { id: 'SHIPPING', label: 'Đang giao' },

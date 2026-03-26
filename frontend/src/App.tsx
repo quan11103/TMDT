@@ -13,6 +13,7 @@ import OrderStatusPage from './pages/OrderStatusPage';
 import AdminPage from './pages/AdminPage';
 import SignUpPage from './pages/SignUpPage';
 import ProtectedRoute from './components/admin-page/ProtectedRoute';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
 function App() {
 
@@ -50,6 +51,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login/" element={<LoginPage />} />
         <Route path="/signup/" element={<SignUpPage />} />
+        <Route path="/forgot-password/" element={<ForgotPasswordPage />} />
         <Route path="/search/" element={<SearchPage />} />
         <Route path="/product/:productId" element={<ProductDetailPage />} />
         <Route path="/category/:categoryId" element={<CategoryPage />} />

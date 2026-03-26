@@ -81,3 +81,50 @@
         white-space: nowrap;
     }
 }
+
+/* Container bao quanh tiêu đề */
+.order-header-title {
+    margin-top: 8px;
+    padding: 0 16px;
+    width: 100%;
+}
+
+/* Tiêu đề chính h1 */
+.order-header-title .page-main-title {
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    color: #333;
+    padding: 30px 0;
+}
+
+/* Phần hiển thị số lượng (x đơn hàng) */
+.order-header-title .total-count {
+    margin-left: 12px;
+    font-weight: 400;
+    color: #666;
+    font-size: 11px;
+    /* Mặc định cho mobile */
+}
+
+/* Cấu trúc cho màn hình Tablet/Desktop */
+@media (min-width: 768px) {
+    .order-header-title {
+        padding: 0;
+        margin-bottom: 24px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .order-header-title .total-count {
+        font-size: 17px;
+        /* Tăng kích thước số lượng trên màn hình lớn */
+    }
+}
+
+/* Để tiêu đề không dính sát vào Tabs bên dưới */
+.order-status-page .order-header-title {
+    margin-bottom: 20px;
+}

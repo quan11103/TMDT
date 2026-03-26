@@ -123,7 +123,7 @@ const LoginCard: React.FC = () => {
             </div>
 
             <div className="forgot-password">
-                <a href="/vn/forgot-password">Quên Mật Khẩu?</a>
+                <a href="/forgot-password/">Quên Mật Khẩu?</a>
             </div>
             <LoginFooter />
         </div>

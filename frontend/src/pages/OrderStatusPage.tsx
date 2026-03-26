@@ -8,7 +8,6 @@ import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 
 export const OrderStatusEnum = {
-    ALL: "ALL",
     PENDING: "PENDING",
     CONFIRMED: "CONFIRMED",
     SHIPPING: "SHIPPING",
@@ -19,7 +18,7 @@ export const OrderStatusEnum = {
 export type OrderStatusType = typeof OrderStatusEnum[keyof typeof OrderStatusEnum];
 
 const OrderStatus: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<OrderStatusType>(OrderStatusEnum.ALL);
+    const [activeTab, setActiveTab] = useState<OrderStatusType>(OrderStatusEnum.PENDING);
     const [allOrders, setAllOrders] = useState<any[]>([]); // Lưu toàn bộ đơn hàng
     const [filteredOrders, setFilteredOrders] = useState<any[]>([]); // Lưu đơn hàng sau khi lọc
     const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -56,12 +55,8 @@ const OrderStatus: React.FC = () => {
 
     // Logic lọc đơn hàng tại Client dựa trên activeTab
     useEffect(() => {
-        if (activeTab === OrderStatusEnum.ALL) {
-            setFilteredOrders(allOrders);
-        } else {
-            const filtered = allOrders.filter(order => order.status === activeTab);
-            setFilteredOrders(filtered);
-        }
+        const filtered = allOrders.filter(order => order.status === activeTab);
+        setFilteredOrders(filtered);
     }, [activeTab, allOrders]);
 
     return (
@@ -69,6 +64,14 @@ const OrderStatus: React.FC = () => {
             <Header />
             <div className="order-status-page">
                 <div className="container">
+                    <div className="order-header-title">
+                        <h1 className="page-main-title">
+                            Trạng thái đơn hàng
+                            <span className="total-count">
+                                {filteredOrders.length} đơn hàng
+                            </span>
+                        </h1>
+                    </div>
                     <OrderStatusTabs
                         activeTab={activeTab}
                         onTabChange={setActiveTab}
