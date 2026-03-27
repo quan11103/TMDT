@@ -9,9 +9,10 @@ interface Props {
     shippingInfo: ShippingInfo;
     shipping?: number;
     discount?: number;
+    paymentMethod: string | null;
 }
 
-const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount = 0 }) => {
+const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount = 0, paymentMethod }) => {
     if (!items || items.length === 0) {
         return <div className="os-empty">Giỏ hàng của bạn đang trống.</div>;
     }
@@ -57,11 +58,10 @@ const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount
         };
 
         try {
-            // Hiển thị loading để người dùng không nhấn nút nhiều lần
             Swal.showLoading();
 
-            // 4. Gọi API tạo đơn hàng (Backend sẽ tự trừ kho và xóa giỏ hàng trong Transaction)
-            const response = await fetch('http://localhost:3000/api/order', {
+            // BƯỚC A: Gọi API tạo đơn hàng
+            const orderResponse = await fetch('http://localhost:3000/api/order', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -70,20 +70,38 @@ const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount
                 body: JSON.stringify(orderPayload)
             });
 
-            const result = await response.json();
+            const orderResult = await orderResponse.json();
 
-            if (response.ok) {
-                // Thành công: Backend đã tự xóa cart_items và trừ stock products
-                await Swal.fire({
-                    icon: 'success',
-                    title: 'Đặt hàng thành công!',
-                    text: `Mã đơn hàng của bạn là: #${result.id}`,
-                    confirmButtonColor: '#28a745'
+            if (orderResponse.ok) {
+                // BƯỚC B: Gọi API tạo Payment cho đơn hàng vừa tạo
+                // Giả sử bạn chọn mặc định là VNPAY, nếu có UI chọn method thì thay bằng biến
+                const paymentResponse = await fetch('http://localhost:3000/api/payment', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        order_id: orderResult.id,
+                        method: paymentMethod?.toUpperCase()
+                    })
                 });
-                navigate('/'); // Quay về trang chủ
+
+                const paymentResult = await paymentResponse.json();
+
+                if (paymentResponse.ok) {
+                    Swal.close();
+                    // CHUYỂN HƯỚNG sang trang Redirect đã thiết kế
+                    if (paymentResult.payment_url) {
+                        window.location.href = paymentResult.payment_url;
+                    } else {
+                        throw new Error('Không nhận được liên kết thanh toán từ hệ thống');
+                    }
+                } else {
+                    throw new Error(paymentResult.message || 'Lỗi tạo liên kết thanh toán');
+                }
             } else {
-                // Thất bại: Hiển thị lỗi từ NestJS (ví dụ: "Sản phẩm A chỉ còn lại 2 sản phẩm")
-                throw new Error(result.message || 'Có lỗi xảy ra khi tạo đơn hàng');
+                throw new Error(orderResult.message || 'Có lỗi xảy ra khi tạo đơn hàng');
             }
         } catch (error: any) {
             console.error("Lỗi đặt hàng:", error);
@@ -156,8 +174,12 @@ const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount
                     <button
                         className="btn-checkout"
                         type="button"
-                        disabled={items.length === 0}
+                        disabled={items.length === 0 || !paymentMethod}
                         onClick={handleConfirmOrder}
+                        style={{
+                            backgroundColor: !paymentMethod ? '#ccc' : '',
+                            cursor: !paymentMethod ? 'auto' : 'pointer'
+                        }}
                     >
                         Thanh toán
                     </button>

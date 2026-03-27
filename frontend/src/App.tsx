@@ -14,20 +14,37 @@ import AdminPage from './pages/AdminPage';
 import SignUpPage from './pages/SignUpPage';
 import ProtectedRoute from './components/admin-page/ProtectedRoute';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import PaymentResultPage from './pages/PaymentResultPage';
 
 function App() {
 
   // Logic kiểm tra Token tự động khi load trang
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
+    // 1. CHỨC NĂNG MỚI: Hứng Token từ Google Redirect
+    const params = new URLSearchParams(window.location.search);
+    const tokenFromUrl = params.get('token');
+    const userFromUrl = params.get('user');
 
+    if (tokenFromUrl) {
+      localStorage.setItem('access_token', tokenFromUrl);
+      if (userFromUrl) {
+        // Backend thường trả về string, ta lưu vào localStorage
+        localStorage.setItem('user', userFromUrl);
+      }
+      // Xóa query params trên URL để thanh địa chỉ sạch sẽ
+      window.history.replaceState({}, document.title, window.location.pathname);
+      console.log("Đăng nhập Google thành công!");
+    }
+
+    // 2. LOGIC CŨ: Kiểm tra Token hiện tại
+    const token = localStorage.getItem('access_token');
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
         const currentTime = Date.now() / 1000;
 
         if (decoded.exp < currentTime) {
-          console.warn("Phiên đăng nhập đã hết hạn. Đang dọn dẹp...");
+          console.warn("Phiên đăng nhập đã hết hạn.");
           handleClearSession();
         }
       } catch (error) {
@@ -57,6 +74,7 @@ function App() {
         <Route path="/category/:categoryId" element={<CategoryPage />} />
         <Route path="/cart/" element={<CartPage />} />
         <Route path="/checkout/" element={<CheckoutPage />} />
+        <Route path="/payment-result/" element={<PaymentResultPage />} />
         <Route path="/order-status/" element={<OrderStatusPage />} />
         <Route
           path="/admin/"
