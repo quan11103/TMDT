@@ -140,7 +140,7 @@ const ShippingAddress: React.FC<ShippingAddressProps> = ({ address, setAddress }
                         <label className="label" htmlFor="district">Quận / Huyện <span className="req">*</span></label>
                         <div className="selectWrap">
                             <select id="district" className="select" value={address.districtCode} onChange={handleChange} required>
-                                <option value="">Chọn Quận/Huyện/TP</option>
+                                <option value="">Chọn Quận/Huyện</option>
                                 {districts.map(d => <option key={d.code} value={d.code}>{d.name}</option>)}
                             </select>
                         </div>

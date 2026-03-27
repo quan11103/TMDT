@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import "./PaymentMethod.css";
 
-const PaymentMethod: React.FC = () => {
-    const [selected, setSelected] = useState<string | null>(null);
+interface Props {
+    selected: string | null;
+    onSelect: (id: string) => void;
+}
 
+const PaymentMethod: React.FC<Props> = ({ selected, onSelect }) => {
     const methods = [
         {
             id: "vnpay",
@@ -35,10 +38,6 @@ const PaymentMethod: React.FC = () => {
         },
     ];
 
-    const handleSelect = (id: string) => {
-        setSelected(id);
-    };
-
     return (
         <aside className="pm">
             <h3 className="pm-title">Phương thức thanh toán</h3>
@@ -48,12 +47,9 @@ const PaymentMethod: React.FC = () => {
                     <div
                         key={m.id}
                         className={`pm-item ${selected === m.id ? "active" : ""}`}
-                        onClick={() => handleSelect(m.id)}
+                        onClick={() => onSelect(m.id)} // Sử dụng hàm từ Props
                         role="button"
                         tabIndex={0}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") handleSelect(m.id);
-                        }}
                     >
                         <div className="pm-left">
                             <img className="pm-logo" src={m.img} alt={m.title} />

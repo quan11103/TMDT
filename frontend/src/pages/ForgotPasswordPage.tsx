@@ -1,26 +1,40 @@
 import React, { useState } from 'react';
-import ForgotPasswordFlow from '../components/forgot-password-page/ForgotPasswordFlow';
+import Header from '../components/common/Header';
+import Footer from '../components/common/Footer';
+import ForgotPasswordForm from '../components/forgot-password-page/FormForgotPassword';
+import axios from 'axios';
+import './ForgotPasswordPage.css';
 
 const ForgotPasswordPage: React.FC = () => {
-    // State để nhận thông tin tiêu đề từ Flow truyền ra
-    const [header, setHeader] = useState({ title: 'Quên mật khẩu?', description: '' });
+    const [loading, setLoading] = useState(false);
 
-    // Hàm cập nhật tiêu đề dựa trên trạng thái của Flow
-    const handleStatusChange = (status: string) => {
-        const meta: Record<string, { t: string; d: string }> = {
-            SEND_EMAIL: { t: 'Quên mật khẩu?', d: 'Nhập email để nhận mã khôi phục.' },
-            WAITING_CONFIRM: { t: 'Kiểm tra Email', d: 'Chúng tôi đã gửi liên kết đến hộp thư của bạn.' },
-            RESET_PASSWORD: { t: 'Mật khẩu mới', d: 'Thiết lập lại mật khẩu cho tài khoản.' },
-            SUCCESS: { t: 'Thành công!', d: 'Mật khẩu của bạn đã được thay đổi.' },
-            ERROR: { t: 'Lỗi xác thực', d: 'Liên kết không hợp lệ hoặc đã hết hạn.' },
-        };
+    const handleSendResetEmail = async (email: string) => {
+        setLoading(true);
+        try {
+            const response = await axios.post('http://localhost:3000/api/auth/forgot-password', {
+                email: email
+            });
 
-        const currentMeta = meta[status] || meta['SEND_EMAIL'];
-        setHeader({ title: currentMeta.t, description: currentMeta.d });
+            alert(response.data.message || "Vui lòng kiểm tra email của bạn!");
+        } catch (error: any) {
+            const msg = error.response?.data?.message || "Email không tồn tại hoặc có lỗi xảy ra";
+            alert(msg);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
-        <ForgotPasswordFlow onStatusChange={handleStatusChange} />
+        <div className="page-wrapper">
+            <Header />
+            <main className="forgot-password-main">
+                <ForgotPasswordForm
+                    onSubmit={handleSendResetEmail}
+                    isLoading={loading}
+                />
+            </main>
+            <Footer />
+        </div>
     );
 };
 

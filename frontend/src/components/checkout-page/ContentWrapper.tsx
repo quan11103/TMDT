@@ -28,6 +28,7 @@ const ContentWrapper: React.FC<Props> = ({ items }) => {
         note: "",
         addrType: "home"
     });
+    const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
 
     return (
         <div className="checkout-wrapper">
@@ -40,7 +41,10 @@ const ContentWrapper: React.FC<Props> = ({ items }) => {
                 <div className="checkout-right">
                     <div className="sticky-content">
                         <section className="section-card">
-                            <PaymentMethod />
+                            <PaymentMethod
+                                selected={paymentMethod}
+                                onSelect={setPaymentMethod}
+                            />
                         </section>
 
                         <section className="section-card">
@@ -49,7 +53,11 @@ const ContentWrapper: React.FC<Props> = ({ items }) => {
 
                         <section className="section-card">
                             <div className="summary-container">
-                                <OrderSummary items={items} shippingInfo={address} />
+                                <OrderSummary
+                                    items={items}
+                                    shippingInfo={address}
+                                    paymentMethod={paymentMethod}
+                                />
                             </div>
                         </section>
                     </div>
