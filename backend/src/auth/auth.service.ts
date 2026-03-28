@@ -25,7 +25,7 @@ export class AuthService {
     private jwt: JwtService,
     private config: ConfigService,
     private email: EmailService,
-  ) { }
+  ) {}
 
   async oauthLogin(profile: {
     email: string | null;
@@ -90,7 +90,7 @@ export class AuthService {
     const user = await this.prisma.users.findUnique({
       where: { email: dto.email },
       include: {
-        roles: true, // Join với bảng roles để lấy tên role (admin/customer)
+        roles: true,
       },
     });
 
@@ -101,31 +101,27 @@ export class AuthService {
     if (!user.is_active)
       throw new UnauthorizedException('Tài khoản đã bị khóa');
 
-    // 2. So sánh password
     const isMatch = await bcrypt.compare(dto.password, user.password);
 
     if (!isMatch) {
       throw new UnauthorizedException('Email hoặc mật khẩu sai');
     }
 
-    // 3. Chuẩn bị payload cho JWT
-    // Thêm role vào payload để các Guard ở Backend có thể kiểm tra quyền sau này
     const payload = {
       sub: user.id,
       email: user.email,
-      role: user.roles.role, // Ví dụ: "admin" hoặc "customer"
+      role: user.roles.role,
     };
 
     const accessToken = await this.jwt.signAsync(payload);
 
-    // 4. Trả về token và thông tin user cho Frontend
     return {
       access_token: accessToken,
       user: {
         id: user.id,
         full_name: user.full_name,
         email: user.email,
-        role: user.roles.role, // Trả về role để Frontend (LoginCard) dùng để navigate
+        role: user.roles.role,
       },
     };
   }
