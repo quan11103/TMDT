@@ -14,7 +14,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { ForgotPasswordDto } from './dto/forgot_password_dto';
 import { ResetPasswordDto } from './dto/reset_password_dto';
 import { ConfigService } from '@nestjs/config';
-import type { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -35,11 +34,11 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  googleAuth() {}
+  googleAuth() { }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleCallback(@Req() req: any, @Res() res: Response) {
+  async googleCallback(@Req() req: any, @Res() res: any) {
     const result = await this.authService.oauthLogin(req.user);
 
     const token = result.access_token;
@@ -52,11 +51,11 @@ export class AuthController {
 
   @Get('facebook')
   @UseGuards(AuthGuard('facebook'))
-  facebookAuth() {}
+  facebookAuth() { }
 
   @Get('facebook/callback')
   @UseGuards(AuthGuard('facebook'))
-  async facebookCallback(@Req() req: any, @Res() res: Response) {
+  async facebookCallback(@Req() req: any, @Res() res: any) {
     const result = await this.authService.oauthLogin(req.user);
 
     const token = result.access_token;

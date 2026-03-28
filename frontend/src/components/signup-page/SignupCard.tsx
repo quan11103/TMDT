@@ -2,20 +2,23 @@ import React, { useState, useRef, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "react-day-picker/dist/style.css";
 import "./SignupCard.css";
 import SignupFooter from "./SignupFooter";
 
 const SignupCard: React.FC = () => {
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
-    const dateInputRef = useRef<HTMLInputElement>(null);
     const [selectedDate, setSelectedDate] = useState<Date>();
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const calendarRef = useRef<HTMLDivElement>(null);
 
     // --- Thêm state để quản lý gọi API ---
     const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState({ type: '', text: '' }); // type: 'success' | 'error'
+    const [errors, setErrors] = useState<Record<string, string>>({});
+    const [generalMessage, setGeneralMessage] = useState("");
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -31,7 +34,8 @@ const SignupCard: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
-        setMessage({ type: '', text: '' }); // Reset message
+        setErrors({});
+        setGeneralMessage("");
 
         // 1. Lấy dữ liệu từ form
         const formData = new FormData(e.currentTarget);
@@ -42,63 +46,83 @@ const SignupCard: React.FC = () => {
         // (Tùy chọn) Lấy các trường khác nếu sau này backend cần
         const phone = formData.get("phone") as string;
         const gender = formData.get("gender") as string;
-        const dob = formData.get("dob") as string; 
+        const dob = formData.get("dob") as string;
         console.log(gender);
-        
+
 
         try {
-            // 2. Gọi API đến Backend
-            // Thay 'http://localhost:3000/auth/register' bằng đường dẫn API thực tế của bạn
-            const response = await fetch('http://localhost:3000/api/auth/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                // Đổi tên trường cho khớp với RegisterDto (fullName -> full_name)
-                body: JSON.stringify({
-                    email,
-                    password,
-                    full_name: fullName,
-                    phone,
-                    gender,
-                    dob,
-                }),
+            const registerRes = await axios.post('http://localhost:3000/api/auth/register', {
+                email,
+                password,
+                full_name: fullName,
+                phone,
+                gender,
+                dob,
             });
 
-            const data = await response.json();
+            if (registerRes.status === 201 || registerRes.status === 200) {
+                const loginRes = await axios.post("http://localhost:3000/api/auth/login", { email, password });
+                const { access_token, user } = loginRes.data;
 
-            // 3. Xử lý kết quả trả về
-            if (!response.ok) {
-                // Nếu lỗi (vd: Email đã tồn tại - 409)
-                throw new Error(data.message || 'Có lỗi xảy ra khi đăng ký!');
+                localStorage.setItem("access_token", access_token);
+                if (user) localStorage.setItem("user", JSON.stringify(user));
+
+                setGeneralMessage("Đăng ký thành công! Đang chuyển hướng...");
+                setTimeout(() => {
+                    navigate("/");
+                    window.location.reload();
+                }, 1500);
             }
-
-            // Nếu thành công
-            setMessage({ type: 'success', text: 'Đăng ký tài khoản thành công!' });
-            // TODO: Bạn có thể thêm lệnh chuyển hướng người dùng sang trang Đăng nhập tại đây
-            window.location.href = '/login';
-
         } catch (error: any) {
-            setMessage({ type: 'error', text: error.message });
+            const errorResponse = error.response?.data?.message;
+            const newFieldErrors: Record<string, string> = {};
+
+            const translateError = (msg: string) => {
+                const m = msg.toLowerCase();
+                if (m.includes("email must be an email")) return "Địa chỉ email không hợp lệ.";
+                if (m.includes("email should not be empty")) return "Vui lòng nhập email.";
+                if (m.includes("password must be longer")) return "Mật khẩu phải có ít nhất 8 ký tự.";
+                if (m.includes("phone must be a number")) return "Số điện thoại phải là chữ số.";
+                if (m.includes("full_name should not be empty")) return "Vui lòng nhập họ và tên.";
+                if (m.includes("already exists")) return "Thông tin này đã được đăng ký.";
+                return "Thông tin không hợp lệ.";
+            };
+
+            // --- 2. THAY ĐỔI: Logic phân loại lỗi từ Backend ---
+            if (Array.isArray(errorResponse)) {
+                errorResponse.forEach((msg: string) => {
+                    const translated = translateError(msg);
+                    if (msg.includes("email")) newFieldErrors.email = translated;
+                    else if (msg.includes("password")) newFieldErrors.password = translated;
+                    else if (msg.includes("phone")) newFieldErrors.phone = translated;
+                    else if (msg.includes("full_name")) newFieldErrors.fullName = translated;
+                });
+                setErrors(newFieldErrors);
+            } else {
+                setGeneralMessage(errorResponse || "Có lỗi xảy ra khi đăng ký!");
+            }
         } finally {
             setIsLoading(false);
         }
     };
 
+    const renderError = (field: string) => (
+        errors[field] ? <span className="error-text">{errors[field]}</span> : null
+    );
+
     return (
         <div className="signup-card">
             <form className="signup-form" onSubmit={handleSubmit}>
                 {/* --- Hiển thị thông báo Lỗi / Thành công --- */}
-                {message.text && (
-                    <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'}`} style={{ padding: '10px', marginBottom: '15px', borderRadius: '4px', backgroundColor: message.type === 'success' ? '#d4edda' : '#f8d7da', color: message.type === 'success' ? '#155724' : '#721c24' }}>
-                        {message.text}
-                    </div>
+                {generalMessage && (
+                    <div className="alert">{generalMessage}</div>
                 )}
 
                 {/* Email */}
                 <div className="form-group">
                     <label htmlFor="email">Địa Chỉ Email *</label>
                     <input type="email" id="email" name="email" placeholder="Nhập email" required />
+                    {renderError("email")}
                 </div>
 
                 {/* Password */}
@@ -121,18 +145,21 @@ const SignupCard: React.FC = () => {
                             )}
                         </div>
                     </div>
+                    {renderError("password")}
                 </div>
 
                 {/* Phone */}
                 <div className="form-group">
                     <label htmlFor="phone">Số điện thoại *</label>
                     <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại" maxLength={12} required />
+                    {renderError("phone")}
                 </div>
 
                 {/* Full Name */}
                 <div className="form-group">
                     <label htmlFor="fullName">Họ và tên *</label>
                     <input type="text" id="fullName" name="fullName" placeholder="Nhập đầy đủ họ và tên" required />
+                    {renderError("fullName")}
                 </div>
 
                 {/* Date of Birth (Giữ nguyên code cũ của bạn) */}
@@ -156,7 +183,7 @@ const SignupCard: React.FC = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="lucide-calendar"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
                         </button>
                     </div>
-
+                    {renderError("dob")}
                     {isCalendarOpen && (
                         <div className="calendar-popover">
                             <DayPicker
