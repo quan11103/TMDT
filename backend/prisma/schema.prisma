@@ -146,6 +146,29 @@ model reset_password_tokens {
   users      users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_resetpassword_user")
 }
 
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model sale_campaigns {
+  id               Int             @id @default(autoincrement())
+  name             String          @unique @db.VarChar(255)
+  discount_percent Int
+  created_at       DateTime?       @default(now()) @db.Timestamp(6)
+  start_at         DateTime        @db.Timestamp(6)
+  end_at           DateTime        @db.Timestamp(6)
+  is_active        Boolean?        @default(true)
+  scope_type       sale_scope_type
+  sale_rules       sale_rules[]
+}
+
+model sale_rules {
+  id             Int            @id @default(autoincrement())
+  campaign_id    Int
+  rule_type      sale_rule_type
+  rule_operator  sale_operator
+  rule_value     String         @db.VarChar(255)
+  created_at     DateTime?      @default(now()) @db.Timestamp(6)
+  sale_campaigns sale_campaigns @relation(fields: [campaign_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_rule_campaign")
+}
+
 enum order_status {
   PENDING
   CONFIRMED
@@ -165,4 +188,25 @@ enum payment_method {
   COD
   VNPAY
   MOMO
+}
+
+enum sale_operator {
+  GTE
+  LTE
+  EQ
+  IN
+}
+
+enum sale_rule_type {
+  HIGH_STOCK
+  OLD_PRODUCT_DAYS
+  SPECIAL_DATE
+  USER_GENDER
+}
+
+enum sale_scope_type {
+  ALL
+  PRODUCT
+  CATEGORY
+  RULE_BASED
 }

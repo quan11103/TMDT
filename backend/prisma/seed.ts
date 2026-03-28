@@ -750,6 +750,110 @@ async function main() {
     productCount++;
   }
 
+  // ─── SALES CAMPAIGNS (AUTO) ─────────────────────────────
+  const now = new Date();
+  const startAt = new Date(now.getTime() - 24 * 60 * 60 * 1000); // từ 1 ngày trước
+  const endAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // trong 30 ngày tới
+  // Campaign: High stock (>= 100) => 10%
+  const highStockCampaign = await prisma.sale_campaigns.upsert({
+    where: { name: 'auto-sale-high-stock-10' },
+    update: {
+      discount_percent: 10,
+      start_at: startAt,
+      end_at: endAt,
+      is_active: true,
+      scope_type: 'RULE_BASED',
+    },
+    create: {
+      name: 'auto-sale-high-stock-10',
+      discount_percent: 10,
+      start_at: startAt,
+      end_at: endAt,
+      is_active: true,
+      scope_type: 'RULE_BASED',
+    },
+  });
+  // Campaign: Old product (>= 60 days) => 15%
+  const oldProductCampaign = await prisma.sale_campaigns.upsert({
+    where: { name: 'auto-sale-old-product-15' },
+    update: {
+      discount_percent: 15,
+      start_at: startAt,
+      end_at: endAt,
+      is_active: true,
+      scope_type: 'RULE_BASED',
+    },
+    create: {
+      name: 'auto-sale-old-product-15',
+      discount_percent: 15,
+      start_at: startAt,
+      end_at: endAt,
+      is_active: true,
+      scope_type: 'RULE_BASED',
+    },
+  });
+  // Campaign: 8/3 + user nữ => 20%
+  // (campaign này có 2 rule, engine của bạn thường sẽ AND theo “các rule cùng campaign”)
+  const female83Campaign = await prisma.sale_campaigns.upsert({
+    where: { name: 'auto-sale-8-3-female-20' },
+    update: {
+      discount_percent: 20,
+      start_at: startAt,
+      end_at: endAt,
+      is_active: true,
+      scope_type: 'RULE_BASED',
+    },
+    create: {
+      name: 'auto-sale-8-3-female-20',
+      discount_percent: 20,
+      start_at: startAt,
+      end_at: endAt,
+      is_active: true,
+      scope_type: 'RULE_BASED',
+    },
+  });
+  // Reset rules của 3 campaign (để seed chạy nhiều lần không bị nhân bản rule)
+  await prisma.sale_rules.deleteMany({
+    where: {
+      campaign_id: {
+        in: [highStockCampaign.id, oldProductCampaign.id, female83Campaign.id],
+      },
+    },
+  });
+  // Insert rules
+  await prisma.sale_rules.createMany({
+    data: [
+      // High stock: stock >= 100
+      {
+        campaign_id: highStockCampaign.id,
+        rule_type: 'HIGH_STOCK',
+        rule_operator: 'GTE',
+        rule_value: '100',
+      },
+      // Old product: product_age_days >= 60
+      {
+        campaign_id: oldProductCampaign.id,
+        rule_type: 'OLD_PRODUCT_DAYS',
+        rule_operator: 'GTE',
+        rule_value: '60',
+      },
+      // 8/3: SPECIAL_DATE = 03-08
+      {
+        campaign_id: female83Campaign.id,
+        rule_type: 'SPECIAL_DATE',
+        rule_operator: 'EQ',
+        rule_value: '03-08',
+      },
+      // User gender: user.gender = 'Nữ'
+      {
+        campaign_id: female83Campaign.id,
+        rule_type: 'USER_GENDER',
+        rule_operator: 'EQ',
+        rule_value: 'Nữ',
+      },
+    ],
+  });
+
   console.log(`✅ ${productCount} products + ${imageCount} images`);
 
   // ─── TỔNG KẾT ───────────────────────────────────────────

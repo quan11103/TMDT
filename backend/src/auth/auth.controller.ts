@@ -1,14 +1,27 @@
-import { Controller, Post, Body, Get, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  UseGuards,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ForgotPasswordDto } from './dto/forgot_password_dto';
 import { ResetPasswordDto } from './dto/reset_password_dto';
+import { ConfigService } from '@nestjs/config';
+import type { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private config: ConfigService,
+  ) {}
 
   @Post('login')
   login(@Body() dto: LoginDto) {
@@ -26,8 +39,15 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  googleCallback(@Req() req: any) {
-    return this.authService.oauthLogin(req.user);
+  async googleCallback(@Req() req: any, @Res() res: Response) {
+    const result = await this.authService.oauthLogin(req.user);
+
+    const token = result.access_token;
+    const userData = encodeURIComponent(JSON.stringify(result.user));
+
+    return res.redirect(
+      `${this.config.getOrThrow('FRONTEND_URL')}?token=${token}&user=${userData}`,
+    );
   }
 
   @Get('facebook')
@@ -36,8 +56,15 @@ export class AuthController {
 
   @Get('facebook/callback')
   @UseGuards(AuthGuard('facebook'))
-  facebookCallback(@Req() req: any) {
-    return this.authService.oauthLogin(req.user);
+  async facebookCallback(@Req() req: any, @Res() res: Response) {
+    const result = await this.authService.oauthLogin(req.user);
+
+    const token = result.access_token;
+    const userData = encodeURIComponent(JSON.stringify(result.user));
+
+    return res.redirect(
+      `${this.config.getOrThrow('FRONTEND_URL')}?token=${token}&user=${userData}`,
+    );
   }
 
   @Post('forgot-password')
