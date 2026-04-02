@@ -16,18 +16,16 @@ const ProductInfo: React.FC<Props> = ({ product }) => {
     const formattedPrice = new Intl.NumberFormat('vi-VN').format(product.price);
 
     const handleAddToCart = async () => {
-        const finalQuantity = Number(quantity) || 1; // Fallback về 1 nếu đang trống
+        const finalQuantity = Number(quantity) || 1;
         const token = localStorage.getItem("access_token");
 
-        // 1. Kiểm tra đăng nhập
         if (!token) {
             alert("Vui lòng đăng nhập để mua hàng!");
             return;
         }
 
         try {
-            // 2. Gửi request tới API (khớp với AddToCartDto ở Backend)
-            const response = await axios.post(
+            await axios.post(
                 "http://localhost:3000/api/cart",
                 {
                     product_id: product.id,
@@ -40,12 +38,9 @@ const ProductInfo: React.FC<Props> = ({ product }) => {
                 }
             );
             window.dispatchEvent(new Event('cartUpdated'));
-            setTimeout(() => {
-                setIsAdded(false);
-            }, 3000);
             setIsAdded(true);
+            setTimeout(() => setIsAdded(false), 3000);
         } catch (err: any) {
-            // 4. Xử lý lỗi (ví dụ: kho không đủ, sản phẩm hết hàng)
             console.error("Lỗi thêm vào giỏ:", err.response?.data);
             const errorMsg = err.response?.data?.message || "Có lỗi xảy ra khi thêm vào giỏ hàng.";
             alert(Array.isArray(errorMsg) ? errorMsg[0] : errorMsg);
@@ -99,6 +94,16 @@ const ProductInfo: React.FC<Props> = ({ product }) => {
                     <span className="price-currency">VND</span>
                 </div>
 
+                {/* --- PHẦN MÔ TẢ ĐƯỢC CHUYỂN TỪ TABS SANG --- */}
+                <div className="product-short-description">
+                    <h3 className="description-label">Mô tả sản phẩm:</h3>
+                    <div
+                        className="product-description-html"
+                        dangerouslySetInnerHTML={{ __html: product.description || "Đang cập nhật mô tả..." }}
+                    ></div>
+                </div>
+                {/* ------------------------------------------- */}
+
                 <div className="product-controls">
                     <QuantitySelector
                         quantity={quantity}
@@ -108,9 +113,7 @@ const ProductInfo: React.FC<Props> = ({ product }) => {
 
                     <div className="action-buttons">
                         <button
-                            // Cập nhật class để nhận style giống ProductItem
                             className={`btn-add-cart ${isAdded ? 'added' : ''}`}
-                            // Disabled khi đang loading, khi đã thêm, hoặc khi hết hàng
                             disabled={product.stock <= 0 || isAdded}
                             onClick={handleAddToCart}
                         >

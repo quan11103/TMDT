@@ -7,7 +7,7 @@ interface SidebarProps {
 }
 
 const AdminSidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
-    const menuItems = ['Tổng quan', 'Sản phẩm', 'Đơn hàng', 'Khách hàng', 'Danh mục', 'Banner', 'Khuyến mãi'];
+    const menuItems = ['Tổng quan', 'Sản phẩm', 'Đơn hàng', 'Khách hàng', 'Danh mục', 'Banner', 'Khuyến mãi', 'Giao diện'];
 
     return (
         <aside className="admin-sidebar">

@@ -1,0 +1,103 @@
+.admin-section {
+    background: #fff;
+    padding: 24px;
+}
+
+.ui-config-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.ui-description {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 30px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.config-grid {
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+    justify-content: center;
+    margin-top: 80px;
+}
+
+.config-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+.config-item label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+    line-height: 1.4;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.config-item input {
+    width: 100%;
+    max-width: 120px;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    font-size: 14px;
+    outline: none;
+    text-align: center;
+    transition: border-color 0.2s;
+}
+
+.config-item input:focus {
+    border-color: #7f0019;
+    box-shadow: 0 0 0 1px #7f0019;
+}
+
+.input-hint {
+    font-size: 12px;
+    color: #aaa;
+    font-style: italic;
+}
+
+.config-actions {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.config-item input::-webkit-outer-spin-button,
+.config-item input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.config-item input[type=number] {
+    -moz-appearance: textfield;
+}
+
+@media (max-width: 600px) {
+    .section-header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .config-grid {
+        flex-direction: column;
+        gap: 30px;
+    }
+}
+
+/* Responsive cho mobile */
+@media (max-width: 768px) {
+    .config-item input {
+        max-width: 100%;
+    }
+}

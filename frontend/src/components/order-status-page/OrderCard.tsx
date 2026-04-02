@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import './OrderCard.css';
 
 interface OrderCardProps {
@@ -22,18 +23,48 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onReload, handleViewDetail
     };
 
     const handleCancel = async () => {
-        const confirmCancel = window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này?");
-        if (!confirmCancel) return;
+        const result = await Swal.fire({
+            title: 'Xác nhận hủy đơn?',
+            text: `Bạn có chắc chắn muốn hủy đơn hàng #${order.id} không? Hành động này không thể hoàn tác.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#7b0f1a',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Đóng',
+        });
 
-        try {
-            const token = localStorage.getItem("access_token");
-            await axios.patch(`http://localhost:3000/api/order/my/${order.id}/cancel`, {}, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            alert("Đã hủy đơn hàng thành công");
-            onReload();
-        } catch (err: any) {
-            alert(err.response?.data?.message || "Lỗi khi hủy đơn");
+        if (result.isConfirmed) {
+            try {
+                Swal.fire({
+                    title: 'Đang xử lý...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                const token = localStorage.getItem("access_token");
+                await axios.patch(`http://localhost:3000/api/order/my/${order.id}/cancel`, {}, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: 'Đơn hàng của bạn đã được hủy.',
+                    confirmButtonColor: '#7b0f1a'
+                });
+
+                onReload();
+            } catch (err: any) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thất bại',
+                    text: err.response?.data?.message || "Lỗi khi hủy đơn",
+                    confirmButtonColor: '#7b0f1a'
+                });
+            }
         }
     };
 

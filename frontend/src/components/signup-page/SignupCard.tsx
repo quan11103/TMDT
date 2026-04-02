@@ -5,6 +5,7 @@ import { vi } from "date-fns/locale";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "react-day-picker/dist/style.css";
+import Swal from "sweetalert2";
 import "./SignupCard.css";
 import SignupFooter from "./SignupFooter";
 
@@ -18,7 +19,6 @@ const SignupCard: React.FC = () => {
     // --- Thêm state để quản lý gọi API ---
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
-    const [generalMessage, setGeneralMessage] = useState("");
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -35,7 +35,6 @@ const SignupCard: React.FC = () => {
         e.preventDefault();
         setIsLoading(true);
         setErrors({});
-        setGeneralMessage("");
 
         // 1. Lấy dữ liệu từ form
         const formData = new FormData(e.currentTarget);
@@ -47,8 +46,14 @@ const SignupCard: React.FC = () => {
         const phone = formData.get("phone") as string;
         const gender = formData.get("gender") as string;
         const dob = formData.get("dob") as string;
-        console.log(gender);
 
+        if (/\d/.test(fullName)) {
+            setErrors({
+                fullName: "Họ và tên không được chứa chữ số."
+            });
+            setIsLoading(false);
+            return;
+        }
 
         try {
             const registerRes = await axios.post('http://localhost:3000/api/auth/register', {
@@ -67,11 +72,21 @@ const SignupCard: React.FC = () => {
                 localStorage.setItem("access_token", access_token);
                 if (user) localStorage.setItem("user", JSON.stringify(user));
 
-                setGeneralMessage("Đăng ký thành công! Đang chuyển hướng...");
-                setTimeout(() => {
+                Swal.fire({
+                    title: 'Đăng ký thành công!',
+                    text: 'Chào mừng bạn đến với MUJI. Hệ thống đang chuyển hướng...',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    width: '380px',
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                }).then(() => {
                     navigate("/");
                     window.location.reload();
-                }, 1500);
+                });
             }
         } catch (error: any) {
             const errorResponse = error.response?.data?.message;
@@ -88,7 +103,6 @@ const SignupCard: React.FC = () => {
                 return "Thông tin không hợp lệ.";
             };
 
-            // --- 2. THAY ĐỔI: Logic phân loại lỗi từ Backend ---
             if (Array.isArray(errorResponse)) {
                 errorResponse.forEach((msg: string) => {
                     const translated = translateError(msg);
@@ -99,7 +113,13 @@ const SignupCard: React.FC = () => {
                 });
                 setErrors(newFieldErrors);
             } else {
-                setGeneralMessage(errorResponse || "Có lỗi xảy ra khi đăng ký!");
+                Swal.fire({
+                    title: 'Thất bại',
+                    text: errorResponse || "Có lỗi xảy ra khi đăng ký!",
+                    icon: 'error',
+                    confirmButtonColor: '#333',
+                    width: '380px'
+                });
             }
         } finally {
             setIsLoading(false);
@@ -113,11 +133,6 @@ const SignupCard: React.FC = () => {
     return (
         <div className="signup-card">
             <form className="signup-form" onSubmit={handleSubmit}>
-                {/* --- Hiển thị thông báo Lỗi / Thành công --- */}
-                {generalMessage && (
-                    <div className="alert">{generalMessage}</div>
-                )}
-
                 {/* Email */}
                 <div className="form-group">
                     <label htmlFor="email">Địa Chỉ Email *</label>
