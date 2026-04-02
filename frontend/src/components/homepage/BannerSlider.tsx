@@ -1,16 +1,9 @@
 import React from 'react';
-// Import các component của Swiper React
 import { Swiper, SwiperSlide } from 'swiper/react';
-// Import các module cần thiết (Điều hướng, Chấm tròn phân trang, Tự động chạy)
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-
-// Import CSS mặc định của Swiper
 import 'swiper/swiper-bundle.css';
-
-// Import CSS tùy chỉnh của chúng ta
 import './BannerSlider.css';
 
-// Khai báo kiểu dữ liệu cho Slide
 interface SlideData {
     id: number;
     title: string;

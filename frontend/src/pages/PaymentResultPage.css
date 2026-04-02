@@ -77,7 +77,6 @@
     gap: 12px;
 }
 
-.btn-primary,
 .btn-secondary {
     padding: 12px;
     border-radius: 8px;
@@ -85,16 +84,6 @@
     cursor: pointer;
     transition: all 0.2s;
     border: none;
-}
-
-.btn-primary {
-    background-color: #333;
-    /* Màu tối giống phong cách VPP22 */
-    color: white;
-}
-
-.btn-primary:hover {
-    background-color: #000;
 }
 
 .btn-secondary {

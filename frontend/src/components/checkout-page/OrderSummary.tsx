@@ -92,10 +92,24 @@ const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount
                 if (paymentResponse.ok) {
                     Swal.close();
                     // CHUYỂN HƯỚNG sang trang Redirect đã thiết kế
-                    if (paymentResult.payment_url) {
-                        window.location.href = paymentResult.payment_url;
+                    // KIỂM TRA PHƯƠNG THỨC THANH TOÁN
+                    if (paymentMethod?.toUpperCase() === 'VNPAY') {
+                        // Nếu là VNPAY thì mới yêu cầu và chuyển hướng URL
+                        if (paymentResult.payment_url) {
+                            window.location.href = paymentResult.payment_url;
+                        } else {
+                            throw new Error('Không nhận được liên kết thanh toán từ VNPay');
+                        }
                     } else {
-                        throw new Error('Không nhận được liên kết thanh toán từ hệ thống');
+                        // Nếu là COD hoặc phương thức khác không cần chuyển hướng
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Đặt hàng thành công!',
+                            text: 'Đơn hàng của bạn đã được ghi nhận (COD).',
+                            confirmButtonColor: '#7b0f1a'
+                        }).then(() => {
+                            navigate('/order-status/'); // Chuyển về trang danh sách đơn hàng của khách
+                        });
                     }
                 } else {
                     throw new Error(paymentResult.message || 'Lỗi tạo liên kết thanh toán');

@@ -3,6 +3,7 @@ import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import ForgotPasswordForm from '../components/forgot-password-page/FormForgotPassword';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import './ForgotPasswordPage.css';
 
 const ForgotPasswordPage: React.FC = () => {
@@ -15,10 +16,21 @@ const ForgotPasswordPage: React.FC = () => {
                 email: email
             });
 
-            alert(response.data.message || "Vui lòng kiểm tra email của bạn!");
+            Swal.fire({
+                text: response.data.message || "Vui lòng kiểm tra email của bạn để đặt lại mật khẩu.",
+                confirmButtonColor: '#7f0019',
+                confirmButtonText: 'Đóng',
+                width: '300px'
+            });
         } catch (error: any) {
             const msg = error.response?.data?.message || "Email không tồn tại hoặc có lỗi xảy ra";
-            alert(msg);
+            Swal.fire({
+                title: 'Lỗi!',
+                text: msg,
+                icon: 'error',
+                confirmButtonColor: '#333', // Màu đen trung tính
+                confirmButtonText: 'Thử lại'
+            });
         } finally {
             setLoading(false);
         }

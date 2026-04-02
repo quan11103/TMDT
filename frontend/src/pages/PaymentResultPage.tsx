@@ -79,11 +79,11 @@ const PaymentResultPage: React.FC = () => {
 
                 <div className="result-actions">
                     {isSuccess ? (
-                        <button className="btn-primary" onClick={() => navigate('/orders')}>
+                        <button className="btn-secondary" onClick={() => navigate('/orders')}>
                             Xem đơn hàng
                         </button>
                     ) : (
-                        <button className="btn-primary" onClick={() => navigate('/checkout')}>
+                        <button className="btn-secondary" onClick={() => navigate('/checkout')}>
                             Thử lại
                         </button>
                     )}

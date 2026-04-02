@@ -5,7 +5,6 @@ import type { ProductDetail as ProductDetailType } from '../types'; // Đảm b�
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import ProductInfo from '../components/product-detail-page/ProductInfo';
-import ProductTabs from '../components/product-detail-page/ProductTabs';
 import Breadcrumb from '../components/common/Breadcrumb';
 import ProductReviews from '../components/product-detail-page/ProductReviews';
 import './ProductDetailPage.css';
@@ -48,7 +47,6 @@ const ProductDetail: React.FC = () => {
                     category={product.categories}
                 />
                 <ProductInfo product={product} />
-                <ProductTabs description={product.description} />
                 <ProductReviews />
             </div>
 

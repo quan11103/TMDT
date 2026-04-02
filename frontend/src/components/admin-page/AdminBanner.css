@@ -1,0 +1,138 @@
+.admin-section {
+    background: #fff;
+    padding: 24px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+}
+
+/* Tái sử dụng bảng chuẩn MUJI */
+.muji-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.muji-table th {
+    text-align: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #333;
+    color: #888;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+.muji-table td {
+    text-align: center;
+    padding: 16px;
+    border-bottom: 1px solid #eee;
+    /* Đường kẻ mảnh hơn theo style MUJI */
+    color: #333;
+    vertical-align: middle;
+}
+
+.muji-table tr:hover {
+    background-color: #fafafa;
+}
+
+/* Nút bấm đỏ MUJI */
+.btn-primary {
+    background-color: #7f0019;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+/* Cột hình ảnh */
+.banner-img-cell img {
+    width: 160px;
+    height: 64px;
+    object-fit: cover;
+    border: 1px solid #eee;
+}
+
+/* Cột thông tin căn lề trái */
+.text-left {
+    text-align: left !important;
+}
+
+.banner-name {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.banner-url {
+    font-size: 12px;
+    color: #888;
+    word-break: break-all;
+}
+
+/* Icon kéo thả */
+.drag-handle {
+    cursor: grab;
+    color: #ccc;
+    font-size: 18px;
+    user-select: none;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+/* Các nút thao tác (Badge style) */
+.table-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.action-badge {
+    padding: 6px 14px;
+    border-radius: 2px;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-block;
+    transition: all 0.2s;
+    border: none;
+    text-decoration: none;
+}
+
+.action-badge.edit {
+    background-color: #e6f0f8;
+    color: #0066cc;
+}
+
+.action-badge.delete {
+    background-color: #fff0f0;
+    color: #cc0000;
+}
+
+.action-badge:hover {
+    opacity: 0.7;
+}
+
+/* Trạng thái khi đang kéo */
+.dragging {
+    background-color: #f0f0f0;
+    opacity: 0.5;
+}
