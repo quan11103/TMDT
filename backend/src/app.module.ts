@@ -12,7 +12,9 @@ import { AdminModule } from './admin/admin.module';
 import { ConfigModule } from '@nestjs/config';
 import { CategoriesModule } from './categories/categories.module';
 import { EmailModule } from './email/email.module';
-import { SalesModule } from './sales/sales.module';
+import { PromotionsModule } from './promotions/promotions.module';
+import { BannersModule } from './banners/banners.module';
+import { StoreSettingsModule } from './store-settings/store-settings.module';
 
 @Module({
   imports: [
@@ -30,7 +32,9 @@ import { SalesModule } from './sales/sales.module';
     AdminModule,
     CategoriesModule,
     EmailModule,
-    SalesModule,
+    PromotionsModule,
+    BannersModule,
+    StoreSettingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

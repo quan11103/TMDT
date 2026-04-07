@@ -5,22 +5,39 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PromotionsService } from 'src/promotions/promotions.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import {
   OrderStatus,
   UpdateOrderStatusDto,
 } from './dto/update-order-status.dto';
+import { PreviewCheckoutDto } from './dto/preview-checkout.dto';
+import { cart_items, products } from '@prisma/client';
+
+type CartItemWithProduct = cart_items & {
+  products: products;
+};
 
 const ORDER_SELECT = {
   id: true,
   status: true,
   total_amount: true,
+  discount_amount: true,
+  promotion_id: true,
   address: true,
   phone: true,
   note: true,
   created_at: true,
   updated_at: true,
-  // Thông tin các sản phẩm trong đơn
+  promotions: {
+    select: {
+      id: true,
+      code: true,
+      discount_type: true,
+      discount_value: true,
+      product_scope: true,
+    },
+  },
   order_items: {
     select: {
       id: true,
@@ -39,7 +56,6 @@ const ORDER_SELECT = {
       },
     },
   },
-  // Thông tin thanh toán
   payments: {
     select: {
       id: true,
@@ -48,29 +64,32 @@ const ORDER_SELECT = {
       paid_at: true,
     },
   },
-};
+} as const;
 
 @Injectable()
 export class OrderService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private promotionsService: PromotionsService,
+  ) {}
 
-  async createOrderDto(userId: number, dto: CreateOrderDto) {
-    // 1. Lay san pham tu gio hang
+  private async loadAndValidateCartItemsForOrder(
+    userId: number,
+    cartItemIds: number[],
+  ): Promise<CartItemWithProduct[]> {
     const cartItems = await this.prisma.cart_items.findMany({
-      where: { user_id: userId, id: { in: dto.cart_item_ids } },
+      where: { user_id: userId, id: { in: cartItemIds } },
       include: { products: true },
     });
-    // check xem ids co dung la san pham cua ho khong
-    if (dto.cart_item_ids.length !== cartItems.length) {
+
+    if (cartItemIds.length !== cartItems.length) {
       throw new BadRequestException(
         'Mot so san pham trong gio hang khong hop le',
       );
     }
-    // check gio hang trong
     if (cartItems.length === 0) {
       throw new BadRequestException('Gio hang trong');
     }
-    // check xem san pham trong gio hang con duoc ban khong va co du so luong hay khong
     for (const item of cartItems) {
       if (!item.products.is_active) {
         throw new BadRequestException(
@@ -83,17 +102,80 @@ export class OrderService {
         );
       }
     }
-    // 2. Tinh tong tien don hang
-    const totalAmount = cartItems.reduce(
-      (sum, item) => sum + item.quantity * Number(item.products.price),
+    return cartItems as CartItemWithProduct[];
+  }
+
+  private async computePricingFromCart(
+    cartItems: CartItemWithProduct[],
+    promotionCode?: string,
+  ) {
+    const lines = cartItems.map((item) => ({
+      unitPrice: Number(item.products.price),
+      quantity: item.quantity,
+      product_id: item.products.id,
+      category_id: item.products.category_id,
+    }));
+
+    const subtotal = lines.reduce(
+      (sum, line) => sum + line.unitPrice * line.quantity,
       0,
     );
-    // 3. Dung transaction tao don hang, tao san pham don hang, xoa stock, xoa cart
+
+    if (!promotionCode?.trim()) {
+      return {
+        subtotal,
+        discountAmount: 0,
+        totalAmount: subtotal,
+        promotionId: null as number | null,
+      };
+    }
+
+    const promo =
+      await this.promotionsService.resolveApplicablePromotion(promotionCode);
+    const r = this.promotionsService.computeDiscountForCart(promo, lines);
+
+    return {
+      subtotal: r.subtotal,
+      discountAmount: r.discountAmount,
+      totalAmount: r.totalAmount,
+      promotionId: r.promotionId,
+    };
+  }
+
+  async previewCheckout(userId: number, dto: PreviewCheckoutDto) {
+    const cartItems = await this.loadAndValidateCartItemsForOrder(
+      userId,
+      dto.cart_item_ids,
+    );
+    const pricing = await this.computePricingFromCart(
+      cartItems,
+      dto.promotion_code,
+    );
+
+    return {
+      subtotal: pricing.subtotal,
+      discount_amount: pricing.discountAmount,
+      total_amount: pricing.totalAmount,
+      promotion_id: pricing.promotionId,
+    };
+  }
+
+  async createOrderDto(userId: number, dto: CreateOrderDto) {
+    const cartItems = await this.loadAndValidateCartItemsForOrder(
+      userId,
+      dto.cart_item_ids,
+    );
+
+    const { discountAmount, totalAmount, promotionId } =
+      await this.computePricingFromCart(cartItems, dto.promotion_code);
+
     const newOrder = await this.prisma.$transaction(async (tx) => {
       const order = await tx.orders.create({
         data: {
           user_id: userId,
           total_amount: totalAmount,
+          discount_amount: discountAmount,
+          promotion_id: promotionId,
           address: dto.address,
           phone: dto.phone,
           note: dto.note,

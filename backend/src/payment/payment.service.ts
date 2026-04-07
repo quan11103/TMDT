@@ -28,7 +28,8 @@ export class PaymentService {
       throw new NotFoundException('Order không tồn tại');
     }
 
-    if (!order_status.PENDING.includes(order?.status as any)) {
+    // fix !order_status.PENDING.includes(order.status as any)
+    if (order.status !== order_status.PENDING) {
       throw new BadRequestException(
         'Order không ở trạng thái có thể thanh toán',
       );

@@ -132,7 +132,7 @@ export class ProductsService {
     });
 
     if (!exsitingCategory)
-      throw new ConflictException('Category này không tồn tại');
+      throw new NotFoundException('Category này không tồn tại');
 
     const newProduct = await this.prisma.products.create({
       data: {

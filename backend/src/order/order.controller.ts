@@ -12,12 +12,19 @@ import { Permissions } from 'src/common/decorators/permissions.decorator';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { PreviewCheckoutDto } from './dto/preview-checkout.dto';
 import { PermissionsGuard } from 'src/common/guards/permissions.guard';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Post('preview')
+  previewCheckout(@CurrentUser() user, @Body() dto: PreviewCheckoutDto) {
+    return this.orderService.previewCheckout(user.id as number, dto);
+  }
 
   @UseGuards(JwtAuthGuard)
   @Post()

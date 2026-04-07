@@ -34,7 +34,7 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  googleAuth() { }
+  googleAuth() {}
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
@@ -51,7 +51,7 @@ export class AuthController {
 
   @Get('facebook')
   @UseGuards(AuthGuard('facebook'))
-  facebookAuth() { }
+  facebookAuth() {}
 
   @Get('facebook/callback')
   @UseGuards(AuthGuard('facebook'))

@@ -1,4 +1,10 @@
-import { IsArray, IsInt, IsString, IsNotEmpty } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+} from 'class-validator';
 
 export class CreateOrderDto {
   @IsArray()
@@ -13,6 +19,12 @@ export class CreateOrderDto {
   @IsNotEmpty({ message: 'Số điện thoại không được để trống' })
   phone: string;
 
+  @IsOptional()
   @IsString()
   note?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  promotion_code?: string;
 }
