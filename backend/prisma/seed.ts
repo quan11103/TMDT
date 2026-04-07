@@ -25,6 +25,15 @@ async function main() {
       { name: 'product.delete' },
       { name: 'order.read' },
       { name: 'order.update' },
+      { name: 'banner.read' },
+      { name: 'banner.create' },
+      { name: 'banner.update' },
+      { name: 'banner.delete' },
+      { name: 'store_settings.update' },
+      { name: 'promotion.read' },
+      { name: 'promotion.update' },
+      { name: 'promotion.create' },
+      { name: 'promotion.delete' },
     ],
     skipDuplicates: true,
   });
@@ -750,111 +759,54 @@ async function main() {
     productCount++;
   }
 
-  // ─── SALES CAMPAIGNS (AUTO) ─────────────────────────────
-  const now = new Date();
-  const startAt = new Date(now.getTime() - 24 * 60 * 60 * 1000); // từ 1 ngày trước
-  const endAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // trong 30 ngày tới
-  // Campaign: High stock (>= 100) => 10%
-  const highStockCampaign = await prisma.sale_campaigns.upsert({
-    where: { name: 'auto-sale-high-stock-10' },
-    update: {
-      discount_percent: 10,
-      start_at: startAt,
-      end_at: endAt,
-      is_active: true,
-      scope_type: 'RULE_BASED',
-    },
+  console.log(`✅ ${productCount} products + ${imageCount} images`);
+
+  await prisma.promotions.upsert({
+    where: { code: 'TESTALL10' },
+    update: {},
     create: {
-      name: 'auto-sale-high-stock-10',
-      discount_percent: 10,
-      start_at: startAt,
-      end_at: endAt,
+      code: 'TESTALL10',
+      discount_type: 'PERCENT',
+      discount_value: 10,
+      product_scope: 'ALL',
+      starts_at: new Date('2026-01-01'),
+      ends_at: new Date('2026-12-31'),
       is_active: true,
-      scope_type: 'RULE_BASED',
     },
   });
-  // Campaign: Old product (>= 60 days) => 15%
-  const oldProductCampaign = await prisma.sale_campaigns.upsert({
-    where: { name: 'auto-sale-old-product-15' },
-    update: {
-      discount_percent: 15,
-      start_at: startAt,
-      end_at: endAt,
-      is_active: true,
-      scope_type: 'RULE_BASED',
-    },
+  await prisma.promotions.upsert({
+    where: { code: 'TESTCAT5K' },
+    update: {},
     create: {
-      name: 'auto-sale-old-product-15',
-      discount_percent: 15,
-      start_at: startAt,
-      end_at: endAt,
+      code: 'TESTCAT5K',
+      discount_type: 'FIXED_AMOUNT',
+      discount_value: 5000,
+      product_scope: 'CATEGORY',
+      category_id: catBut.id, // đổi theo biến category có trong seed của bạn
+      starts_at: new Date('2026-01-01'),
+      ends_at: new Date('2026-12-31'),
       is_active: true,
-      scope_type: 'RULE_BASED',
     },
-  });
-  // Campaign: 8/3 + user nữ => 20%
-  // (campaign này có 2 rule, engine của bạn thường sẽ AND theo “các rule cùng campaign”)
-  const female83Campaign = await prisma.sale_campaigns.upsert({
-    where: { name: 'auto-sale-8-3-female-20' },
-    update: {
-      discount_percent: 20,
-      start_at: startAt,
-      end_at: endAt,
-      is_active: true,
-      scope_type: 'RULE_BASED',
-    },
-    create: {
-      name: 'auto-sale-8-3-female-20',
-      discount_percent: 20,
-      start_at: startAt,
-      end_at: endAt,
-      is_active: true,
-      scope_type: 'RULE_BASED',
-    },
-  });
-  // Reset rules của 3 campaign (để seed chạy nhiều lần không bị nhân bản rule)
-  await prisma.sale_rules.deleteMany({
-    where: {
-      campaign_id: {
-        in: [highStockCampaign.id, oldProductCampaign.id, female83Campaign.id],
-      },
-    },
-  });
-  // Insert rules
-  await prisma.sale_rules.createMany({
-    data: [
-      // High stock: stock >= 100
-      {
-        campaign_id: highStockCampaign.id,
-        rule_type: 'HIGH_STOCK',
-        rule_operator: 'GTE',
-        rule_value: '100',
-      },
-      // Old product: product_age_days >= 60
-      {
-        campaign_id: oldProductCampaign.id,
-        rule_type: 'OLD_PRODUCT_DAYS',
-        rule_operator: 'GTE',
-        rule_value: '60',
-      },
-      // 8/3: SPECIAL_DATE = 03-08
-      {
-        campaign_id: female83Campaign.id,
-        rule_type: 'SPECIAL_DATE',
-        rule_operator: 'EQ',
-        rule_value: '03-08',
-      },
-      // User gender: user.gender = 'Nữ'
-      {
-        campaign_id: female83Campaign.id,
-        rule_type: 'USER_GENDER',
-        rule_operator: 'EQ',
-        rule_value: 'Nữ',
-      },
-    ],
   });
 
-  console.log(`✅ ${productCount} products + ${imageCount} images`);
+  await prisma.promotions.upsert({
+    where: { code: 'TESTPROD15' },
+    update: {
+      /* optional */
+    },
+    create: {
+      code: 'TESTPROD15',
+      discount_type: 'PERCENT',
+      discount_value: 15,
+      product_scope: 'PRODUCT',
+      starts_at: new Date('2026-01-01'),
+      ends_at: new Date('2026-12-31'),
+      is_active: true,
+      promotion_products: {
+        create: [{ product_id: 1 }, { product_id: 5 }, { product_id: 12 }],
+      },
+    },
+  });
 
   // ─── TỔNG KẾT ───────────────────────────────────────────
   console.log('\n' + '─'.repeat(45));
