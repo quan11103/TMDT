@@ -15,6 +15,7 @@ import { EmailModule } from './email/email.module';
 import { PromotionsModule } from './promotions/promotions.module';
 import { BannersModule } from './banners/banners.module';
 import { StoreSettingsModule } from './store-settings/store-settings.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { StoreSettingsModule } from './store-settings/store-settings.module';
     PromotionsModule,
     BannersModule,
     StoreSettingsModule,
+    ReviewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
