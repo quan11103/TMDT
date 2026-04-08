@@ -128,6 +128,11 @@
     color: #cc0000;
 }
 
+.action-badge.disable {
+    background-color: #fff8e6;
+    color: #b8860b;
+}
+
 /* --- Form Thêm Mới --- */
 .promo-form-container {
     background-color: #fafafa;
@@ -192,4 +197,84 @@
     margin-top: 24px;
     display: flex;
     justify-content: flex-end;
+    gap: 10px;
+}
+
+/* --- Typeahead (category/product search) --- */
+.typeahead {
+    position: relative;
+}
+
+.typeahead-list {
+    position: absolute;
+    z-index: 10;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    max-height: 220px;
+    overflow: auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.typeahead-item {
+    width: 100%;
+    text-align: left;
+    padding: 10px 12px;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    color: #333;
+}
+
+.typeahead-item:hover {
+    background: #fafafa;
+}
+
+.typeahead-item:disabled {
+    color: #999;
+    cursor: not-allowed;
+}
+
+.typeahead-hint {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #888;
+}
+
+.typeahead-selected {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #666;
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #ddd;
+    background: #f8f9fa;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: #333;
+}
+
+.chip-x {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    color: #7f0019;
 }

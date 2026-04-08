@@ -16,9 +16,10 @@ interface Props {
     minPrice: number;
     maxPrice: number;
     onFilterPrice: (min: number, max: number) => void;
+    productsPerRow?: number;
 }
 
-const SearchContainer: React.FC<Props> = ({ title, totalItems, productIds, paginationMeta, onPageChange, selectedCategoryIds, onCategoryToggle, searchQuery, minPrice, maxPrice, onFilterPrice }) => {
+const SearchContainer: React.FC<Props> = ({ title, totalItems, productIds, paginationMeta, onPageChange, selectedCategoryIds, onCategoryToggle, searchQuery, minPrice, maxPrice, onFilterPrice, productsPerRow }) => {
     return (
         <div className="main-page-wrapper">
             {/* Cấp 1: Tiêu đề trang và số lượng mặt hàng */}
@@ -35,6 +36,7 @@ const SearchContainer: React.FC<Props> = ({ title, totalItems, productIds, pagin
                 minPrice={minPrice}
                 maxPrice={maxPrice}
                 onFilterPrice={onFilterPrice}
+                productsPerRow={productsPerRow}
             />
         </div>
     );

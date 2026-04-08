@@ -8,15 +8,16 @@ interface Props {
     productIds?: number[];
     paginationMeta?: PaginationMeta;
     onPageChange?: (newPage: number) => void; // Hàm để load trang mới
+    productsPerRow?: number;
 }
 
-const CategoryMain: React.FC<Props> = ({ productIds, paginationMeta, onPageChange }) => {
+const CategoryMain: React.FC<Props> = ({ productIds, paginationMeta, onPageChange, productsPerRow }) => {
     return (
         <main className="category-main">
             <div className="category-container">
                 {/* Phần hiển thị danh sách sản phẩm */}
                 <section className="product-section">
-                    <ProductGrid productIds={productIds} />
+                    <ProductGrid productIds={productIds} columnsDesktop={productsPerRow} />
                 </section>
 
                 {/* Phần điều hướng trang */}

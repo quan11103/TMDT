@@ -103,3 +103,164 @@
     padding: 40px;
     color: #888;
 }
+
+/* —— Khách hàng (danh sách + modal) —— */
+.admin-customers-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.admin-customers-sub {
+    margin: 8px 0 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.btn-refresh-customers {
+    background: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    font-size: 13px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-refresh-customers:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.admin-customers-error {
+    background: #fff5f5;
+    border: 1px solid #fcc;
+    color: #b00020;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.admin-customers-empty {
+    text-align: center;
+    color: #888;
+    padding: 40px 16px;
+}
+
+.admin-customers-table-wrap {
+    overflow-x: auto;
+}
+
+.customer-actions-cell {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.btn-customer-detail {
+    background: #f4f4f4;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-customer-detail:hover {
+    background: #eee;
+}
+
+.admin-customers-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.btn-page {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 8px 16px;
+    font-size: 13px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-page:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.page-indicator {
+    font-size: 14px;
+    color: #555;
+}
+
+.customer-detail-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.customer-detail-modal {
+    background: #fff;
+    max-width: 440px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.customer-detail-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.customer-detail-head h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.customer-detail-close {
+    border: none;
+    background: none;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    color: #666;
+    padding: 0 4px;
+}
+
+.customer-detail-close:hover:not(:disabled) {
+    color: #000;
+}
+
+.customer-detail-close:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.customer-detail-body {
+    padding: 16px 20px 20px;
+    font-size: 14px;
+    color: #333;
+}
+
+.customer-detail-body p {
+    margin: 0 0 10px;
+    line-height: 1.5;
+}

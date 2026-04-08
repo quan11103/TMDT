@@ -81,6 +81,27 @@
     transform: translateY(1px);
 }
 
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.coupon-clear-btn {
+    margin-top: 10px;
+    background: none;
+    border: none;
+    color: #7b0f1a;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.coupon-clear-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* Message under form */
 .msg {
     margin: 10px 0 0 0;

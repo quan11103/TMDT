@@ -18,6 +18,21 @@ export class PaymentService {
     private config: ConfigService,
   ) {}
 
+  /**
+   * URL VNPay chuyển hướng trình duyệt sau khi khách thanh toán — phải là trang FE
+   * (ví dụ http://localhost:5173/payment-result/) để có UI và gọi lại API xác thực.
+   */
+  private resolveVnpayReturnUrl(): string {
+    const configured = this.config.get<string>('VNPAY_RETURN_URL')?.trim();
+    if (configured) {
+      return configured;
+    }
+    const frontend =
+      this.config.get<string>('FRONTEND_URL')?.trim() || 'http://localhost:5173';
+    const base = frontend.replace(/\/+$/, '');
+    return `${base}/payment-result/`;
+  }
+
   async createPayment(userId: number, dto: CreatePaymentDto) {
     const order = await this.prisma.orders.findFirst({
       where: { user_id: userId, id: dto.order_id },
@@ -101,7 +116,7 @@ export class PaymentService {
     const tmnCode = this.config.getOrThrow('VNPAY_TMN_CODE');
     const hashSecret = this.config.getOrThrow('VNPAY_HASH_SECRET');
     const baseUrl = this.config.getOrThrow('VNPAY_PAYMENT_URL');
-    const returnUrl = this.config.getOrThrow('VNPAY_RETURN_URL');
+    const returnUrl = this.resolveVnpayReturnUrl();
 
     const amountVnd = Math.round(Number(order.total_amount));
     const vnpAmount = String(amountVnd * 100);

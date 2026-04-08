@@ -247,7 +247,7 @@ export class PromotionsService {
         });
       }
 
-      return this.findOne(promo.id);
+      return promo;
     });
   }
 

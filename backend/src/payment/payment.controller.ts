@@ -18,4 +18,10 @@ export class PaymentController {
   vnPayCallback(@Query() query: Record<string, string>) {
     return this.paymentService.handleVnPayCallback(query);
   }
+
+  /** Alias (cũ): tránh 404 nếu client gọi /vnpay-callback */
+  @Get('vnpay-callback')
+  vnPayCallbackLegacy(@Query() query: Record<string, string>) {
+    return this.paymentService.handleVnPayCallback(query);
+  }
 }

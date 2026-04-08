@@ -3,16 +3,30 @@ import type { CartItem, ShippingInfo } from "../../types";
 import { useNavigate } from 'react-router-dom';
 import "./OrderSummary.css";
 import Swal from "sweetalert2";
+import { mediaUrl } from "../../lib/mediaUrl";
+import { CHECKOUT_PROMO_STORAGE_KEY } from "../../lib/orderPreview";
+import type { OrderPreviewResult } from "../../lib/orderPreview";
 
 interface Props {
     items: CartItem[];
     shippingInfo: ShippingInfo;
     shipping?: number;
-    discount?: number;
     paymentMethod: string | null;
+    preview: OrderPreviewResult | null;
+    previewLoading?: boolean;
+    /** Mã đang áp dụng (đồng bộ với CreateOrderDto.promotion_code) */
+    promotionCode?: string;
 }
 
-const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount = 0, paymentMethod }) => {
+const OrderSummary: React.FC<Props> = ({
+    items,
+    shippingInfo,
+    shipping,
+    paymentMethod,
+    preview,
+    previewLoading,
+    promotionCode = "",
+}) => {
     if (!items || items.length === 0) {
         return <div className="os-empty">Giỏ hàng của bạn đang trống.</div>;
     }
@@ -21,11 +35,14 @@ const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount
 
     const { email, fullName, phone, province, district, ward, street } = shippingInfo;
     const itemCount = items.reduce((acc, it) => acc + (it.quantity || 0), 0);
-    const subtotal = items.reduce(
+    const computedSubtotal = items.reduce(
         (acc, item) => acc + Number(item.products.price) * item.quantity,
         0
     );
-    const total = typeof shipping === "number" ? subtotal + shipping - discount : subtotal;
+    const subtotal = preview ? preview.subtotal : computedSubtotal;
+    const discount = preview ? preview.discount_amount : 0;
+    const afterDiscount = preview ? preview.total_amount : computedSubtotal;
+    const total = typeof shipping === "number" ? afterDiscount + shipping : afterDiscount;
     const fmt = (v: number) => v.toLocaleString("vi-VN");
 
     const handleConfirmOrder = async () => {
@@ -50,12 +67,15 @@ const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount
         }
 
         // 3. Chuẩn bị dữ liệu theo CreateOrderDto của Backend
-        const orderPayload = {
+        const code =
+            promotionCode.trim() || localStorage.getItem(CHECKOUT_PROMO_STORAGE_KEY)?.trim() || "";
+        const orderPayload: Record<string, unknown> = {
             cart_item_ids: items.map(it => it.id), // Lấy danh sách ID các item trong giỏ
             address: `${street}, ${ward}, ${district}, ${province}`, // Ghép chuỗi địa chỉ đầy đủ
             phone: phone,
             note: shippingInfo.note || ""
         };
+        if (code) orderPayload.promotion_code = code;
 
         try {
             Swal.showLoading();
@@ -91,6 +111,7 @@ const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount
 
                 if (paymentResponse.ok) {
                     Swal.close();
+                    localStorage.removeItem(CHECKOUT_PROMO_STORAGE_KEY);
                     // CHUYỂN HƯỚNG sang trang Redirect đã thiết kế
                     // KIỂM TRA PHƯƠNG THỨC THANH TOÁN
                     if (paymentMethod?.toUpperCase() === 'VNPAY') {
@@ -138,7 +159,11 @@ const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount
                         <div className="os-imgWrap">
                             <img
                                 className="os-img"
-                                src={it.products.product_images[0]?.image_url || 'https://via.placeholder.com/80'}
+                                src={
+                                    it.products.product_images[0]?.image_url
+                                        ? mediaUrl(it.products.product_images[0].image_url)
+                                        : 'https://via.placeholder.com/80'
+                                }
                                 alt={it.products.name}
                             />
                         </div>
@@ -158,7 +183,15 @@ const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount
             <div className="os-summary">
                 <div className="os-row">
                     <div className="os-label">Tạm tính ({itemCount} mặt hàng)</div>
-                    <div className="os-value">{fmt(subtotal)} <span className="vnd">VND</span></div>
+                    <div className="os-value">
+                        {previewLoading ? (
+                            <span className="muted">…</span>
+                        ) : (
+                            <>
+                                {fmt(subtotal)} <span className="vnd">VND</span>
+                            </>
+                        )}
+                    </div>
                 </div>
 
                 <div className="os-row">
@@ -172,14 +205,24 @@ const OrderSummary: React.FC<Props> = ({ items, shippingInfo, shipping, discount
                 </div>
 
                 <div className="os-row">
-                    <div className="os-label">Tổng khuyến mãi</div>
-                    <div className="os-value">{fmt(discount || 0)} <span className="vnd">VND</span></div>
+                    <div className="os-label">Giảm giá (mã khuyến mại)</div>
+                    <div className="os-value" style={{ color: discount > 0 ? '#1f7a3a' : undefined }}>
+                        {previewLoading ? (
+                            <span className="muted">…</span>
+                        ) : (
+                            <>
+                                {discount > 0 ? `-${fmt(discount)}` : fmt(0)} <span className="vnd">VND</span>
+                            </>
+                        )}
+                    </div>
                 </div>
 
                 <div className="os-total">
                     <div className="os-total-label">Tổng tiền</div>
                     <div className="os-total-value">
-                        <div className="big">{fmt(total)} VND</div>
+                        <div className="big">
+                            {previewLoading ? '…' : `${fmt(total)} VND`}
+                        </div>
                         <div className="vat">(Đã bao gồm VAT)</div>
                     </div>
                 </div>

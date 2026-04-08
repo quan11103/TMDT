@@ -39,6 +39,23 @@
     }
 }
 
+/* Lưới theo store settings: mobile 2 cột, tablet 3, desktop repeat(var(--pg-cols)) */
+.product-grid.product-grid--store {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 768px) {
+    .product-grid.product-grid--store {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .product-grid.product-grid--store {
+        grid-template-columns: repeat(var(--pg-cols, 4), 1fr);
+    }
+}
+
 /* Thẻ sản phẩm */
 .product-card {
     display: flex;

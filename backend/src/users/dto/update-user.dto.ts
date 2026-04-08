@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsDateString,
@@ -5,6 +6,7 @@ import {
   IsOptional,
   IsString,
   Matches,
+  ValidateIf,
 } from 'class-validator';
 
 export enum Gender {
@@ -23,15 +25,21 @@ export class UpdateUserDto {
   is_active?: boolean;
 
   @IsOptional()
+  @Transform(({ value }) => (value === '' ? null : value))
+  @ValidateIf((_, v) => v != null)
   @IsString()
   @Matches(/^(\+84|0)[0-9]{9}$/)
-  phone?: string;
+  phone?: string | null;
 
   @IsOptional()
+  @Transform(({ value }) => (value === '' ? null : value))
+  @ValidateIf((_, v) => v != null)
   @IsEnum(Gender)
-  gender?: Gender;
+  gender?: Gender | null;
 
   @IsOptional()
+  @Transform(({ value }) => (value === '' ? null : value))
+  @ValidateIf((_, v) => v != null)
   @IsDateString()
-  dob?: string;
+  dob?: string | null;
 }

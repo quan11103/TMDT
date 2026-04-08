@@ -16,9 +16,10 @@ interface Props {
     minPrice: number;
     maxPrice: number;
     onFilterPrice: (min: number, max: number) => void;
+    productsPerRow?: number;
 }
 
-const CategoryContainer: React.FC<Props> = ({ title, totalItems, productIds, paginationMeta, onPageChange, currentCategoryId, selectedCategoryIds, onCategoryToggle, minPrice, maxPrice, onFilterPrice }) => {
+const CategoryContainer: React.FC<Props> = ({ title, totalItems, productIds, paginationMeta, onPageChange, currentCategoryId, selectedCategoryIds, onCategoryToggle, minPrice, maxPrice, onFilterPrice, productsPerRow }) => {
     return (
         <div className="main-page-wrapper">
             {/* Cấp 1: Tiêu đề trang và số lượng mặt hàng */}
@@ -35,6 +36,7 @@ const CategoryContainer: React.FC<Props> = ({ title, totalItems, productIds, pag
                 minPrice={minPrice}
                 maxPrice={maxPrice}
                 onFilterPrice={onFilterPrice}
+                productsPerRow={productsPerRow}
             />
         </div>
     );

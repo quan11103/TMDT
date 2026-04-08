@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import './OrderDetailModal.css';
+import { mediaUrl } from '../../lib/mediaUrl';
 
 interface OrderDetailModalProps {
     isOpen: boolean;
@@ -97,7 +98,11 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, or
                                 {order.order_items.map((item: any) => (
                                     <div key={item.id} className="product-row-item">
                                         <img
-                                            src={item.products.product_images?.[0]?.image_url || 'https://via.placeholder.com/60'}
+                                            src={
+                                                item.products.product_images?.[0]?.image_url
+                                                    ? mediaUrl(item.products.product_images[0].image_url)
+                                                    : 'https://via.placeholder.com/60'
+                                            }
                                             alt={item.products.name}
                                             className="prod-thumb-sm"
                                         />

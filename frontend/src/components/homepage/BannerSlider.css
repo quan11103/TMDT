@@ -7,6 +7,22 @@
     overflow: hidden;
 }
 
+.banner-slider-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 0%, #f6f6f6 50%, #f0f0f0 100%);
+    background-size: 200% 100%;
+    animation: banner-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes banner-shimmer {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: -100% 0;
+    }
+}
+
 /* Đảm bảo Swiper chiếm trọn khung chứa */
 .banner-swiper {
     width: 100%;

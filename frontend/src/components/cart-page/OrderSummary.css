@@ -78,6 +78,40 @@
     cursor: pointer;
 }
 
+.coupon-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.coupon-clear {
+    margin-top: 8px;
+    background: none;
+    border: none;
+    color: #7b0f1a;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.coupon-msg {
+    font-size: 13px;
+    margin: 8px 0 0;
+    line-height: 1.4;
+}
+
+.coupon-msg-ok {
+    color: #2e7d32;
+}
+
+.coupon-msg-err {
+    color: #c62828;
+}
+
+.muted {
+    color: #999;
+}
+
 .shipping-notice {
     color: #DC063A;
     font-size: 13px;
