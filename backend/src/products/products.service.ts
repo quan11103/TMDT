@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
@@ -24,9 +25,13 @@ export class ProductsService {
     } = query;
     const skip = (page - 1) * limit;
 
+    const tokens = String(search ?? '')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+
     const where: any = {
       is_active: true,
-      ...(search && { name: { contains: search, mode: 'insensitive' } }),
     };
 
     if (min_price !== undefined || max_price !== undefined) {
@@ -57,31 +62,112 @@ export class ProductsService {
       }
     }
 
-    const [data, total] = await Promise.all([
-      this.prisma.products.findMany({
-        where,
-        skip,
-        take: limit,
-        select: {
-          id: true,
-          name: true,
-          price: true,
-          slug: true,
-          description: true,
-          stock: true,
-          categories: {
-            select: { id: true, name: true },
+    // If no search, keep Prisma query (fast + typed).
+    if (tokens.length === 0) {
+      const [data, total] = await Promise.all([
+        this.prisma.products.findMany({
+          where,
+          skip,
+          take: limit,
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            slug: true,
+            description: true,
+            stock: true,
+            categories: {
+              select: { id: true, name: true },
+            },
+            product_images: {
+              where: { is_main: true },
+              select: { image_url: true },
+              take: 1,
+            },
           },
-          product_images: {
-            where: { is_main: true },
-            select: { image_url: true },
-            take: 1,
-          },
+          orderBy: { created_at: 'desc' },
+        }),
+        this.prisma.products.count({ where }),
+      ]);
+
+      return {
+        data,
+        meta: {
+          total,
+          page,
+          limit,
+          total_page: Math.ceil(total / limit),
         },
-        orderBy: { created_at: 'desc' },
-      }),
-      this.prisma.products.count({ where }),
-    ]);
+      };
+    }
+
+    // Accent-insensitive token AND search using PostgreSQL unaccent.
+    const categoryIds = Array.isArray(where.category_id?.in)
+      ? (where.category_id.in as number[])
+      : null;
+    const minPrice = min_price ?? null;
+    const maxPrice = max_price ?? null;
+    const tokenCondsSafe = tokens.map(
+      (t) =>
+        Prisma.sql`unaccent(lower(p.name)) LIKE '%' || unaccent(lower(${t})) || '%'`,
+    );
+
+    const baseWhereSqlParts: Prisma.Sql[] = [Prisma.sql`p.is_active = true`];
+    if (categoryIds && categoryIds.length > 0) {
+      baseWhereSqlParts.push(Prisma.sql`p.category_id = ANY(${categoryIds})`);
+    }
+    if (minPrice !== null) {
+      baseWhereSqlParts.push(Prisma.sql`p.price >= ${minPrice}`);
+    }
+    if (maxPrice !== null) {
+      baseWhereSqlParts.push(Prisma.sql`p.price <= ${maxPrice}`);
+    }
+    baseWhereSqlParts.push(...tokenCondsSafe);
+
+    const whereSql = Prisma.join(baseWhereSqlParts, ' AND ');
+
+    const [{ count }] = await this.prisma.$queryRaw<Array<{ count: bigint }>>(
+      Prisma.sql`SELECT COUNT(*)::bigint AS count FROM products p WHERE ${whereSql}`,
+    );
+
+    const idRows = await this.prisma.$queryRaw<Array<{ id: number }>>(
+      Prisma.sql`SELECT p.id
+                 FROM products p
+                 WHERE ${whereSql}
+                 ORDER BY p.created_at DESC
+                 LIMIT ${limit} OFFSET ${skip}`,
+    );
+
+    const ids = idRows.map((r) => r.id);
+    const total = Number(count);
+
+    const dataUnsorted = await this.prisma.products.findMany({
+      where: {
+        ...where,
+        id: { in: ids.length ? ids : [-1] },
+      },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        slug: true,
+        description: true,
+        stock: true,
+        categories: {
+          select: { id: true, name: true },
+        },
+        product_images: {
+          where: { is_main: true },
+          select: { image_url: true },
+          take: 1,
+        },
+      },
+    });
+
+    const orderIndex = new Map(ids.map((id, idx) => [id, idx]));
+    const data = dataUnsorted.sort(
+      (a, b) => (orderIndex.get(a.id) ?? 0) - (orderIndex.get(b.id) ?? 0),
+    );
 
     return {
       data,

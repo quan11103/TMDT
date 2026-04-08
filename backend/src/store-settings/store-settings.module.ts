@@ -7,4 +7,3 @@ import { StoreSettingsService } from './store-settings.service';
   providers: [StoreSettingsService],
 })
 export class StoreSettingsModule {}
-

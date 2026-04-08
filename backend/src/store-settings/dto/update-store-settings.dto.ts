@@ -16,4 +16,3 @@ export class UpdateStoreSettingsDto {
   @Max(12)
   products_per_row?: number;
 }
-

@@ -21,4 +21,3 @@ export class StoreSettingsController {
     return this.storeSettingsService.update(dto);
   }
 }
-
