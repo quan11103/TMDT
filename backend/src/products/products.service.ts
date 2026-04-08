@@ -8,10 +8,35 @@ import { Prisma } from '@prisma/client';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
+import { extname, join } from 'path';
+import { randomUUID } from 'crypto';
+import { mkdirSync } from 'fs';
+import * as fs from 'fs/promises';
 
 @Injectable()
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
+
+  private ensureProductUploadDir() {
+    const dir = join(process.cwd(), 'uploads', 'products');
+    mkdirSync(dir, { recursive: true });
+    return dir;
+  }
+
+  private createFilename(originalname: string) {
+    const ext = extname(originalname || '').toLowerCase();
+    const safeExt = ext && ext.length <= 10 ? ext : '';
+    return `${randomUUID()}${safeExt}`;
+  }
+
+  private toPublicImageUrl(filename: string) {
+    return `/uploads/products/${filename}`;
+  }
+
+  private toDiskPathFromPublicUrl(imageUrl: string) {
+    // Expect image_url like "/uploads/products/<file>"
+    return join(process.cwd(), imageUrl.replace(/^\//, ''));
+  }
 
   // Search sản phẩm
   async findAll(query: QueryProductDto) {
@@ -285,5 +310,117 @@ export class ProductsService {
         },
       },
     });
+  }
+
+  async addImages(
+    productId: number,
+    files: Express.Multer.File[],
+    mainIndex?: number,
+  ) {
+    const product = await this.prisma.products.findUnique({
+      where: { id: productId },
+      select: { id: true, is_active: true },
+    });
+    if (!product || !product.is_active) {
+      throw new NotFoundException(`Không tìm thấy sản phẩm ${productId}`);
+    }
+
+    if (!files || files.length === 0) {
+      throw new NotFoundException('Thiếu file ảnh');
+    }
+
+    const uploadDir = this.ensureProductUploadDir();
+    const filenames: string[] = [];
+    for (const f of files) {
+      const filename = this.createFilename(f.originalname);
+      await fs.writeFile(join(uploadDir, filename), f.buffer);
+      filenames.push(filename);
+    }
+
+    const existingMain = await this.prisma.product_images.findFirst({
+      where: { product_id: productId, is_main: true },
+      select: { id: true },
+    });
+
+    const resolvedMainIndex =
+      mainIndex !== undefined ? mainIndex : existingMain ? -1 : 0;
+
+    await this.prisma.product_images.createMany({
+      data: filenames.map((filename, idx) => ({
+        product_id: productId,
+        image_url: this.toPublicImageUrl(filename),
+        is_main: idx === resolvedMainIndex,
+      })),
+    });
+
+    // return updated product images
+    return this.prisma.product_images.findMany({
+      where: { product_id: productId },
+      select: { id: true, image_url: true, is_main: true, created_at: true },
+      orderBy: { is_main: 'desc' },
+    });
+  }
+
+  async setMainImage(productId: number, imageId: number) {
+    const image = await this.prisma.product_images.findFirst({
+      where: { id: imageId, product_id: productId },
+      select: { id: true },
+    });
+    if (!image) {
+      throw new NotFoundException('Không tìm thấy ảnh sản phẩm');
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.product_images.updateMany({
+        where: { product_id: productId, is_main: true },
+        data: { is_main: false },
+      });
+      await tx.product_images.update({
+        where: { id: imageId },
+        data: { is_main: true },
+      });
+    });
+
+    return this.prisma.product_images.findMany({
+      where: { product_id: productId },
+      select: { id: true, image_url: true, is_main: true, created_at: true },
+      orderBy: { is_main: 'desc' },
+    });
+  }
+
+  async removeImage(productId: number, imageId: number) {
+    const image = await this.prisma.product_images.findFirst({
+      where: { id: imageId, product_id: productId },
+      select: { id: true, image_url: true, is_main: true },
+    });
+    if (!image) {
+      throw new NotFoundException('Không tìm thấy ảnh sản phẩm');
+    }
+
+    await this.prisma.product_images.delete({ where: { id: imageId } });
+
+    // If removed main image, pick another image as main (oldest first).
+    if (image.is_main) {
+      const next = await this.prisma.product_images.findFirst({
+        where: { product_id: productId },
+        orderBy: { created_at: 'asc' },
+        select: { id: true },
+      });
+      if (next) {
+        await this.prisma.product_images.update({
+          where: { id: next.id },
+          data: { is_main: true },
+        });
+      }
+    }
+
+    if (image.image_url?.startsWith('/uploads/')) {
+      const diskPath = this.toDiskPathFromPublicUrl(image.image_url);
+      await fs.unlink(diskPath).catch(() => undefined);
+    }
+
+    return {
+      message: 'Đã xóa ảnh',
+    };
   }
 }
