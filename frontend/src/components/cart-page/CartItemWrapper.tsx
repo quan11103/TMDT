@@ -3,6 +3,7 @@ import type { CartItem } from '../../types';
 import './CartItemWrapper.css';
 import ItemDetail from './ItemDetail';
 import { useNavigate } from 'react-router-dom';
+import { mediaUrl } from '../../lib/mediaUrl';
 
 interface Props {
     item: CartItem;
@@ -14,7 +15,8 @@ interface Props {
 
 const CartItemWrapper: React.FC<Props> = ({ item, isSelected, onSelect, onChangeQuantity, onRemoveItem }) => {
     // Lấy ảnh đầu tiên trong mảng images, nếu không có thì dùng ảnh placeholder
-    const displayImage = item.products.product_images[0]?.image_url || 'https://via.placeholder.com/150';
+    const raw = item.products.product_images[0]?.image_url;
+    const displayImage = raw ? mediaUrl(raw) : 'https://via.placeholder.com/150';
 
     const navigate = useNavigate();
 

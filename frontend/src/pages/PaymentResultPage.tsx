@@ -20,15 +20,27 @@ const PaymentResultPage: React.FC = () => {
             try {
                 // Chuyển toàn bộ query params từ VNPay về Backend để xác thực
                 const query = Object.fromEntries(searchParams.entries());
-                const response = await axios.get('http://localhost:3000/api/payment/vnpay-callback', {
-                    params: query
+                const response = await axios.get('http://localhost:3000/api/payment/vnpay/callback', {
+                    params: query,
                 });
 
                 setResult(response.data);
-            } catch (error: any) {
+            } catch (error: unknown) {
+                const err = error as { response?: { data?: { message?: string } | string; status?: number } };
+                const data = err.response?.data;
+                const apiMsg =
+                    typeof data === 'object' && data !== null && 'message' in data
+                        ? String((data as { message: string }).message)
+                        : typeof data === 'string'
+                          ? data
+                          : '';
                 setResult({
                     success: false,
-                    message: error.response?.data?.message || 'Không thể xác thực giao dịch.'
+                    message:
+                        apiMsg ||
+                        (err.response?.status === 404
+                            ? 'Không tìm thấy API xác thực thanh toán. Kiểm tra backend đang chạy và đúng đường dẫn.'
+                            : 'Không thể xác thực giao dịch.'),
                 });
             } finally {
                 setLoading(false);
@@ -79,7 +91,7 @@ const PaymentResultPage: React.FC = () => {
 
                 <div className="result-actions">
                     {isSuccess ? (
-                        <button className="btn-secondary" onClick={() => navigate('/orders')}>
+                        <button className="btn-secondary" onClick={() => navigate('/order-status')}>
                             Xem đơn hàng
                         </button>
                     ) : (

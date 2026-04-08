@@ -53,7 +53,8 @@ services:
       VNPAY_TMN_CODE: ${VNPAY_TMN_CODE}
       VNPAY_HASH_SECRET: ${VNPAY_HASH_SECRET}
       VNPAY_PAYMENT_URL: ${VNPAY_PAYMENT_URL}
-      VNPAY_RETURN_URL: ${VNPAY_RETURN_URL}
+      # Sau thanh toán VNPay chuyển về FE (PaymentResultPage), không phải API :3000
+      VNPAY_RETURN_URL: ${VNPAY_RETURN_URL:-http://localhost:5173/payment-result/}
 
       RESEND_API_KEY: ${RESEND_API_KEY}
       RESET_TOKEN_TTL_MINUTES: $RESET_TOKEN_TTL_MINUTES

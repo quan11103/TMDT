@@ -5,10 +5,11 @@ import './ProductSection.css';
 interface ProductSectionProps {
     productsId: number[];
     title: string;
+    /** Theo cấu hình cửa hàng (admin); chưa tải xong → swiper dùng breakpoint mặc định */
+    productsPerRow?: number;
 }
 
-// Nhận title thông qua props
-const ProductSection: React.FC<ProductSectionProps> = ({ title, productsId }) => {
+const ProductSection: React.FC<ProductSectionProps> = ({ title, productsId, productsPerRow }) => {
     return (
         <section className="muji-section">
             <div className="section-container">

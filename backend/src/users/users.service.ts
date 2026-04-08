@@ -52,9 +52,11 @@ export class UsersService {
           id: true,
           email: true,
           full_name: true,
+          phone: true,
           is_active: true,
           created_at: true,
           roles: { select: { role: true } },
+          _count: { select: { orders: true } },
         },
       }),
       this.prisma.users.count(),
@@ -71,9 +73,14 @@ export class UsersService {
         id: true,
         email: true,
         full_name: true,
+        phone: true,
+        dob: true,
+        gender: true,
         created_at: true,
+        updated_at: true,
         is_active: true,
         roles: { select: { role: true } },
+        _count: { select: { orders: true } },
       },
     });
 
@@ -87,16 +94,32 @@ export class UsersService {
     // Kiểm tra user có tồn tại
     await this.findOne(id);
 
+    const data: {
+      full_name?: string | null;
+      is_active?: boolean;
+      phone?: string | null;
+      gender?: string | null;
+      dob?: Date | null;
+    } = {};
+
+    if (dto.full_name !== undefined) data.full_name = dto.full_name;
+    if (dto.is_active !== undefined) data.is_active = dto.is_active;
+    if (dto.phone !== undefined) data.phone = dto.phone;
+    if (dto.gender !== undefined) data.gender = dto.gender;
+    if (dto.dob !== undefined) {
+      data.dob = dto.dob ? new Date(dto.dob) : null;
+    }
+
     const updated = await this.prisma.users.update({
       where: { id },
-      data: {
-        full_name: dto.full_name,
-        is_active: dto.is_active,
-      },
+      data,
       select: {
         id: true,
         full_name: true,
         email: true,
+        phone: true,
+        gender: true,
+        dob: true,
         is_active: true,
         updated_at: true,
       },

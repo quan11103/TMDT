@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -50,8 +51,15 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permissions('user.read')
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const p = page ? Math.max(1, parseInt(page, 10) || 1) : 1;
+    const l = limit
+      ? Math.min(100, Math.max(1, parseInt(limit, 10) || 10))
+      : 10;
+    return this.usersService.findAll(p, l);
   }
 
   // GET/users/:id lấy thông tin user theo id

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Header.css';
 
 interface User {
-    full_name: string;
+    full_name?: string | null;
     email?: string;
 }
 
@@ -76,11 +76,15 @@ const Header: React.FC = () => {
         const storedUser = localStorage.getItem('user');
 
         if (storedUser) {
-
             setUser(JSON.parse(storedUser));
-
         }
 
+        const onUserCacheUpdated = () => {
+            const u = localStorage.getItem('user');
+            if (u) setUser(JSON.parse(u));
+        };
+        window.addEventListener('userCacheUpdated', onUserCacheUpdated);
+        return () => window.removeEventListener('userCacheUpdated', onUserCacheUpdated);
     }, []);
 
     useEffect(() => {
@@ -218,7 +222,8 @@ const Header: React.FC = () => {
                                         {user ? (
                                             <>
                                                 <div className="dropdown-greeting">
-                                                    Chào, <span>{user.full_name}</span>
+                                                    Chào,{' '}
+                                                    <span>{user.full_name?.trim() || 'bạn'}</span>
                                                 </div>
 
                                                 <div className="dropdown-item" onClick={() => navigate('/account')}>

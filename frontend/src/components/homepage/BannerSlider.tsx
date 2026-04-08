@@ -1,87 +1,106 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import './BannerSlider.css';
 
-interface SlideData {
+const API_PUBLIC_BANNERS = 'http://localhost:3000/api/banners/public';
+
+interface BannerPublic {
     id: number;
     title: string;
-    link: string;
-    imgSrc: string;
+    link_url: string | null;
+    image_url: string;
+    sort_order: number;
 }
 
-// Mảng chứa dữ liệu các Banner
-const bannerData: SlideData[] = [
-    {
-        id: 1,
-        title: "Feb.26 - Vali vỏ ngoài trong suốt",
-        link: "https://www.muji.com.vn/vn/product/muji-vietnam-limited-hard-shell-suitcase-adjustable-handle-suitcase1",
-        imgSrc: "https://api.muji.com.vn/media/mageplaza/bannerslider/banner/image/v/a/vali_trong_suo_t_1.png"
-    },
-    {
-        id: 2,
-        title: "Feb.26 - PYJAMA",
-        link: "https://www.muji.com.vn/vn/search?q=pyjama",
-        imgSrc: "https://api.muji.com.vn/media/mageplaza/bannerslider/banner/image/p/y/pyjama.png"
-    },
-    {
-        id: 3,
-        title: "Aug - New Skincare Series 1",
-        link: "https://www.muji.com.vn/vn/category/2506-booster-essence-sensitive-care-series",
-        imgSrc: "https://api.muji.com.vn/media/mageplaza/bannerslider/banner/image/a/r/artboard_3.png"
-    },
-    {
-        id: 4,
-        title: "June - EC Promotion - Combo 10 Jute my bag",
-        link: "https://www.muji.com.vn/vn/category/32-hand-bags",
-        imgSrc: "https://api.muji.com.vn/media/mageplaza/bannerslider/banner/image/c/o/combo_10_tu_i_my_bag.png"
-    },
-    {
-        id: 5,
-        title: "July - Gối",
-        link: "https://www.muji.com.vn/vn/category/56-pillows",
-        imgSrc: "https://api.muji.com.vn/media/mageplaza/bannerslider/banner/image/g/o/go_i_-_desk.png"
-    },
-    {
-        id: 6,
-        title: "Feb.26 - EC Promotion",
-        link: "https://www.muji.com.vn/vn/category/1315-thursday-promotion-2025",
-        imgSrc: "https://api.muji.com.vn/media/mageplaza/bannerslider/banner/image/t/e/te_t_delivery_1.png"
-    }
-];
+const imgFullUrl = (imageUrl: string) => {
+    if (!imageUrl) return '';
+    if (imageUrl.startsWith('http')) return imageUrl;
+    const path = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+    return `http://localhost:3000${path}`;
+};
 
 const BannerSlider: React.FC = () => {
+    const [slides, setSlides] = useState<BannerPublic[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        let cancelled = false;
+        const run = async () => {
+            try {
+                const res = await fetch(API_PUBLIC_BANNERS);
+                const data = await res.json().catch(() => []);
+                if (!cancelled && res.ok && Array.isArray(data)) {
+                    setSlides(data);
+                } else if (!cancelled) {
+                    setSlides([]);
+                }
+            } catch {
+                if (!cancelled) setSlides([]);
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        };
+        run();
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
+    if (loading) {
+        return <div className="banner-slider-container banner-slider-skeleton" aria-hidden="true" />;
+    }
+
+    if (slides.length === 0) {
+        return null;
+    }
+
     return (
         <div className="banner-slider-container">
             <Swiper
                 modules={[Navigation, Pagination, Autoplay]}
                 spaceBetween={0}
                 slidesPerView={1}
-                navigation // Bật mũi tên chuyển slide
-                pagination={{ clickable: true }} // Bật dấu chấm tròn
-                autoplay={{ delay: 5000, disableOnInteraction: false }} // Tự động chạy sau 5s
-                loop={true} // Lặp lại vô tận
+                navigation={slides.length > 1}
+                pagination={slides.length > 1 ? { clickable: true } : false}
+                autoplay={
+                    slides.length > 1
+                        ? { delay: 5000, disableOnInteraction: false }
+                        : false
+                }
+                loop={slides.length > 1}
                 className="banner-swiper"
             >
-                {bannerData.map((slide) => (
-                    <SwiperSlide key={slide.id}>
-                        <a
-                            className="banner-link"
-                            title={slide.title}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href={slide.link}
-                        >
-                            <img
-                                className="banner-image"
-                                alt={slide.title}
-                                src={slide.imgSrc}
-                                loading="eager"
-                            />
-                        </a>
-                    </SwiperSlide>
-                ))}
+                {slides.map((slide, index) => {
+                    const img = (
+                        <img
+                            className="banner-image"
+                            alt={slide.title}
+                            src={imgFullUrl(slide.image_url)}
+                            loading={index === 0 ? 'eager' : 'lazy'}
+                        />
+                    );
+                    return (
+                        <SwiperSlide key={slide.id}>
+                            {slide.link_url ? (
+                                <a
+                                    className="banner-link"
+                                    title={slide.title}
+                                    href={slide.link_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    {img}
+                                </a>
+                            ) : (
+                                <div className="banner-link" title={slide.title}>
+                                    {img}
+                                </div>
+                            )}
+                        </SwiperSlide>
+                    );
+                })}
             </Swiper>
         </div>
     );

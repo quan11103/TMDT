@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom'; // Dùng để lấy ?q=...
 import axios from 'axios';
 import type { PaginationMeta } from '../types';
+import { fetchStoreSettings } from '../lib/storeSettings';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import SearchContainer from '../components/search-page/SearchContainer';
@@ -16,6 +17,17 @@ const SearchPage: React.FC = () => {
     const [paginationMeta, setPaginationMeta] = useState<PaginationMeta | undefined>();
     const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [productsPerPage, setProductsPerPage] = useState(12);
+    const [productsPerRow, setProductsPerRow] = useState(4);
+
+    useEffect(() => {
+        fetchStoreSettings()
+            .then((s) => {
+                setProductsPerPage(s.products_per_page);
+                setProductsPerRow(s.products_per_row);
+            })
+            .catch(() => undefined);
+    }, []);
 
     const fetchData = useCallback(async (
         page: number = 1,
@@ -34,7 +46,7 @@ const SearchPage: React.FC = () => {
                     category_id: selectedIds.length > 0 ? selectedIds.join(',') : undefined,
                     min_price: min,
                     max_price: max,
-                    limit: 15,
+                    limit: productsPerPage,
                     page: page
                 }
             });
@@ -46,11 +58,11 @@ const SearchPage: React.FC = () => {
             console.error("Lỗi khi tìm kiếm:", err);
             setError("Không thể tải kết quả tìm kiếm.");
         }
-    }, [query, minPrice, maxPrice, selectedCategoryIds]);
+    }, [query, minPrice, maxPrice, selectedCategoryIds, productsPerPage]);
 
     useEffect(() => {
         fetchData(1, minPrice, maxPrice, selectedCategoryIds);
-    }, [query, selectedCategoryIds]); // Khi đổi từ khóa hoặc tick chọn category đều gọi lại API
+    }, [query, selectedCategoryIds, productsPerPage, fetchData, minPrice, maxPrice]);
 
     const handleCategoryToggle = (id: number) => {
         setSelectedCategoryIds((prev) => {
@@ -90,6 +102,7 @@ const SearchPage: React.FC = () => {
                     minPrice={minPrice}
                     maxPrice={maxPrice}
                     onFilterPrice={handleFilterPrice}
+                    productsPerRow={productsPerRow}
                 />
             </div>
             <Footer />

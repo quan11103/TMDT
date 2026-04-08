@@ -1,31 +1,33 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Coupon.css";
 
-const Coupon: React.FC = () => {
-    const [code, setCode] = useState("");
-    const [msg, setMsg] = useState<string | null>(null);
-    const [type, setType] = useState<"error" | "success" | null>(null);
+export interface CouponMessage {
+    type: "error" | "success";
+    text: string;
+}
 
+interface Props {
+    value: string;
+    onChange: (v: string) => void;
+    onApply: () => void;
+    onClear?: () => void;
+    loading?: boolean;
+    message?: CouponMessage | null;
+    showClear?: boolean;
+}
+
+const Coupon: React.FC<Props> = ({
+    value,
+    onChange,
+    onApply,
+    onClear,
+    loading,
+    message,
+    showClear,
+}) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setMsg(null);
-        setType(null);
-
-        const trimmed = code.trim();
-        if (!trimmed) {
-            setMsg("Vui lòng nhập mã giảm giá");
-            setType("error");
-            return;
-        }
-
-        // TODO: call API to validate code. For demo, fake success when code === "MUJI10"
-        if (trimmed.toUpperCase() === "MUJI10") {
-            setMsg("Áp dụng mã thành công - Giảm 10%");
-            setType("success");
-        } else {
-            setMsg("Mã không hợp lệ hoặc đã hết hạn");
-            setType("error");
-        }
+        onApply();
     };
 
     return (
@@ -38,20 +40,28 @@ const Coupon: React.FC = () => {
                     id="coupon_code"
                     name="coupon_code"
                     type="text"
-                    placeholder="Mã giảm giá"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
+                    placeholder="Nhập mã (ví dụ SUMMER26)"
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    disabled={loading}
                     aria-label="Mã giảm giá"
+                    autoComplete="off"
                 />
 
-                <button className="btn" type="submit" aria-label="Áp dụng mã">
-                    ÁP DỤNG
+                <button className="btn" type="submit" aria-label="Áp dụng mã" disabled={loading}>
+                    {loading ? "…" : "ÁP DỤNG"}
                 </button>
             </form>
 
-            {msg && (
-                <p className={`msg ${type === "error" ? "err" : "ok"}`} role="status">
-                    {msg}
+            {showClear && onClear && (
+                <button type="button" className="coupon-clear-btn" onClick={onClear} disabled={loading}>
+                    Xóa mã
+                </button>
+            )}
+
+            {message && (
+                <p className={`msg ${message.type === "error" ? "err" : "ok"}`} role="status">
+                    {message.text}
                 </p>
             )}
         </aside>

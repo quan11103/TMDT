@@ -136,3 +136,144 @@
     background-color: #f0f0f0;
     opacity: 0.5;
 }
+
+.banner-header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn-primary.btn-outline {
+    background-color: #fff;
+    color: #7f0019;
+    border: 1px solid #7f0019;
+}
+
+.btn-primary.btn-outline:hover {
+    background-color: #fdf5f6;
+}
+
+.btn-primary:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.banner-error {
+    background: #fff5f5;
+    border: 1px solid #fcc;
+    color: #b00020;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.banner-form-card {
+    background: #fafafa;
+    border: 1px solid #eee;
+    padding: 24px;
+    margin-bottom: 24px;
+    border-radius: 4px;
+}
+
+.banner-form-title {
+    margin: 0 0 20px;
+    font-size: 16px;
+    color: #333;
+}
+
+.banner-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .banner-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.banner-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.banner-form-group.row {
+    flex-direction: row;
+    grid-column: 1 / -1;
+}
+
+.banner-form-group.row .col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.banner-form-group label {
+    font-size: 13px;
+    color: #666;
+    font-weight: 500;
+}
+
+.banner-form-group .muji-input {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    font-size: 14px;
+    background: #fff;
+}
+
+.banner-form-group .muji-input:focus {
+    outline: none;
+    border-color: #7f0019;
+}
+
+.banner-form-group .file-input {
+    padding: 8px 0;
+    border: none;
+}
+
+.banner-form-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.banner-preview-inline {
+    margin-top: 8px;
+}
+
+.banner-preview-inline img {
+    max-width: 280px;
+    max-height: 100px;
+    object-fit: cover;
+    border: 1px solid #eee;
+}
+
+.banner-url.muted {
+    color: #bbb;
+    font-style: italic;
+}
+
+.banner-active-pill {
+    border: none;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.banner-active-pill.on {
+    background: #e6f8e6;
+    color: #2e7d32;
+}
+
+.banner-active-pill.off {
+    background: #f0f0f0;
+    color: #757575;
+}

@@ -107,3 +107,57 @@ textarea:focus {
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
+
+.file-input-native {
+    padding: 8px 0;
+    border: none;
+    font-size: 14px;
+}
+
+.field-hint {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: #888;
+    line-height: 1.4;
+}
+
+.image-previews {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.image-preview-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    width: 100px;
+}
+
+.image-preview-card input[type='radio'] {
+    margin: 0;
+    accent-color: #7f0019;
+}
+
+.image-preview-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    display: block;
+}
+
+.image-preview-card:has(input:checked) img {
+    border-color: #7f0019;
+    box-shadow: 0 0 0 1px #7f0019;
+}
+
+.preview-label {
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+}

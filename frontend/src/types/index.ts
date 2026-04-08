@@ -96,12 +96,17 @@ export interface Order {
 export interface User {
     id: number;
     email: string;
-    full_name: string;
+    full_name: string | null;
     is_active: boolean;
     created_at: string;
     roles: {
         role: string;
     };
+    phone?: string | null;
+    dob?: string | null;
+    gender?: string | null;
+    updated_at?: string | null;
+    _count?: { orders: number };
 }
 
 export interface Review {

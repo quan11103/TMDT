@@ -3,6 +3,7 @@ import type { Product, ProductImage } from '../../../types';
 import './ProductItem.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { mediaUrl } from '../../../lib/mediaUrl';
 
 interface Props {
     Id: number;
@@ -49,7 +50,8 @@ const ProductItem: React.FC<Props> = ({ Id }) => {
 
     // 4. Lấy ảnh chính (is_main: true) từ mảng product_images trả về từ API
     const mainImage = product.product_images.find(img => img.is_main) || product.product_images[0];
-    const image_url = mainImage?.image_url || 'https://via.placeholder.com/300'; // Ảnh mặc định nếu ko có ảnh
+    const rawImg = mainImage?.image_url;
+    const image_url = rawImg ? mediaUrl(rawImg) : 'https://via.placeholder.com/300';
 
     const { name, slug, price } = product;
     const formattedPrice = new Intl.NumberFormat('vi-VN').format(price);

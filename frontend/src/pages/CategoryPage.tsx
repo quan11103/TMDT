@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import type { CategoryData, PaginationMeta } from '../types';
+import { fetchStoreSettings } from '../lib/storeSettings';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import Breadcrumb from '../components/common/Breadcrumb';
@@ -18,6 +19,17 @@ const CategoryPage: React.FC = () => {
     const [paginationMeta, setPaginationMeta] = useState<PaginationMeta | undefined>();
     const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [productsPerPage, setProductsPerPage] = useState(12);
+    const [productsPerRow, setProductsPerRow] = useState(4);
+
+    useEffect(() => {
+        fetchStoreSettings()
+            .then((s) => {
+                setProductsPerPage(s.products_per_page);
+                setProductsPerRow(s.products_per_row);
+            })
+            .catch(() => undefined);
+    }, []);
 
     const fetchData = useCallback(async (page: number = 1, min: number = minPrice, max: number = maxPrice, selectedIds: number[] = selectedCategoryIds) => {
         try {
@@ -31,7 +43,7 @@ const CategoryPage: React.FC = () => {
                         category_id: queryCategoryId,
                         min_price: min,
                         max_price: max,
-                        limit: 15,
+                        limit: productsPerPage,
                         page: page
                     }
                 })
@@ -45,14 +57,14 @@ const CategoryPage: React.FC = () => {
             console.error("Lỗi khi lấy dữ liệu:", err);
             setError("Không thể tải dữ liệu.");
         }
-    }, [categoryId, minPrice, maxPrice, selectedCategoryIds]);
+    }, [categoryId, minPrice, maxPrice, selectedCategoryIds, productsPerPage]);
 
     // Gọi API khi có thay đổi
     useEffect(() => {
         if (categoryId) {
             fetchData(1, minPrice, maxPrice, selectedCategoryIds);
         }
-    }, [categoryId, selectedCategoryIds]);
+    }, [categoryId, selectedCategoryIds, productsPerPage, fetchData, minPrice, maxPrice]);
 
     // THÊM: Hàm xử lý khi tick/bỏ tick 1 category
     const handleCategoryToggle = (id: number) => {
@@ -90,6 +102,7 @@ const CategoryPage: React.FC = () => {
                     onFilterPrice={handleFilterPrice}
                     selectedCategoryIds={selectedCategoryIds}
                     onCategoryToggle={handleCategoryToggle}
+                    productsPerRow={productsPerRow}
                 />
             </div>
             <Footer />

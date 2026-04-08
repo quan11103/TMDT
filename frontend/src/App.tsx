@@ -15,6 +15,7 @@ import SignUpPage from './pages/SignUpPage';
 import ProtectedRoute from './components/admin-page/ProtectedRoute';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import PaymentResultPage from './pages/PaymentResultPage';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
 
@@ -25,13 +26,11 @@ function App() {
     const tokenFromUrl = params.get('token');
     const userFromUrl = params.get('user');
 
-    if (tokenFromUrl) {
+    // Chỉ coi là đăng nhập OAuth khi có cả token + user (redirect Google/Facebook).
+    // Tránh nhầm ?token=... trên link đặt lại mật khẩu (/forgot-password?token=...) với JWT.
+    if (tokenFromUrl && userFromUrl) {
       localStorage.setItem('access_token', tokenFromUrl);
-      if (userFromUrl) {
-        // Backend thường trả về string, ta lưu vào localStorage
-        localStorage.setItem('user', userFromUrl);
-      }
-      // Xóa query params trên URL để thanh địa chỉ sạch sẽ
+      localStorage.setItem('user', userFromUrl);
       window.history.replaceState({}, document.title, window.location.pathname);
       console.log("Đăng nhập Google thành công!");
     }
@@ -68,14 +67,18 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login/" element={<LoginPage />} />
         <Route path="/signup/" element={<SignUpPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/forgot-password/" element={<ForgotPasswordPage />} />
         <Route path="/search/" element={<SearchPage />} />
         <Route path="/product/:productId" element={<ProductDetailPage />} />
         <Route path="/category/:categoryId" element={<CategoryPage />} />
         <Route path="/cart/" element={<CartPage />} />
         <Route path="/checkout/" element={<CheckoutPage />} />
+        <Route path="/payment-result" element={<PaymentResultPage />} />
         <Route path="/payment-result/" element={<PaymentResultPage />} />
         <Route path="/order-status/" element={<OrderStatusPage />} />
+        <Route path="/account" element={<ProfilePage />} />
+        <Route path="/account/" element={<ProfilePage />} />
         <Route
           path="/admin/"
           element={

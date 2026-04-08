@@ -3,6 +3,7 @@ import axios from 'axios';
 import type { ProductDetail } from '../../types';
 import QuantitySelector from '../common/QuantitySelector';
 import './ProductInfo.css';
+import { mediaUrl } from '../../lib/mediaUrl';
 
 interface Props {
     product: ProductDetail;
@@ -14,6 +15,7 @@ const ProductInfo: React.FC<Props> = ({ product }) => {
     const [isAdded, setIsAdded] = useState(false);
 
     const formattedPrice = new Intl.NumberFormat('vi-VN').format(product.price);
+    const mainGallerySrc = product.product_images[activeIndex]?.image_url;
 
     const handleAddToCart = async () => {
         const finalQuantity = Number(quantity) || 1;
@@ -53,7 +55,7 @@ const ProductInfo: React.FC<Props> = ({ product }) => {
             <div className="product-gallery">
                 <div className="gallery-main">
                     <img
-                        src={product.product_images[activeIndex]?.image_url || 'https://via.placeholder.com/500'}
+                        src={mainGallerySrc ? mediaUrl(mainGallerySrc) : 'https://via.placeholder.com/500'}
                         alt={product.name}
                     />
                 </div>
@@ -64,7 +66,7 @@ const ProductInfo: React.FC<Props> = ({ product }) => {
                             className={`thumb-item ${activeIndex === index ? 'active' : ''}`}
                             onClick={() => setActiveIndex(index)}
                         >
-                            <img src={img.image_url} alt={`thumb-${index}`} />
+                            <img src={mediaUrl(img.image_url)} alt={`thumb-${index}`} />
                         </div>
                     ))}
                 </div>
