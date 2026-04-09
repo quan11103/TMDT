@@ -38,23 +38,12 @@
     color: #666;
 }
 
-/* Review List Layout */
+/* Review List Layout — một cột, dễ đọc khi có phân trang */
 .reviews-list {
     display: flex;
     flex-direction: column;
-    gap: 32px;
-}
-
-/* Responsive: 2 cột trên màn hình lớn (giống web mẫu) */
-@media (min-width: 1024px) {
-    .reviews-list {
-        flex-direction: row;
-        gap: 16px;
-    }
-
-    .review-card {
-        flex: 1;
-    }
+    gap: 24px;
+    max-width: 720px;
 }
 
 /* Individual Review Card */
@@ -125,4 +114,214 @@
 
 .comment-section p {
     margin: 0;
+}
+
+.comment-empty {
+    color: #888;
+    font-style: italic;
+}
+
+/* Form gửi đánh giá */
+.review-compose {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #eee;
+}
+
+.review-login-hint {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.review-link-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #7f0019;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.review-form-title {
+    margin: 0 0 12px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #222;
+}
+
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.review-form-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.review-form-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+}
+
+.star-picker {
+    display: flex;
+    gap: 4px;
+}
+
+.star-pick {
+    background: none;
+    border: none;
+    padding: 0 2px;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    color: #ddd;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.star-pick.on,
+.star-pick:hover {
+    color: #c4a574;
+}
+
+.star-pick:focus-visible {
+    outline: 2px solid #7f0019;
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+.review-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+}
+
+.review-textarea:focus {
+    outline: none;
+    border-color: #7f0019;
+    box-shadow: 0 0 0 2px rgba(127, 0, 25, 0.12);
+}
+
+.review-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.review-submit-btn {
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    background: #7f0019;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.review-submit-btn:hover:not(:disabled) {
+    background: #660014;
+}
+
+.review-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.review-delete-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+    color: #b91c1c;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.review-delete-btn:hover:not(:disabled) {
+    background: #fff5f5;
+}
+
+.review-msg {
+    margin: 0;
+    font-size: 13px;
+}
+
+.review-msg-error {
+    color: #b91c1c;
+}
+
+.review-msg-success {
+    color: #1b5e20;
+}
+
+.review-list-error {
+    color: #b91c1c;
+    font-size: 14px;
+}
+
+.reviews-loading,
+.reviews-empty {
+    font-size: 14px;
+    color: #666;
+}
+
+.review-badge-mine {
+    font-size: 11px;
+    font-weight: 700;
+    color: #7f0019;
+}
+
+.review-card--mine {
+    background: #fafafa;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.reviews-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.reviews-page-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.reviews-page-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.reviews-page-info {
+    font-size: 14px;
+    color: #555;
+}
+
+.user-avatar {
+    background-repeat: no-repeat;
+    background-position: center;
 }

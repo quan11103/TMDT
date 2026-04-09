@@ -120,12 +120,24 @@
 
 .product-rating {
     display: flex;
-    /* Quan trọng: Đưa các div con lên cùng 1 hàng */
     align-items: center;
-    /* Căn giữa các thành phần theo chiều dọc */
     gap: 8px;
-    /* Tạo khoảng cách giữa sao, số điểm và lượt đánh giá */
     margin-bottom: 10px;
+}
+
+.product-rating .rating-stars {
+    display: flex;
+    letter-spacing: 1px;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.product-rating .rating-stars .star-on {
+    color: #c4a574;
+}
+
+.product-rating .rating-stars .star-off {
+    color: #ddd;
 }
 
 /* --- CONTROLS & BUTTONS --- */

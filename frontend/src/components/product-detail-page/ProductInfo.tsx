@@ -4,18 +4,24 @@ import type { ProductDetail } from '../../types';
 import QuantitySelector from '../common/QuantitySelector';
 import './ProductInfo.css';
 import { mediaUrl } from '../../lib/mediaUrl';
+import type { ReviewSummary } from '../../lib/reviewsApi';
 
 interface Props {
     product: ProductDetail;
+    reviewSummary: ReviewSummary | null;
 }
 
-const ProductInfo: React.FC<Props> = ({ product }) => {
+const ProductInfo: React.FC<Props> = ({ product, reviewSummary }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [quantity, setQuantity] = useState<number | string>(1);
     const [isAdded, setIsAdded] = useState(false);
 
     const formattedPrice = new Intl.NumberFormat('vi-VN').format(product.price);
     const mainGallerySrc = product.product_images[activeIndex]?.image_url;
+
+    const reviewCount = reviewSummary?.count ?? 0;
+    const avgRating = reviewSummary?.avg_rating ?? 0;
+    const roundedStars = reviewCount > 0 ? Math.round(avgRating) : 0;
 
     const handleAddToCart = async () => {
         const finalQuantity = Number(quantity) || 1;
@@ -85,10 +91,19 @@ const ProductInfo: React.FC<Props> = ({ product }) => {
                     </div>
                 </div>
 
-                <div className="product-rating">
-                    <div className="rating-stars">★★★★★</div>
-                    <strong className="review-score">5.0<span className="score-max">/ 5</span></strong>
-                    <div className="review-count">(2 Đánh giá)</div>
+                <div className="product-rating" aria-label="Điểm đánh giá">
+                    <div className="rating-stars" aria-hidden>
+                        {[1, 2, 3, 4, 5].map((n) => (
+                            <span key={n} className={n <= roundedStars ? 'star-on' : 'star-off'}>
+                                ★
+                            </span>
+                        ))}
+                    </div>
+                    <strong className="review-score">
+                        {reviewCount > 0 ? avgRating.toFixed(1) : '—'}
+                        <span className="score-max">/ 5</span>
+                    </strong>
+                    <div className="review-count">({reviewCount} đánh giá)</div>
                 </div>
 
                 <div className="product-price">

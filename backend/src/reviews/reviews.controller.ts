@@ -20,14 +20,15 @@ import { QueryReviewsDto } from './dto/query-reviews.dto';
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
-  @Get()
-  list(@Param('id') productId: string, @Query() query: QueryReviewsDto) {
-    return this.reviewsService.listByProduct(+productId, query);
-  }
-
+  /** Đăng ký trước route `list` để `/reviews/summary` không bị nhầm với list */
   @Get('summary')
   summary(@Param('id') productId: string) {
     return this.reviewsService.summary(+productId);
+  }
+
+  @Get()
+  list(@Param('id') productId: string, @Query() query: QueryReviewsDto) {
+    return this.reviewsService.listByProduct(+productId, query);
   }
 
   @UseGuards(JwtAuthGuard)

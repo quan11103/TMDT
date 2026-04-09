@@ -7,6 +7,7 @@ import Footer from '../components/common/Footer';
 import ProductInfo from '../components/product-detail-page/ProductInfo';
 import Breadcrumb from '../components/common/Breadcrumb';
 import ProductReviews from '../components/product-detail-page/ProductReviews';
+import { fetchReviewSummary, type ReviewSummary } from '../lib/reviewsApi';
 import './ProductDetailPage.css';
 
 const ProductDetail: React.FC = () => {
@@ -15,6 +16,7 @@ const ProductDetail: React.FC = () => {
     const [product, setProduct] = useState<ProductDetailType | null>(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
+    const [reviewSummary, setReviewSummary] = useState<ReviewSummary | null>(null);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -34,6 +36,24 @@ const ProductDetail: React.FC = () => {
         fetchProduct();
     }, [productId]);
 
+    useEffect(() => {
+        if (!productId) return;
+        const id = Number(productId);
+        let cancelled = false;
+        fetchReviewSummary(id)
+            .then((s) => {
+                if (!cancelled) setReviewSummary(s);
+            })
+            .catch(() => {
+                if (!cancelled) {
+                    setReviewSummary({ product_id: id, count: 0, avg_rating: 0 });
+                }
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [productId]);
+
     if (loading) return <div className="loading-screen" style={{ color: '#fff' }}>Đang tải...</div>;
     if (error || !product) return <div className="error-screen">{error || "Sản phẩm không tồn tại"}</div>;
 
@@ -46,8 +66,12 @@ const ProductDetail: React.FC = () => {
                     productName={product.name}
                     category={product.categories}
                 />
-                <ProductInfo product={product} />
-                <ProductReviews />
+                <ProductInfo product={product} reviewSummary={reviewSummary} />
+                <ProductReviews
+                    productId={product.id}
+                    reviewSummary={reviewSummary}
+                    onReviewChanged={setReviewSummary}
+                />
             </div>
 
             <Footer />
