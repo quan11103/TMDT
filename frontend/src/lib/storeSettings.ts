@@ -1,5 +1,8 @@
 const API_URL = 'http://localhost:3000/api/store-settings';
 
+/** Trang mua hàng lắng nghe để refetch cấu hình sau khi admin lưu */
+export const STORE_SETTINGS_UPDATED_EVENT = 'storeSettingsUpdated';
+
 export type StoreSettings = {
     id: number;
     products_per_page: number;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import type { CategoryData, PaginationMeta } from '../types';
-import { fetchStoreSettings } from '../lib/storeSettings';
+import { fetchStoreSettings, STORE_SETTINGS_UPDATED_EVENT } from '../lib/storeSettings';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import Breadcrumb from '../components/common/Breadcrumb';
@@ -22,14 +22,25 @@ const CategoryPage: React.FC = () => {
     const [productsPerPage, setProductsPerPage] = useState(12);
     const [productsPerRow, setProductsPerRow] = useState(4);
 
-    useEffect(() => {
-        fetchStoreSettings()
-            .then((s) => {
-                setProductsPerPage(s.products_per_page);
-                setProductsPerRow(s.products_per_row);
-            })
-            .catch(() => undefined);
+    const applyStoreSettings = useCallback((s: { products_per_page: number; products_per_row: number }) => {
+        setProductsPerPage(s.products_per_page);
+        setProductsPerRow(s.products_per_row);
     }, []);
+
+    useEffect(() => {
+        fetchStoreSettings().then(applyStoreSettings).catch(() => undefined);
+        const onUpdated = (ev: Event) => {
+            const d = (ev as CustomEvent<{ products_per_page?: number; products_per_row?: number }>).detail;
+            if (d?.products_per_page != null && d?.products_per_row != null) {
+                applyStoreSettings({
+                    products_per_page: d.products_per_page,
+                    products_per_row: d.products_per_row,
+                });
+            }
+        };
+        window.addEventListener(STORE_SETTINGS_UPDATED_EVENT, onUpdated);
+        return () => window.removeEventListener(STORE_SETTINGS_UPDATED_EVENT, onUpdated);
+    }, [applyStoreSettings]);
 
     const fetchData = useCallback(async (page: number = 1, min: number = minPrice, max: number = maxPrice, selectedIds: number[] = selectedCategoryIds) => {
         try {

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Swal from 'sweetalert2';
-import { fetchStoreSettings, updateStoreSettings } from '../../lib/storeSettings';
+import { fetchStoreSettings, updateStoreSettings, STORE_SETTINGS_UPDATED_EVENT } from '../../lib/storeSettings';
 import './AdminUI.css';
 
 const AdminUI: React.FC = () => {
@@ -73,13 +73,16 @@ const AdminUI: React.FC = () => {
 
         setIsSaving(true);
         try {
-            await updateStoreSettings(token, {
+            const saved = await updateStoreSettings(token, {
                 products_per_page: productsPerPage,
                 products_per_row: productsPerRow,
             });
+            window.dispatchEvent(
+                new CustomEvent(STORE_SETTINGS_UPDATED_EVENT, { detail: saved }),
+            );
             await Swal.fire({
                 title: 'Cập nhật thành công!',
-                text: 'Cấu hình hiển thị sản phẩm đã được lưu.',
+                text: 'Cấu hình hiển thị sản phẩm đã được lưu. Trang chủ / tìm kiếm sẽ dùng ngay (tab đang mở).',
                 icon: 'success',
                 confirmButtonColor: '#7f0019',
                 width: '380px',
@@ -108,8 +111,9 @@ const AdminUI: React.FC = () => {
             {loadError && <div className="ui-load-error">{loadError}</div>}
 
             <p className="ui-description">
-                Thiết lập số sản phẩm trên mỗi trang và số cột lưới ở trang danh mục / tìm kiếm. Thay đổi áp dụng sau khi lưu
-                và tải lại trang mua hàng.
+                Số sản phẩm mỗi trang: trang danh mục / tìm kiếm. Số cột mỗi hàng: áp dụng cả lưới đó và{' '}
+                <strong>3 khối trên trang chủ</strong> (Mới về, Nổi bật, Bán chạy). Sau khi lưu, tab trang mua hàng mở sẵn
+                tự cập nhật; tab khác tải lại để lấy cấu hình mới.
             </p>
 
             <div className="ui-config-container">
