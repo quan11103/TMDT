@@ -1,8 +1,10 @@
 services:
 
   # ─── POSTGRESQL DATABASE ─────────────────────────────────
+  # Dùng image Debian (không dùng -alpine) để có đủ postgresql-contrib / extension unaccent
+  # cho tìm kiếm không dấu (products.service raw SQL).
   db:
-    image: postgres:18-alpine
+    image: postgres:18
     container_name: tmdt_db
     restart: always
 
@@ -17,6 +19,8 @@ services:
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      # Chỉ chạy khi tạo DB lần đầu (volume rỗng). DB cũ: prisma migrate hoặc psql CREATE EXTENSION.
+      - ./docker/postgres-init:/docker-entrypoint-initdb.d:ro
 
     networks:
       - tmdt_network
