@@ -21,7 +21,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, productsId, prod
                 </header>
 
                 <div className="section-content">
-                    <ProductSlider productsId={productsId} />
+                    <ProductSlider productsId={productsId} slidesPerViewDesktop={productsPerRow} />
                 </div>
 
             </div>
