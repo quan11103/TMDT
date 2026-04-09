@@ -6,36 +6,72 @@ interface OrderItem {
     status: string;
 }
 
+interface ProductsItem {
+    stock: number;
+}
+
+function normalizeOrders(raw: unknown): OrderItem[] {
+    if (Array.isArray(raw)) return raw as OrderItem[];
+    return [];
+}
+
+function normalizeProducts(raw: unknown): ProductsItem[] {
+    if (raw && typeof raw === 'object' && Array.isArray((raw as { data?: unknown }).data)) {
+        return (raw as { data: ProductsItem[] }).data;
+    }
+    if (Array.isArray(raw)) return raw as ProductsItem[];
+    return [];
+}
+
 const AdminDashboard: React.FC = () => {
     const [totalRevenue, setTotalRevenue] = useState<number>(0);
     const [orderCount, setOrderCount] = useState<number>(0);
+    const [productCount, setProductCount] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
                 const token = localStorage.getItem('access_token');
-                const response = await fetch('http://localhost:3000/api/order', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+                const [responseOrder, responseProduct] = await Promise.all([
+                    fetch('http://localhost:3000/api/order', {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }),
+                    // API trả { data, meta } — không phải mảng; cần limit đủ lớn để đếm hết hàng
+                    fetch('http://localhost:3000/api/products?page=1&limit=5000', {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }),
+                ]);
 
-                if (response.ok) {
-                    const orders: OrderItem[] = await response.json();
-
-                    const total = orders.reduce((acc, order) => {
-                        return order.status !== 'CANCELLED' ? acc + Number(order.total_amount) : acc;
-                    }, 0);
-
-                    // 2. Tính số lượng đơn hàng mới (Ví dụ: trạng thái PENDING)
-                    const newOrders = orders.filter(order => order.status === 'PENDING').length;
-
-                    setTotalRevenue(total);
-                    setOrderCount(newOrders);
+                let orders: OrderItem[] = [];
+                if (responseOrder.ok) {
+                    orders = normalizeOrders(await responseOrder.json());
+                } else {
+                    console.error('Dashboard: không tải được đơn hàng');
                 }
+
+                let products: ProductsItem[] = [];
+                if (responseProduct.ok) {
+                    products = normalizeProducts(await responseProduct.json());
+                } else {
+                    console.error('Dashboard: không tải được sản phẩm');
+                }
+
+                const total = orders.reduce((acc, order) => {
+                    return order.status !== 'CANCELLED' ? acc + Number(order.total_amount) : acc;
+                }, 0);
+
+                const newOrders = orders.filter((order) => order.status === 'PENDING').length;
+
+                const outOfStockProduct = products.filter(
+                    (product) => Number(product.stock) === 0,
+                ).length;
+
+                setTotalRevenue(total);
+                setOrderCount(newOrders);
+                setProductCount(outOfStockProduct);
             } catch (error) {
-                console.error("Lỗi khi lấy dữ liệu dashboard:", error);
+                console.error('Lỗi khi lấy dữ liệu dashboard:', error);
             } finally {
                 setLoading(false);
             }
@@ -62,7 +98,7 @@ const AdminDashboard: React.FC = () => {
         },
         {
             label: 'Sản phẩm hết hàng',
-            value: '3' // Phần này có thể tích hợp API sản phẩm sau
+            value: loading ? '...' : productCount.toString()
         },
     ];
 
