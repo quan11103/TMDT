@@ -1,4 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
+import { DayPicker } from "react-day-picker";
+import { format } from "date-fns";
+import { vi } from "date-fns/locale";
+import Swal from 'sweetalert2';
 import './AdminPromotions.css';
 
 type PromoDiscountType = 'PERCENT' | 'FIXED_AMOUNT';
@@ -32,88 +36,84 @@ interface ProductItem {
 
 const API_BASE = 'http://localhost:3000/api';
 
-const toDateInput = (iso: string) => {
-    // Convert ISO to yyyy-mm-dd for <input type="date" />
-    if (!iso) return '';
-    const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return '';
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
-};
-
 const formatCurrency = (val: number, type: PromoDiscountType) => {
     if (type === 'PERCENT') return `-${val}%`;
     return `-${new Intl.NumberFormat('vi-VN').format(val)}đ`;
 };
 
 const AdminPromotions: React.FC = () => {
+    // State quản lý danh sách và form
     const [promotions, setPromotions] = useState<PromotionApi[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>('');
     const [isFormOpen, setIsFormOpen] = useState(false);
-
     const [mode, setMode] = useState<'create' | 'edit'>('create');
     const [editingId, setEditingId] = useState<number | null>(null);
+    const [saving, setSaving] = useState<boolean>(false);
 
-    // Form state
+    // State cho Form
     const [code, setCode] = useState('');
     const [discountType, setDiscountType] = useState<PromoDiscountType>('PERCENT');
-    const [discountValue, setDiscountValue] = useState<number>(10);
+    const [discountValue, setDiscountValue] = useState<number | string>(0);
     const [productScope, setProductScope] = useState<PromoProductScope>('ALL');
     const [categoryId, setCategoryId] = useState<number | null>(null);
-    const [startsAt, setStartsAt] = useState<string>(toDateInput(new Date().toISOString()));
-    const [endsAt, setEndsAt] = useState<string>('');
     const [isActive, setIsActive] = useState<boolean>(true);
-    const [saving, setSaving] = useState<boolean>(false);
+
+    // State cho Ngày (DayPicker)
+    const [selectedStart, setSelectedStart] = useState<Date>(new Date());
+    const [selectedEnd, setSelectedEnd] = useState<Date>();
+    const [isStartOpen, setIsStartOpen] = useState(false);
+    const [isEndOpen, setIsEndOpen] = useState(false);
+    const startRef = useRef<HTMLDivElement>(null);
+    const endRef = useRef<HTMLDivElement>(null);
 
     // Typeahead data — categories: flatten tree from GET /categories, filter by name client-side
     const [categoryQuery, setCategoryQuery] = useState('');
     const [allCategoriesFlat, setAllCategoriesFlat] = useState<CategoryItem[]>([]);
     const [categoryTreeLoading, setCategoryTreeLoading] = useState(false);
-
     const [productQuery, setProductQuery] = useState('');
     const [productResults, setProductResults] = useState<ProductItem[]>([]);
     const [productLoading, setProductLoading] = useState(false);
     const [selectedProducts, setSelectedProducts] = useState<ProductItem[]>([]);
 
     const token = useMemo(() => localStorage.getItem('access_token') || '', []);
-
     const authHeaders = useMemo(() => ({
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
     }), [token]);
+
+    // Xử lý đóng popover khi click ngoài
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (startRef.current && !startRef.current.contains(event.target as Node)) setIsStartOpen(false);
+            if (endRef.current && !endRef.current.contains(event.target as Node)) setIsEndOpen(false);
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     const resetForm = () => {
         setMode('create');
         setEditingId(null);
         setCode('');
         setDiscountType('PERCENT');
-        setDiscountValue(10);
+        setDiscountValue(0);
         setProductScope('ALL');
         setCategoryId(null);
         setCategoryQuery('');
-        setAllCategoriesFlat([]);
         setProductQuery('');
-        setProductResults([]);
         setSelectedProducts([]);
-        setStartsAt(toDateInput(new Date().toISOString()));
-        setEndsAt('');
+        setSelectedStart(new Date());
+        setSelectedEnd(undefined);
         setIsActive(true);
     };
 
     const loadPromotions = async () => {
         try {
             setLoading(true);
-            setError('');
             const res = await fetch(`${API_BASE}/promotions`, { headers: authHeaders });
             const data = await res.json();
-            if (!res.ok) {
-                setError(data?.message || 'Không thể tải danh sách khuyến mãi');
-                return;
-            }
-            setPromotions(Array.isArray(data) ? data : []);
+            setPromotions(Array.isArray(data) ? data : (data.data || []));
         } catch (e) {
             setError('Lỗi kết nối khi tải khuyến mãi');
         } finally {
@@ -121,10 +121,7 @@ const AdminPromotions: React.FC = () => {
         }
     };
 
-    useEffect(() => {
-        loadPromotions();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    useEffect(() => { loadPromotions(); }, []);
 
     const flattenCategoryTree = (rows: any[]): CategoryItem[] => {
         const out: CategoryItem[] = [];
@@ -192,38 +189,16 @@ const AdminPromotions: React.FC = () => {
 
     useEffect(() => {
         const q = productQuery.trim();
-        if (productScope !== 'PRODUCT') return;
-        if (q.length < 1) {
-            setProductResults([]);
-            return;
-        }
-
-        const controller = new AbortController();
-        const run = async () => {
-            try {
-                setProductLoading(true);
-                const res = await fetch(`${API_BASE}/products?search=${encodeURIComponent(q)}&limit=10`, { signal: controller.signal });
-                const data = await res.json();
-                if (!res.ok) {
-                    setProductResults([]);
-                    return;
-                }
-                const items = Array.isArray(data?.data) ? data.data : [];
-                setProductResults(
-                    items.map((p: any) => ({
-                        id: p.id,
-                        name: p.name ?? p.slug ?? `Sản phẩm #${p.id}`,
-                        slug: p.slug ?? '',
-                    })),
-                );
-            } catch {
-                // ignore
-            } finally {
-                setProductLoading(false);
-            }
+        if (productScope !== 'PRODUCT' || q.length < 1) return;
+        const fetchProds = async () => {
+            setProductLoading(true);
+            const res = await fetch(`${API_BASE}/products?search=${encodeURIComponent(q)}&limit=10`);
+            const data = await res.json();
+            if (res.ok) setProductResults(data.data.map((p: any) => ({ id: p.id, name: p.name, slug: p.slug })));
+            setProductLoading(false);
         };
-        run();
-        return () => controller.abort();
+        const timer = setTimeout(fetchProds, 300);
+        return () => clearTimeout(timer);
     }, [productQuery, productScope]);
 
     const scopeLabel = (promo: PromotionApi) => {
@@ -248,31 +223,20 @@ const AdminPromotions: React.FC = () => {
         return label === 'Đang chạy' ? 'active' : 'expired';
     };
 
+    // Xử lý Submit
     const onSubmit = async () => {
-        if (!code.trim()) {
-            alert('Vui lòng nhập mã');
-            return;
-        }
-        if (!endsAt) {
-            alert('Vui lòng chọn hạn sử dụng');
-            return;
-        }
-        if (productScope === 'CATEGORY' && !categoryId) {
-            alert('Vui lòng chọn danh mục');
-            return;
-        }
-        if (productScope === 'PRODUCT' && selectedProducts.length === 0) {
-            alert('Vui lòng chọn ít nhất 1 sản phẩm');
+        if (!code.trim() || !selectedEnd) {
+            Swal.fire('Lỗi', 'Vui lòng nhập mã và thời hạn kết thúc', 'error');
             return;
         }
 
         const payload: any = {
-            code: code.trim(),
+            code: code.trim().toUpperCase(),
             discount_type: discountType,
             discount_value: Number(discountValue),
             product_scope: productScope,
-            starts_at: new Date(startsAt).toISOString(),
-            ends_at: new Date(endsAt).toISOString(),
+            starts_at: selectedStart.toISOString(),
+            ends_at: selectedEnd.toISOString(),
             is_active: isActive,
         };
         if (productScope === 'CATEGORY') payload.category_id = categoryId;
@@ -280,95 +244,102 @@ const AdminPromotions: React.FC = () => {
 
         try {
             setSaving(true);
-            const url = mode === 'edit' && editingId ? `${API_BASE}/promotions/${editingId}` : `${API_BASE}/promotions`;
+            const url = mode === 'edit' ? `${API_BASE}/promotions/${editingId}` : `${API_BASE}/promotions`;
             const method = mode === 'edit' ? 'PATCH' : 'POST';
             const res = await fetch(url, {
                 method,
                 headers: authHeaders,
                 body: JSON.stringify(payload),
             });
-            const data = await res.json();
-            if (!res.ok) {
-                const msg = Array.isArray(data?.message) ? data.message[0] : (data?.message || 'Không thể lưu khuyến mãi');
-                alert(msg);
-                return;
+            if (res.ok) {
+                Swal.fire('Thành công', mode === 'edit' ? 'Đã cập nhật' : 'Đã tạo mới', 'success');
+                loadPromotions();
+                setIsFormOpen(false);
+                resetForm();
+            } else {
+                const data = await res.json();
+                Swal.fire('Thất bại', data.message || 'Lỗi khi lưu', 'error');
             }
-            await loadPromotions();
-            setIsFormOpen(false);
-            resetForm();
         } catch {
-            alert('Lỗi kết nối khi lưu khuyến mãi');
-        } finally {
-            setSaving(false);
-        }
+            Swal.fire('Lỗi', 'Lỗi kết nối Server', 'error');
+        } finally { setSaving(false); }
     };
 
+    // Thao tác bảng (Edit/Delete)
     const onEdit = (promo: PromotionApi) => {
-        setIsFormOpen(true);
         setMode('edit');
         setEditingId(promo.id);
         setCode(promo.code);
         setDiscountType(promo.discount_type);
-        setDiscountValue(Number(promo.discount_value));
+        setDiscountValue(promo.discount_value);
         setProductScope(promo.product_scope);
-        setCategoryId(promo.category_id ?? null);
-        setStartsAt(toDateInput(promo.starts_at));
-        setEndsAt(toDateInput(promo.ends_at));
-        setIsActive(Boolean(promo.is_active));
-        setSelectedProducts(
-            (promo.promotion_products ?? [])
-                .map((r: any) => r.products ? ({ id: r.products.id, name: r.products.name, slug: '' }) : null)
-                .filter(Boolean) as ProductItem[],
-        );
-        setCategoryQuery(
-            promo.product_scope === 'CATEGORY' && promo.categories?.name
-                ? promo.categories.name
-                : '',
-        );
-        setProductQuery('');
-        setProductResults([]);
+        setCategoryId(promo.category_id);
+        setSelectedStart(new Date(promo.starts_at));
+        setSelectedEnd(new Date(promo.ends_at));
+        setIsActive(promo.is_active);
+        setCategoryQuery(promo.categories?.name || '');
+        setSelectedProducts(promo.promotion_products?.map(p => ({ id: p.products!.id, name: p.products!.name, slug: '' })) || []);
+        setIsFormOpen(true);
     };
 
-    const onDeactivate = async (promo: PromotionApi) => {
-        if (!promo.is_active) {
-            alert('Mã này đã vô hiệu');
-            return;
-        }
-        const ok = window.confirm(`Vô hiệu mã "${promo.code}"? (Có thể bật lại khi sửa.)`);
+    const onToggleActive = async (promo: PromotionApi) => {
+        const newStatus = !promo.is_active;
+        const actionText = newStatus ? 'Kích hoạt' : 'Vô hiệu';
+
+        const ok = window.confirm(`${actionText} mã "${promo.code}"?`);
         if (!ok) return;
+
         try {
             const res = await fetch(`${API_BASE}/promotions/${promo.id}`, {
                 method: 'PATCH',
                 headers: authHeaders,
-                body: JSON.stringify({ is_active: false }),
+                body: JSON.stringify({ is_active: newStatus }),
             });
-            const data = await res.json().catch(() => ({}));
+
             if (!res.ok) {
-                alert(data?.message || 'Không thể vô hiệu mã');
+                const data = await res.json().catch(() => ({}));
+                alert(data?.message || `Không thể ${actionText} mã`);
                 return;
             }
             await loadPromotions();
         } catch {
-            alert('Lỗi kết nối khi vô hiệu');
+            alert(`Lỗi kết nối khi ${actionText}`);
         }
     };
 
-    const onDelete = async (promo: PromotionApi) => {
-        const ok = window.confirm(`Xóa vĩnh viễn mã "${promo.code}"? Hành động này không hoàn tác.`);
-        if (!ok) return;
-        try {
-            const res = await fetch(`${API_BASE}/promotions/${promo.id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` },
-            });
-            if (!res.ok) {
-                const data = await res.json().catch(() => ({}));
-                alert(data?.message || 'Không thể xóa mã');
-                return;
-            }
-            await loadPromotions();
-        } catch {
-            alert('Lỗi kết nối khi xóa');
+    const onDelete = async (id: number) => {
+        const result = await Swal.fire({
+            title: 'Xác nhận xóa?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#7f0019',
+            confirmButtonText: 'Xóa ngay'
+        });
+        if (result.isConfirmed) {
+            await fetch(`${API_BASE}/promotions/${id}`, { method: 'DELETE', headers: authHeaders });
+            loadPromotions();
+            Swal.fire('Đã xóa!', '', 'success');
+        }
+    };
+
+    // Thêm 2 hàm này vào bên trong component AdminPromotions:
+
+    const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value;
+        if (val === '') {
+            setDiscountValue('');
+            return;
+        }
+        const numValue = parseInt(val, 10);
+        if (!isNaN(numValue)) {
+            setDiscountValue(numValue);
+        }
+    };
+
+    const handleDiscountBlur = () => {
+        // Nếu trống hoặc nhỏ hơn 0, đưa về 0 (hoặc mức tối thiểu bạn muốn)
+        if (discountValue === '' || Number(discountValue) < 0) {
+            setDiscountValue(0);
         }
     };
 
@@ -425,10 +396,10 @@ const AdminPromotions: React.FC = () => {
                                 <label>Mức giảm</label>
                                 <input
                                     type="number"
-                                    placeholder="10"
                                     className="muji-input"
                                     value={discountValue}
-                                    onChange={(e) => setDiscountValue(Number(e.target.value))}
+                                    onChange={handleDiscountChange}
+                                    onBlur={handleDiscountBlur}
                                 />
                             </div>
                         </div>
@@ -564,13 +535,52 @@ const AdminPromotions: React.FC = () => {
                             </div>
                         )}
 
-                        <div className="form-group">
-                            <label>Ngày bắt đầu</label>
-                            <input type="date" className="muji-input" value={startsAt} onChange={(e) => setStartsAt(e.target.value)} />
-                        </div>
-                        <div className="form-group">
-                            <label>Hạn sử dụng</label>
-                            <input type="date" className="muji-input" value={endsAt} onChange={(e) => setEndsAt(e.target.value)} />
+                        {/* Phần Ngày sử dụng (UI DayPicker) */}
+                        <div className="form-group row">
+                            {/* Phần Ngày bắt đầu */}
+                            <div className="col relative" ref={startRef}>
+                                <label>Ngày bắt đầu</label>
+                                <div className="dob-input-wrapper" onClick={() => setIsStartOpen(!isStartOpen)}>
+                                    <input type="text" readOnly className="muji-input pointer" value={format(selectedStart, "yyyy-MM-dd")} />
+                                    <button className="calendar-btn" type="button"><i className="fas fa-calendar"></i></button>
+                                </div>
+                                {isStartOpen && (
+                                    <div className="calendar-popover">
+                                        <DayPicker
+                                            mode="single"
+                                            selected={selectedStart}
+                                            onSelect={(d) => {
+                                                // Luôn cập nhật nếu có ngày mới, hoặc đơn giản là đóng lịch nếu người dùng click lại ngày cũ
+                                                if (d) setSelectedStart(d);
+                                                setIsStartOpen(false); // Chuyển dòng này ra ngoài if hoặc đảm bảo nó luôn chạy
+                                            }}
+                                            locale={vi}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Phần Ngày kết thúc */}
+                            <div className="col relative" ref={endRef}>
+                                <label>Ngày kết thúc</label>
+                                <div className="dob-input-wrapper" onClick={() => setIsEndOpen(!isEndOpen)}>
+                                    <input type="text" readOnly placeholder="Chọn ngày" className="muji-input pointer" value={selectedEnd ? format(selectedEnd, "yyyy-MM-dd") : ""} />
+                                    <button className="calendar-btn" type="button"><i className="fas fa-calendar"></i></button>
+                                </div>
+                                {isEndOpen && (
+                                    <div className="calendar-popover">
+                                        <DayPicker
+                                            mode="single"
+                                            selected={selectedEnd}
+                                            onSelect={(d) => {
+                                                if (d) setSelectedEnd(d);
+                                                setIsEndOpen(false); // Luôn đóng popover sau khi tương tác với lịch
+                                            }}
+                                            locale={vi}
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         <div className="form-group">
                             <label>Trạng thái</label>
@@ -638,10 +648,14 @@ const AdminPromotions: React.FC = () => {
                             <td>
                                 <div className="table-actions">
                                     <span className="action-badge edit" role="button" tabIndex={0} onClick={() => onEdit(promo)} onKeyDown={(e) => e.key === 'Enter' && onEdit(promo)}>Sửa</span>
-                                    {promo.is_active && (
-                                        <span className="action-badge disable" role="button" tabIndex={0} onClick={() => onDeactivate(promo)} onKeyDown={(e) => e.key === 'Enter' && onDeactivate(promo)}>Vô hiệu</span>
-                                    )}
-                                    <span className="action-badge delete" role="button" tabIndex={0} onClick={() => onDelete(promo)} onKeyDown={(e) => e.key === 'Enter' && onDelete(promo)}>Xóa</span>
+                                    <span
+                                        className={`action-badge ${promo.is_active ? 'disable' : 'enable'}`}
+                                        role="button"
+                                        onClick={() => onToggleActive(promo)}
+                                    >
+                                        {promo.is_active ? 'Vô hiệu' : 'Kích hoạt'}
+                                    </span>
+                                    <span className="action-badge delete" role="button" tabIndex={0} onClick={() => onDelete(promo.id)} onKeyDown={(e) => e.key === 'Enter' && onDelete(promo.id)}>Xóa</span>
                                 </div>
                             </td>
                         </tr>

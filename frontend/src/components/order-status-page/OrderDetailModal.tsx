@@ -72,7 +72,9 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, or
                                 <div className="info-item">
                                     <span className="info-label">Trạng thái:</span>
                                     <span className="info-value">
-                                        <span className="payment-status-tag">{order.payments?.[0]?.status || 'Chưa thanh toán'}</span>
+                                        <span className={`payment-status-tag ${order.payments?.[0]?.status === 'SUCCESS' ? 'status-success' : ''}`}>
+                                            {order.payments?.[0]?.status || 'Chưa thanh toán'}
+                                        </span>
                                     </span>
                                 </div>
                             </div>

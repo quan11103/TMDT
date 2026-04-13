@@ -40,9 +40,9 @@ label {
     color: #666;
 }
 
-input,
-select,
-textarea {
+.form-group input,
+.form-group select,
+.form-group textarea {
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 4px;

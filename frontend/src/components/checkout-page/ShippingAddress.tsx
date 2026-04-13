@@ -22,13 +22,12 @@ const ShippingAddress: React.FC<ShippingAddressProps> = ({ address, setAddress }
     useEffect(() => {
         if (address.provinceCode) {
             axios.get(`https://provinces.open-api.vn/api/p/${address.provinceCode}?depth=2`)
-                // Thêm vào trong useEffect lấy districts
                 .then((res) => {
-                    console.log("Danh sách huyện nhận được:", res.data.districts);
                     setDistricts(res.data.districts || []);
                 });
         } else {
             setDistricts([]);
+            setWards([]);
         }
     }, [address.provinceCode]);
 
@@ -36,7 +35,9 @@ const ShippingAddress: React.FC<ShippingAddressProps> = ({ address, setAddress }
     useEffect(() => {
         if (address.districtCode) {
             axios.get(`https://provinces.open-api.vn/api/d/${address.districtCode}?depth=2`)
-                .then((res) => setWards(res.data.wards));
+                .then((res) => {
+                    setWards(res.data.wards || []);
+                });
         } else {
             setWards([]);
         }
@@ -81,7 +82,7 @@ const ShippingAddress: React.FC<ShippingAddressProps> = ({ address, setAddress }
     };
 
     return (
-        <aside className="shipping">
+        <aside className="shipping-addr">
             <h3 className="title">Địa Chỉ Giao Hàng</h3>
 
             <div className="content">

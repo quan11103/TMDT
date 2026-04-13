@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import type { CartItem } from '../types';
+import type { User, CartItem } from '../types';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import ContentWrapper from '../components/checkout-page/ContentWrapper';
@@ -8,6 +8,7 @@ import './CheckoutPage.css';
 
 const CheckoutPage: React.FC = () => {
     const [items, setItems] = useState<CartItem[]>([]);
+    const [userProfile, setUserProfile] = useState<User | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -32,13 +33,37 @@ const CheckoutPage: React.FC = () => {
             // 2. Nếu không có dữ liệu (user tự ý gõ link /checkout), đẩy về giỏ hàng
             navigate('/cart');
         }
+
+        const fetchUserProfile = async () => {
+            const token = localStorage.getItem('access_token');
+            if (!token) return;
+
+            try {
+                const response = await fetch('http://localhost:3000/api/users/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserProfile(data);
+                }
+            } catch (error) {
+                console.error("Lỗi lấy thông tin người dùng:", error);
+            }
+        };
+
+        fetchUserProfile();
     }, [navigate]);
 
     return (
         <>
             <Header />
             <div className="checkout-page">
-                <ContentWrapper items={items} />
+                <ContentWrapper
+                    items={items}
+                    user={userProfile}
+                />
             </div>
             <Footer />
         </>

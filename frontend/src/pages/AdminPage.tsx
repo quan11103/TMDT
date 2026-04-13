@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminSidebar from '../components/admin-page/AdminSidebar';
 import AdminHeader from '../components/admin-page/AdminHeader';
 import AdminDashboard from '../components/admin-page/AdminDashboard';
@@ -12,8 +12,14 @@ import AdminUI from '../components/admin-page/AdminUI';
 import './AdminPage.css';
 
 const AdminLayout: React.FC = () => {
-    // Quản lý trạng thái menu đang được chọn (mặc định là 'Tổng quan')
-    const [activeTab, setActiveTab] = useState('Tổng quan');
+    const [activeTab, setActiveTab] = useState(() => {
+        const savedTab = localStorage.getItem('adminActiveTab');
+        return savedTab || 'Tổng quan';
+    });
+
+    useEffect(() => {
+        localStorage.setItem('adminActiveTab', activeTab);
+    }, [activeTab]);
 
     // Hàm render nội dung dựa trên tab đang hoạt động
     const renderContent = () => {

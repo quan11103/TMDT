@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './ContentWrapper.css';
-import type { ShippingInfo, CartItem } from '../../types';
+import type { User, ShippingInfo, CartItem } from '../../types';
 import ShippingAddress from './ShippingAddress';
 import PaymentMethod from './PaymentMethod';
 import Coupon from './Coupon';
@@ -13,9 +13,10 @@ import {
 
 interface Props {
     items: CartItem[];
+    user: User | null;
 }
 
-const ContentWrapper: React.FC<Props> = ({ items }) => {
+const ContentWrapper: React.FC<Props> = ({ items, user }) => {
     const [address, setAddress] = useState<ShippingInfo>({
         email: '',
         fullName: '',
@@ -30,6 +31,18 @@ const ContentWrapper: React.FC<Props> = ({ items }) => {
         note: '',
         addrType: 'home',
     });
+
+    useEffect(() => {
+        if (user) {
+            setAddress((prev) => ({
+                ...prev,
+                email: user.email || prev.email,
+                fullName: user.full_name || prev.fullName,
+                phone: user.phone || prev.phone,
+            }));
+        }
+    }, [user]);
+
     const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
     const [preview, setPreview] = useState<OrderPreviewResult | null>(null);
     const [previewLoading, setPreviewLoading] = useState(false);

@@ -14,7 +14,7 @@ const OrderStatusTabs: React.FC<OrderStatusTabsProps> = ({ activeTab, onTabChang
         { id: 'PENDING', label: 'Chờ xác nhận' },
         { id: 'CONFIRMED', label: 'Đã xác nhận' },
         { id: 'SHIPPING', label: 'Đang giao' },
-        { id: 'DELIVERED', label: 'Đã giao' },
+        { id: 'DELIVERED', label: 'Đã nhận' },
         { id: 'CANCELLED', label: 'Đã hủy' },
     ];
 

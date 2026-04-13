@@ -133,6 +133,11 @@
     color: #b8860b;
 }
 
+.action-badge.enable {
+    background-color: #e6f8e6;
+    color: #2e7d32;
+}
+
 /* --- Form Thêm Mới --- */
 .promo-form-container {
     background-color: #fafafa;
@@ -277,4 +282,63 @@
     font-size: 14px;
     line-height: 1;
     color: #7f0019;
+}
+
+/* CSS hỗ trợ Popover và Icon trong Input */
+.relative {
+    position: relative;
+}
+
+.dob-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.calendar-btn {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.calendar-popover {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 999;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    padding: 4px;
+}
+
+/* Thu nhỏ DayPicker để phù hợp với Admin panel */
+.rdp {
+    --rdp-cell-size: 32px;
+    --rdp-accent-color: #7f0019;
+    /* Màu đỏ Muji */
+    margin: 0;
+}
+
+.rdp-day_button {
+    font-size: 12px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }

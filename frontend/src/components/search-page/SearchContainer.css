@@ -1,11 +1,21 @@
 .main-page-wrapper {
     width: 100%;
     max-width: 1440px;
-    /* Giới hạn độ rộng chuẩn */
+    min-height: 1000px;
     margin: 0 auto;
     padding: 0 16px;
-    /* Mặc định cho mobile */
     box-sizing: border-box;
+}
+
+/* Container mới để dàn hàng ngang tiêu đề và Sort */
+.search-header-flex {
+    display: flex;
+    justify-content: space-between;
+    /* Đẩy tiêu đề sang trái, Sort sang phải */
+    align-items: flex-end;
+    /* Căn hàng theo đáy của chữ */
+    margin-bottom: 32px;
+    /* Giữ khoảng cách xuống phần dưới */
 }
 
 /* Cấu hình cho màn hình Desktop (md: 768px trở lên) */
