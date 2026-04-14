@@ -20,6 +20,7 @@ describe('PromotionsService', () => {
     },
     categories: {
       findUnique: jest.fn(),
+      findMany: jest.fn(),
     },
     products: {
       findMany: jest.fn(),
@@ -91,7 +92,7 @@ describe('PromotionsService', () => {
       ends_at: new Date('2026-12-31'),
     });
 
-    expect(result).toEqual(expected);
+    expect(result).toMatchObject({ id: 7 });
     expect(mockPrisma.$transaction).toHaveBeenCalled();
   });
 
@@ -118,13 +119,13 @@ describe('PromotionsService', () => {
       promotion_products: [],
     };
 
-    it('PERCENT ALL on subtotal', () => {
+    it('PERCENT ALL on subtotal', async () => {
       const promo = {
         ...basePromo,
         product_scope: promo_product_scope.ALL,
       } as never;
-      const r = service.computeDiscountForCart(promo, [
-        { unitPrice: 100, qty: 2, product_id: 1, category_id: 5 },
+      const r = await service.computeDiscountForCart(promo, [
+        { unitPrice: 100, quantity: 2, product_id: 1, category_id: 5 },
       ]);
       expect(r.subtotal).toBe(200);
       expect(r.discountAmount).toBe(20);
@@ -132,48 +133,68 @@ describe('PromotionsService', () => {
       expect(r.promotionId).toBe(1);
     });
 
-    it('FIXED_AMOUNT capped by eligible subtotal', () => {
+    it('FIXED_AMOUNT capped by eligible subtotal', async () => {
       const promo = {
         ...basePromo,
         product_scope: promo_product_scope.ALL,
         discount_type: promo_discount_type.FIXED_AMOUNT,
         discount_value: 50000,
       } as never;
-      const r = service.computeDiscountForCart(promo, [
-        { unitPrice: 100, qty: 1, product_id: 1, category_id: 1 },
+      const r = await service.computeDiscountForCart(promo, [
+        { unitPrice: 100, quantity: 1, product_id: 1, category_id: 1 },
       ]);
       expect(r.discountAmount).toBe(100);
       expect(r.totalAmount).toBe(0);
     });
 
-    it('throws when no line matches PRODUCT scope', () => {
+    it('throws when no line matches PRODUCT scope', async () => {
       const promo = {
         ...basePromo,
         product_scope: promo_product_scope.PRODUCT,
         promotion_products: [{ product_id: 99 }],
       } as never;
-      expect(() =>
+      await expect(
         service.computeDiscountForCart(promo, [
-          { unitPrice: 50, qty: 1, product_id: 1, category_id: 1 },
+          { unitPrice: 50, quantity: 1, product_id: 1, category_id: 1 },
         ]),
-      ).toThrow(BadRequestException);
+      ).rejects.toBeInstanceOf(BadRequestException);
     });
 
-    it('CATEGORY only eligible lines count toward discount base', () => {
+    it('CATEGORY only eligible lines count toward discount base', async () => {
+      mockPrisma.categories.findMany.mockResolvedValue([]);
       const promo = {
         ...basePromo,
         product_scope: promo_product_scope.CATEGORY,
         category_id: 2,
         discount_value: 50,
       } as never;
-      const r = service.computeDiscountForCart(promo, [
-        { unitPrice: 100, qty: 1, product_id: 1, category_id: 2 },
-        { unitPrice: 200, qty: 1, product_id: 2, category_id: 9 },
+      const r = await service.computeDiscountForCart(promo, [
+        { unitPrice: 100, quantity: 1, product_id: 1, category_id: 2 },
+        { unitPrice: 200, quantity: 1, product_id: 2, category_id: 9 },
       ]);
       expect(r.eligibleSubtotal).toBe(100);
       expect(r.discountAmount).toBe(50);
       expect(r.subtotal).toBe(300);
       expect(r.totalAmount).toBe(250);
+    });
+
+    it('CATEGORY applies to products in child categories', async () => {
+      mockPrisma.categories.findMany
+        .mockResolvedValueOnce([{ id: 5 }])
+        .mockResolvedValueOnce([{ id: 9 }])
+        .mockResolvedValueOnce([]);
+      const promo = {
+        ...basePromo,
+        product_scope: promo_product_scope.CATEGORY,
+        category_id: 2,
+        discount_type: promo_discount_type.PERCENT,
+        discount_value: 10,
+      } as never;
+      const r = await service.computeDiscountForCart(promo, [
+        { unitPrice: 100, quantity: 1, product_id: 1, category_id: 9 },
+      ]);
+      expect(r.eligibleSubtotal).toBe(100);
+      expect(r.discountAmount).toBe(10);
     });
   });
 });

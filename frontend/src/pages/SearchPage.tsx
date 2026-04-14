@@ -8,8 +8,9 @@ import Footer from '../components/common/Footer';
 import SearchContainer from '../components/search-page/SearchContainer';
 
 const SearchPage: React.FC = () => {
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const query = searchParams.get('q') || ''; // Lấy từ khóa từ URL
+    const sort = searchParams.get('sort') || 'newest';
 
     const [minPrice, setMinPrice] = useState<number>(0);
     const [maxPrice, setMaxPrice] = useState<number>(1000000);
@@ -57,6 +58,7 @@ const SearchPage: React.FC = () => {
                     category_id: selectedIds.length > 0 ? selectedIds.join(',') : undefined,
                     min_price: min,
                     max_price: max,
+                    sort,
                     limit: productsPerPage,
                     page: page
                 }
@@ -69,11 +71,11 @@ const SearchPage: React.FC = () => {
             console.error("Lỗi khi tìm kiếm:", err);
             setError("Không thể tải kết quả tìm kiếm.");
         }
-    }, [query, minPrice, maxPrice, selectedCategoryIds, productsPerPage]);
+    }, [query, minPrice, maxPrice, selectedCategoryIds, productsPerPage, sort]);
 
     useEffect(() => {
         fetchData(1, minPrice, maxPrice, selectedCategoryIds);
-    }, [query, selectedCategoryIds, productsPerPage, fetchData, minPrice, maxPrice]);
+    }, [query, selectedCategoryIds, productsPerPage, fetchData, minPrice, maxPrice, sort]);
 
     const handleCategoryToggle = (id: number) => {
         setSelectedCategoryIds((prev) => {
@@ -95,6 +97,16 @@ const SearchPage: React.FC = () => {
         fetchData(1, min, max, selectedCategoryIds);
     };
 
+    const handleSortChange = (nextSort: string) => {
+        const next = new URLSearchParams(searchParams);
+        if (!nextSort || nextSort === 'newest') {
+            next.delete('sort');
+        } else {
+            next.set('sort', nextSort);
+        }
+        setSearchParams(next);
+    };
+
     if (error) return <div className="error-message">{error}</div>;
 
     return (
@@ -114,6 +126,8 @@ const SearchPage: React.FC = () => {
                     maxPrice={maxPrice}
                     onFilterPrice={handleFilterPrice}
                     productsPerRow={productsPerRow}
+                    sort={sort}
+                    onSortChange={handleSortChange}
                 />
             </div>
             <Footer />

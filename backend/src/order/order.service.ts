@@ -132,7 +132,7 @@ export class OrderService {
 
     const promo =
       await this.promotionsService.resolveApplicablePromotion(promotionCode);
-    const r = this.promotionsService.computeDiscountForCart(promo, lines);
+    const r = await this.promotionsService.computeDiscountForCart(promo, lines);
 
     return {
       subtotal: r.subtotal,

@@ -15,9 +15,11 @@ interface Props {
     maxPrice: number;
     onFilterPrice: (min: number, max: number) => void;
     productsPerRow?: number;
+    sort?: string;
+    onSortChange?: (nextSort: string) => void;
 }
 
-const CategoryPageContainer: React.FC<Props> = ({ productIds, paginationMeta, onPageChange, selectedCategoryIds, onCategoryToggle, searchQuery, minPrice, maxPrice, onFilterPrice, productsPerRow }) => {
+const CategoryPageContainer: React.FC<Props> = ({ productIds, paginationMeta, onPageChange, selectedCategoryIds, onCategoryToggle, searchQuery, minPrice, maxPrice, onFilterPrice, productsPerRow, sort, onSortChange }) => {
     return (
         <div className="category-page-container">
             {/* CỘT 1: SIDEBAR (Bên trái) */}
@@ -39,6 +41,8 @@ const CategoryPageContainer: React.FC<Props> = ({ productIds, paginationMeta, on
                     paginationMeta={paginationMeta}
                     onPageChange={onPageChange}
                     productsPerRow={productsPerRow}
+                    sort={sort}
+                    onSortChange={onSortChange}
                 />
             </main>
         </div>

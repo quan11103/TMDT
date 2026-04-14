@@ -72,28 +72,54 @@ export class PromotionsService {
   }
 
   /**
-   * MVP: CATEGORY scope matches exact product.category_id only (not parent/child tree).
+   * CATEGORY scope: sản phẩm thuộc đúng danh mục mã chọn **hoặc** mọi danh mục con (đệ quy).
    */
   isLineEligible(
     promo: PromotionResolvedForOrder,
     line: { product_id: number; category_id: number },
+    promoCategoryInclusive?: ReadonlySet<number>,
   ): boolean {
     if (promo.product_scope === promo_product_scope.ALL) {
       return true;
     }
     if (promo.product_scope === promo_product_scope.CATEGORY) {
-      return (
-        promo.category_id != null && line.category_id === promo.category_id
-      );
+      if (promo.category_id == null) return false;
+      if (promoCategoryInclusive) {
+        return promoCategoryInclusive.has(line.category_id);
+      }
+      return line.category_id === promo.category_id;
     }
     const allowed = new Set(promo.promotion_products.map((r) => r.product_id));
     return allowed.has(line.product_id);
   }
 
+  /** Danh mục gốc + tất cả danh mục con (đa cấp). */
+  private async getDescendantCategoryIdsInclusive(
+    rootId: number,
+  ): Promise<Set<number>> {
+    const result = new Set<number>([rootId]);
+    let frontier: number[] = [rootId];
+    while (frontier.length > 0) {
+      const children = await this.prisma.categories.findMany({
+        where: { parent_id: { in: frontier } },
+        select: { id: true },
+      });
+      const next: number[] = [];
+      for (const c of children) {
+        if (!result.has(c.id)) {
+          result.add(c.id);
+          next.push(c.id);
+        }
+      }
+      frontier = next;
+    }
+    return result;
+  }
+
   /**
    * Discount applies only to eligible lines; PERCENT rounds to integer VND.
    */
-  computeDiscountForCart(
+  async computeDiscountForCart(
     promo: PromotionResolvedForOrder,
     lines: Array<{
       unitPrice: number;
@@ -101,19 +127,29 @@ export class PromotionsService {
       product_id: number;
       category_id: number;
     }>,
-  ): {
+  ): Promise<{
     subtotal: number;
     eligibleSubtotal: number;
     discountAmount: number;
     totalAmount: number;
     promotionId: number;
-  } {
+  }> {
+    let promoCategoryInclusive: Set<number> | undefined;
+    if (
+      promo.product_scope === promo_product_scope.CATEGORY &&
+      promo.category_id != null
+    ) {
+      promoCategoryInclusive = await this.getDescendantCategoryIdsInclusive(
+        promo.category_id,
+      );
+    }
+
     let eligibleSubtotal = 0;
     let subtotal = 0;
     for (const line of lines) {
       const lineGross = line.unitPrice * line.quantity;
       subtotal += lineGross;
-      if (this.isLineEligible(promo, line)) {
+      if (this.isLineEligible(promo, line, promoCategoryInclusive)) {
         eligibleSubtotal += lineGross;
       }
     }
