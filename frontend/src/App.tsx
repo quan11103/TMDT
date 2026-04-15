@@ -16,6 +16,7 @@ import ProtectedRoute from './components/admin-page/ProtectedRoute';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import PaymentResultPage from './pages/PaymentResultPage';
 import ProfilePage from './pages/ProfilePage';
+import ChatWidget from './components/common/ChatWidget';
 
 function App() {
 
@@ -88,6 +89,7 @@ function App() {
           }
         />
       </Routes>
+      <ChatWidget />
     </Router>
   );
 }

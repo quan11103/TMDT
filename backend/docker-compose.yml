@@ -64,6 +64,12 @@ services:
       RESET_TOKEN_TTL_MINUTES: $RESET_TOKEN_TTL_MINUTES
       FRONTEND_FORGOT_PASSWORD_URL: ${FRONTEND_FORGOT_PASSWORD_URL}
 
+      # Coze (扣子 / coze.com) — PAT + Bot đã publish: https://www.coze.com/docs/developer_guides/coze_api_overview
+      COZE_API_TOKEN: ${COZE_API_TOKEN:-}
+      COZE_BOT_ID: ${COZE_BOT_ID:-}
+      # https://api.coze.com (quốc tế) hoặc https://api.coze.cn — có thể để com | cn
+      COZE_BASE_URL: ${COZE_BASE_URL:-com}
+
     ports:
       - "3000:3000"
 

@@ -28,7 +28,8 @@ export class PaymentService {
       return configured;
     }
     const frontend =
-      this.config.get<string>('FRONTEND_URL')?.trim() || 'http://localhost:5173';
+      this.config.get<string>('FRONTEND_URL')?.trim() ||
+      'http://localhost:5173';
     const base = frontend.replace(/\/+$/, '');
     return `${base}/payment-result/`;
   }

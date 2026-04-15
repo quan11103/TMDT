@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import './Sort.css';
 
 interface SortOption {
@@ -6,17 +6,31 @@ interface SortOption {
     value: string;
 }
 
-const Sort: React.FC = () => {
+const LABEL_BY_SORT: Record<string, string> = {
+    newest: 'Phù hợp nhất',
+    price_desc: 'Giá từ cao tới thấp',
+    price_asc: 'Giá từ thấp tới cao',
+};
+
+interface SortProps {
+    sort?: string;
+    onSortChange?: (nextSort: string) => void;
+}
+
+const Sort: React.FC<SortProps> = ({ sort = 'newest', onSortChange }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedLabel, setSelectedLabel] = useState('Phù hợp nhất');
     const sortRef = useRef<HTMLDivElement>(null);
 
-    // Danh sách 3 mục theo yêu cầu của bạn
-    const options: SortOption[] = [
-        { label: 'Phù hợp nhất', value: 'default' },
-        { label: 'Giá từ cao tới thấp', value: 'price_desc' },
-        { label: 'Giá từ thấp tới cao', value: 'price_asc' },
-    ];
+    const options: SortOption[] = useMemo(
+        () => [
+            { label: 'Phù hợp nhất', value: 'newest' },
+            { label: 'Giá từ cao tới thấp', value: 'price_desc' },
+            { label: 'Giá từ thấp tới cao', value: 'price_asc' },
+        ],
+        []
+    );
+
+    const selectedLabel = LABEL_BY_SORT[sort] ?? LABEL_BY_SORT.newest;
 
     // Xử lý đóng menu khi nhấn ra ngoài
     useEffect(() => {
@@ -29,10 +43,13 @@ const Sort: React.FC = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const handleSelect = (option: SortOption) => {
-        setSelectedLabel(option.label);
+    useEffect(() => {
         setIsOpen(false);
-        // Bạn có thể gọi hàm lọc dữ liệu ở đây, ví dụ: onSortChange(option.value)
+    }, [sort]);
+
+    const handleSelect = (option: SortOption) => {
+        setIsOpen(false);
+        onSortChange?.(option.value);
     };
 
     return (

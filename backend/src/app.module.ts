@@ -16,6 +16,7 @@ import { PromotionsModule } from './promotions/promotions.module';
 import { BannersModule } from './banners/banners.module';
 import { StoreSettingsModule } from './store-settings/store-settings.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { ChatbotModule } from './chatbot/chatbot.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     BannersModule,
     StoreSettingsModule,
     ReviewsModule,
+    ChatbotModule,
   ],
   controllers: [AppController],
   providers: [AppService],
