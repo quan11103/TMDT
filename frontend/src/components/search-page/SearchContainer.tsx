@@ -18,22 +18,11 @@ interface Props {
     maxPrice: number;
     onFilterPrice: (min: number, max: number) => void;
     productsPerRow?: number;
+    sort?: string;
+    onSortChange?: (nextSort: string) => void;
 }
 
-const SearchContainer: React.FC<Props> = ({
-    title,
-    totalItems,
-    productIds,
-    paginationMeta,
-    onPageChange,
-    selectedCategoryIds,
-    onCategoryToggle,
-    searchQuery,
-    minPrice,
-    maxPrice,
-    onFilterPrice,
-    productsPerRow
-}) => {
+const SearchContainer: React.FC<Props> = ({ title, totalItems, productIds, paginationMeta, onPageChange, selectedCategoryIds, onCategoryToggle, searchQuery, minPrice, maxPrice, onFilterPrice, productsPerRow, sort, onSortChange }) => {
     return (
         <div className="main-page-wrapper">
             {/* Cấp 1: Tiêu đề trang và Sắp xếp nằm cùng hàng */}
@@ -54,6 +43,8 @@ const SearchContainer: React.FC<Props> = ({
                 maxPrice={maxPrice}
                 onFilterPrice={onFilterPrice}
                 productsPerRow={productsPerRow}
+                sort={sort}
+                onSortChange={onSortChange}
             />
         </div>
     );

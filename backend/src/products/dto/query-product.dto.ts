@@ -1,5 +1,12 @@
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString, Min } from 'class-validator';
+
+export const PRODUCT_SORT_VALUES = [
+  'newest',
+  'price_asc',
+  'price_desc',
+] as const;
+export type ProductSort = (typeof PRODUCT_SORT_VALUES)[number];
 
 export class QueryProductDto {
   @IsOptional()
@@ -32,4 +39,8 @@ export class QueryProductDto {
   @Type(() => Number)
   @IsInt()
   limit?: number = 10;
+
+  @IsOptional()
+  @IsIn(PRODUCT_SORT_VALUES)
+  sort?: ProductSort = 'newest';
 }

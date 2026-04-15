@@ -16,6 +16,32 @@
     width: 100%;
 }
 
+.sort-row {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #444;
+}
+
+.sort-select {
+    min-width: 180px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-size: 14px;
+    background: #fff;
+    color: #333;
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: #7f0019;
+}
+
 .product-section {
     width: 100%;
     /* lg:p-2 tương đương */

@@ -7,7 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { QueryProductDto } from './dto/query-product.dto';
+import { ProductSort, QueryProductDto } from './dto/query-product.dto';
 import { extname, join } from 'path';
 import { randomUUID } from 'crypto';
 import { mkdirSync } from 'fs';
@@ -16,6 +16,26 @@ import * as fs from 'fs/promises';
 @Injectable()
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
+
+  private getSortOrder(sort?: ProductSort) {
+    const selected = sort ?? 'newest';
+    if (selected === 'price_asc') {
+      return {
+        prismaOrderBy: { price: 'asc' as const },
+        sqlOrderBy: Prisma.sql`p.price ASC`,
+      };
+    }
+    if (selected === 'price_desc') {
+      return {
+        prismaOrderBy: { price: 'desc' as const },
+        sqlOrderBy: Prisma.sql`p.price DESC`,
+      };
+    }
+    return {
+      prismaOrderBy: { created_at: 'desc' as const },
+      sqlOrderBy: Prisma.sql`p.created_at DESC`,
+    };
+  }
 
   private ensureProductUploadDir() {
     const dir = join(process.cwd(), 'uploads', 'products');
@@ -47,7 +67,9 @@ export class ProductsService {
       max_price,
       page = 1,
       limit = 10,
+      sort = 'newest',
     } = query;
+    const { prismaOrderBy, sqlOrderBy } = this.getSortOrder(sort);
     const skip = (page - 1) * limit;
 
     const tokens = String(search ?? '')
@@ -110,7 +132,7 @@ export class ProductsService {
               take: 1,
             },
           },
-          orderBy: { created_at: 'desc' },
+          orderBy: prismaOrderBy,
         }),
         this.prisma.products.count({ where }),
       ]);
@@ -159,7 +181,7 @@ export class ProductsService {
       Prisma.sql`SELECT p.id
                  FROM products p
                  WHERE ${whereSql}
-                 ORDER BY p.created_at DESC
+                 ORDER BY ${sqlOrderBy}
                  LIMIT ${limit} OFFSET ${skip}`,
     );
 
