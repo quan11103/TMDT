@@ -28,7 +28,7 @@ const SearchContainer: React.FC<Props> = ({ title, totalItems, productIds, pagin
             {/* Cấp 1: Tiêu đề trang và Sắp xếp nằm cùng hàng */}
             <div className="search-header-flex">
                 <CategoryFilterTitle title={title} totalItems={totalItems} />
-                <Sort />
+                <Sort sort={sort} onSortChange={onSortChange} />
             </div>
 
             {/* Cấp 2: Khu vực chứa Sidebar Lọc và Main Content */}
@@ -43,8 +43,6 @@ const SearchContainer: React.FC<Props> = ({ title, totalItems, productIds, pagin
                 maxPrice={maxPrice}
                 onFilterPrice={onFilterPrice}
                 productsPerRow={productsPerRow}
-                sort={sort}
-                onSortChange={onSortChange}
             />
         </div>
     );

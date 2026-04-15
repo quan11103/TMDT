@@ -51,10 +51,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permissions('user.read')
   @Get()
-  findAll(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
-  ) {
+  findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
     const p = page ? Math.max(1, parseInt(page, 10) || 1) : 1;
     const l = limit
       ? Math.min(100, Math.max(1, parseInt(limit, 10) || 10))
