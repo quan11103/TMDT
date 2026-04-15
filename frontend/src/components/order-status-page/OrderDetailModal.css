@@ -38,7 +38,6 @@
 
 /* Phần thanh toán thu gọn cho cột 1 */
 .payment-summary-box {
-    background: #f9f9f9;
     border-radius: 6px;
     margin-top: auto;
     /* Đẩy xuống cuối cột 1 nếu muốn */
@@ -117,6 +116,13 @@
     padding: 2px 8px;
     border-radius: 4px;
     font-size: 13px;
+}
+
+.payment-status-tag.status-success {
+    color: #1e7e34;
+    /* Màu xanh lá đậm */
+    background: rgba(40, 167, 69, 0.1);
+    /* Nền xanh lá nhạt */
 }
 
 .price-row.total-row {

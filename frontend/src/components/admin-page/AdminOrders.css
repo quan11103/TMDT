@@ -8,6 +8,8 @@
     font-size: 12px;
 }
 
+
+
 .status-badge.success {
     background-color: #e6f4ea;
     color: #1e7e34;
@@ -83,6 +85,11 @@
     color: #d97706;
 }
 
+.status-badge.pending {
+    background: #fff4e6;
+    color: #d97706;
+}
+
 .status-badge.confirmed {
     background: #e7f5ff;
     color: #1c7ed6;
@@ -94,6 +101,11 @@
 }
 
 .status-badge.success {
+    background: #ebfbee;
+    color: #2b8a3e;
+}
+
+.status-badge.delivered {
     background: #ebfbee;
     color: #2b8a3e;
 }

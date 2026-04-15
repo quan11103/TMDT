@@ -2,6 +2,7 @@ import React from 'react';
 import type { PaginationMeta } from '../../types';
 import CategoryFilterTitle from './SearchFilterTitle';
 import CategoryPageContainer from './SearchPageContainer';
+import Sort from '../common/sorter/Sort';
 import './SearchContainer.css';
 
 interface Props {
@@ -24,8 +25,11 @@ interface Props {
 const SearchContainer: React.FC<Props> = ({ title, totalItems, productIds, paginationMeta, onPageChange, selectedCategoryIds, onCategoryToggle, searchQuery, minPrice, maxPrice, onFilterPrice, productsPerRow, sort, onSortChange }) => {
     return (
         <div className="main-page-wrapper">
-            {/* Cấp 1: Tiêu đề trang và số lượng mặt hàng */}
-            <CategoryFilterTitle title={title} totalItems={totalItems} />
+            {/* Cấp 1: Tiêu đề trang và Sắp xếp nằm cùng hàng */}
+            <div className="search-header-flex">
+                <CategoryFilterTitle title={title} totalItems={totalItems} />
+                <Sort />
+            </div>
 
             {/* Cấp 2: Khu vực chứa Sidebar Lọc và Main Content */}
             <CategoryPageContainer

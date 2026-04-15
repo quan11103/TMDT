@@ -1,7 +1,7 @@
 /* ShippingAddress.css */
 
 /* container */
-.shipping {
+.shipping-addr {
     width: 100%;
     max-width: 400px;
     min-height: 70vh;
@@ -119,7 +119,7 @@
         grid-template-columns: 1fr 1fr;
     }
 
-    .shipping {
+    .shipping-addr {
         min-height: 70vh;
     }
 

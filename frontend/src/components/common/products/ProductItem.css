@@ -68,16 +68,13 @@
     margin: 0 0 12px 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    /* Giới hạn đúng 2 dòng như HTML mẫu */
     -webkit-box-orient: vertical;
     overflow: hidden;
     height: 42px;
-    /* Cố định chiều cao để các thẻ sản phẩm bằng nhau */
     font-size: 13px;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 21px;
     color: #333333;
-    /* Màu text-muji_gray_800 */
     text-decoration: none;
     transition: color 0.2s;
 }
