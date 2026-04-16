@@ -136,8 +136,8 @@ const Header: React.FC = () => {
                 <nav aria-label="Main" className="main-nav">
                     <div className="nav-container">
                         <ul className="nav-menu" dir="ltr">
-                            <li><a title="Hàng Mới" className="nav-link" href="/en/new-arrivals">Hàng Mới</a></li>
-                            <li><a title="Bán chạy" className="nav-link" href="/en/bestseller">Bán chạy</a></li>
+                            {/* <li><a title="Hàng Mới" className="nav-link" href="/en/new-arrivals">Hàng Mới</a></li>
+                            <li><a title="Bán chạy" className="nav-link" href="/en/bestseller">Bán chạy</a></li> */}
                             <li>
                                 <button className="nav-button" onClick={() => handleCategoryClick(1)}>
                                     <a className="category-link" title="Bút viết" href="/category/1">Bút viết</a>

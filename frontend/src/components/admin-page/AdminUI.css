@@ -106,6 +106,8 @@
     outline: none;
     text-align: center;
     transition: border-color 0.2s;
+    background-color: #fff;
+    color: #000;
 }
 
 .config-item input:focus {

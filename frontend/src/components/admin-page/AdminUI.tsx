@@ -4,8 +4,8 @@ import { fetchStoreSettings, updateStoreSettings, STORE_SETTINGS_UPDATED_EVENT }
 import './AdminUI.css';
 
 const AdminUI: React.FC = () => {
-    const [productsPerPage, setProductsPerPage] = useState(12);
-    const [productsPerRow, setProductsPerRow] = useState(4);
+    const [productsPerPage, setProductsPerPage] = useState<number | string>(12);
+    const [productsPerRow, setProductsPerRow] = useState<number | string>(4);
     const [loading, setLoading] = useState(true);
     const [loadError, setLoadError] = useState('');
     const [isSaving, setIsSaving] = useState(false);
@@ -31,13 +31,39 @@ const AdminUI: React.FC = () => {
     }, [load]);
 
     const handleChangePage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const v = parseInt(e.target.value, 10);
-        setProductsPerPage(Number.isFinite(v) ? v : 1);
+        const val = e.target.value;
+        if (val === '') {
+            setProductsPerPage('');
+            return;
+        }
+        const v = parseInt(val, 10);
+        if (!isNaN(v)) setProductsPerPage(v);
     };
 
     const handleChangeRow = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const v = parseInt(e.target.value, 10);
-        setProductsPerRow(Number.isFinite(v) ? v : 1);
+        const val = e.target.value;
+        if (val === '') {
+            setProductsPerRow('');
+            return;
+        }
+        const v = parseInt(val, 10);
+        if (!isNaN(v)) setProductsPerRow(v);
+    };
+
+    const handleBlurPage = () => {
+        if (productsPerPage === '' || Number(productsPerPage) < 1) {
+            setProductsPerPage(1);
+        } else if (Number(productsPerPage) > 200) {
+            setProductsPerPage(200);
+        }
+    };
+
+    const handleBlurRow = () => {
+        if (productsPerRow === '' || Number(productsPerRow) < 1) {
+            setProductsPerRow(1);
+        } else if (Number(productsPerRow) > 12) {
+            setProductsPerRow(12);
+        }
     };
 
     const handleSave = async () => {
@@ -51,7 +77,10 @@ const AdminUI: React.FC = () => {
             return;
         }
 
-        if (productsPerPage < 1 || productsPerPage > 200) {
+        const finalPage = Number(productsPerPage);
+        const finalRow = Number(productsPerRow);
+
+        if (finalPage < 1 || finalPage > 200) {
             await Swal.fire({
                 title: 'Giá trị không hợp lệ',
                 text: 'Số sản phẩm mỗi trang phải từ 1 đến 200.',
@@ -61,7 +90,7 @@ const AdminUI: React.FC = () => {
             return;
         }
 
-        if (productsPerRow < 1 || productsPerRow > 12) {
+        if (finalRow < 1 || finalRow > 12) {
             await Swal.fire({
                 title: 'Giá trị không hợp lệ',
                 text: 'Số cột mỗi hàng phải từ 1 đến 12.',
@@ -74,8 +103,8 @@ const AdminUI: React.FC = () => {
         setIsSaving(true);
         try {
             const saved = await updateStoreSettings(token, {
-                products_per_page: productsPerPage,
-                products_per_row: productsPerRow,
+                products_per_page: finalPage,
+                products_per_row: finalRow,
             });
             window.dispatchEvent(
                 new CustomEvent(STORE_SETTINGS_UPDATED_EVENT, { detail: saved }),
@@ -110,38 +139,34 @@ const AdminUI: React.FC = () => {
 
             {loadError && <div className="ui-load-error">{loadError}</div>}
 
-            <p className="ui-description">
-                Số sản phẩm mỗi trang: trang danh mục / tìm kiếm. Số cột mỗi hàng: áp dụng cả lưới đó và{' '}
-                <strong>3 khối trên trang chủ</strong> (Mới về, Nổi bật, Bán chạy). Sau khi lưu, tab trang mua hàng mở sẵn
-                tự cập nhật; tab khác tải lại để lấy cấu hình mới.
-            </p>
-
             <div className="ui-config-container">
                 {loading ? (
                     <div className="ui-loading">Đang tải cấu hình...</div>
                 ) : (
                     <div className="config-grid">
                         <div className="config-item">
-                            <label htmlFor="productsPerPage">Số sản phẩm mỗi trang (1–200)</label>
+                            <label htmlFor="productsPerPage">Số sản phẩm mỗi trang</label>
                             <input
                                 type="number"
                                 id="productsPerPage"
                                 name="productsPerPage"
                                 value={productsPerPage}
                                 onChange={handleChangePage}
+                                onBlur={handleBlurPage}
                                 min={1}
                                 max={200}
                             />
                         </div>
 
                         <div className="config-item">
-                            <label htmlFor="productsPerRow">Số sản phẩm mỗi hàng — desktop (1–12)</label>
+                            <label htmlFor="productsPerRow">Số sản phẩm mỗi hàng</label>
                             <input
                                 type="number"
                                 id="productsPerRow"
                                 name="productsPerRow"
                                 value={productsPerRow}
                                 onChange={handleChangeRow}
+                                onBlur={handleBlurRow}
                                 min={1}
                                 max={12}
                             />

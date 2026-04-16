@@ -44,7 +44,6 @@ const FilterCategory: React.FC<Props> = ({ currentCategoryId, selectedCategoryId
                 if (currentCategoryId) {
                     // Trang Category: Lấy danh mục con của danh mục hiện tại
                     const res = await axios.get(`http://localhost:3000/api/categories/${currentCategoryId}`, { params });
-                    console.log(">>> Dữ liệu Categories nhận về:", res.data);
                     setCategories(res.data.other_categories || []);
                 } else {
                     // Trang Search: Lấy tất cả danh mục gốc

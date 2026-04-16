@@ -9,9 +9,6 @@
     /* flex-col gap-5 tương đương */
     display: flex;
     flex-direction: column;
-
-    /* Căn giữa và giới hạn độ rộng theo HTML mẫu */
-    max-width: 950px;
     margin: 0 auto;
     width: 100%;
 }
