@@ -7,6 +7,7 @@ import FormResetPassword from '../components/forgot-password-page/FormResetPassw
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import './ForgotPasswordPage.css';
+import { API_BASE } from '../lib/apiConfig';
 
 const ForgotPasswordPage: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -21,7 +22,7 @@ const ForgotPasswordPage: React.FC = () => {
     const handleSendResetEmail = async (email: string) => {
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/forgot-password', {
+            const response = await axios.post(`${API_BASE}/auth/forgot-password`, {
                 email: email,
             });
 
@@ -51,7 +52,7 @@ const ForgotPasswordPage: React.FC = () => {
     const handleResetPassword = async (newPassword: string) => {
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/reset-password', {
+            const response = await axios.post(`${API_BASE}/auth/reset-password`, {
                 token: resetToken,
                 new_password: newPassword,
             });

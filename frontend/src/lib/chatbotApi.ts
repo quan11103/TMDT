@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = 'http://localhost:3000/api';
+import { API_BASE } from './apiConfig';
 
 export type ChatbotProduct = {
   id: number;
@@ -48,7 +48,7 @@ export async function sendChatbotMessage(
   payload: ChatbotSendPayload,
 ): Promise<ChatbotSendResponse> {
   const { data } = await axios.post<ChatbotSendResponse>(
-    `${API}/chatbot/message`,
+    `${API_BASE}/chatbot/message`,
     {
       message: payload.message,
       history: payload.history,

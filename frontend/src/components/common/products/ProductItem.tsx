@@ -4,6 +4,7 @@ import './ProductItem.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { mediaUrl } from '../../../lib/mediaUrl';
+import { API_BASE } from '../../../lib/apiConfig';
 
 interface Props {
     Id: number;
@@ -29,7 +30,7 @@ const ProductItem: React.FC<Props> = ({ Id }) => {
             setError("");
             try {
                 // Thay đổi URL theo cấu hình backend của bạn (thông thường là /api/products/:id)
-                const response = await axios.get(`http://localhost:3000/api/products/${Id}`);
+                const response = await axios.get(`${API_BASE}/products/${Id}`);
                 setProduct(response.data);
             } catch (err: any) {
                 const message = err.response?.data?.message || "Không thể tải thông tin sản phẩm.";
@@ -70,7 +71,7 @@ const ProductItem: React.FC<Props> = ({ Id }) => {
 
         try {
             console.log("Token gửi đi:", token)
-            await axios.post("http://localhost:3000/api/cart", {
+            await axios.post(`${API_BASE}/cart`, {
                 product_id: product.id, // ID sản phẩm từ dữ liệu API sản phẩm
                 quantity: 1             // Số lượng mặc định
             }, {

@@ -6,6 +6,7 @@ import OrderDetailModal from '../components/order-status-page/OrderDetailModal';
 import './OrderStatusPage.css';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import { API_BASE } from '../lib/apiConfig';
 
 export const OrderStatusEnum = {
     PENDING: "PENDING",
@@ -38,7 +39,7 @@ const OrderStatus: React.FC = () => {
         setLoading(true);
         try {
             // Theo service của bạn, API này trả về orders của user hiện tại
-            const response = await axios.get(`http://localhost:3000/api/order/my`, {
+            const response = await axios.get(`${API_BASE}/order/my`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setAllOrders(response.data);

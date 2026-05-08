@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import './ProfilePage.css';
-
-const API_BASE = 'http://localhost:3000/api';
+import { API_BASE } from '../lib/apiConfig';
 
 type MeResponse = {
     id: number;

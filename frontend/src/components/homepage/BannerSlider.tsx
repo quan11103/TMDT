@@ -3,8 +3,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import './BannerSlider.css';
+import { API_BASE, apiUrl } from '../../lib/apiConfig';
 
-const API_PUBLIC_BANNERS = 'http://localhost:3000/api/banners/public';
+const API_PUBLIC_BANNERS = `${API_BASE}/banners/public`;
 
 interface BannerPublic {
     id: number;
@@ -16,9 +17,7 @@ interface BannerPublic {
 
 const imgFullUrl = (imageUrl: string) => {
     if (!imageUrl) return '';
-    if (imageUrl.startsWith('http')) return imageUrl;
-    const path = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
-    return `http://localhost:3000${path}`;
+    return apiUrl(imageUrl);
 };
 
 const BannerSlider: React.FC = () => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import type { CategoryData } from '../../types';
 import './CreateProduct.css'; // Sử dụng chung file CSS với CreateProduct
+import { API_BASE } from '../../lib/apiConfig';
 
 interface UpdateProductProps {
     productId: number;
@@ -29,8 +30,8 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ productId, onBack, onSucc
             try {
                 const token = localStorage.getItem('access_token');
                 const [catRes, prodRes] = await Promise.all([
-                    fetch('http://localhost:3000/api/categories'),
-                    fetch(`http://localhost:3000/api/products/${productId}`, {
+                    fetch(`${API_BASE}/categories`),
+                    fetch(`${API_BASE}/products/${productId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     })
                 ]);
@@ -93,7 +94,7 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ productId, onBack, onSucc
 
         try {
             const token = localStorage.getItem('access_token');
-            const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
+            const response = await fetch(`${API_BASE}/products/${productId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

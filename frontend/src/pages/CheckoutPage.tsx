@@ -5,6 +5,7 @@ import Footer from '../components/common/Footer';
 import ContentWrapper from '../components/checkout-page/ContentWrapper';
 import { useNavigate } from 'react-router-dom';
 import './CheckoutPage.css';
+import { API_BASE } from '../lib/apiConfig';
 
 const CheckoutPage: React.FC = () => {
     const [items, setItems] = useState<CartItem[]>([]);
@@ -39,7 +40,7 @@ const CheckoutPage: React.FC = () => {
             if (!token) return;
 
             try {
-                const response = await fetch('http://localhost:3000/api/users/me', {
+                const response = await fetch(`${API_BASE}/users/me`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

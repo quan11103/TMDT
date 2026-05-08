@@ -9,6 +9,7 @@ import Breadcrumb from '../components/common/Breadcrumb';
 import ProductReviews from '../components/product-detail-page/ProductReviews';
 import { fetchReviewSummary, type ReviewSummary } from '../lib/reviewsApi';
 import './ProductDetailPage.css';
+import { API_BASE } from '../lib/apiConfig';
 
 const ProductDetail: React.FC = () => {
     const { productId } = useParams<{ productId: string }>();
@@ -23,7 +24,7 @@ const ProductDetail: React.FC = () => {
             if (!productId) return;
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:3000/api/products/${productId}`);
+                const response = await axios.get(`${API_BASE}/products/${productId}`);
                 setProduct(response.data);
             } catch (err: any) {
                 setError("Không thể tải thông tin sản phẩm.");

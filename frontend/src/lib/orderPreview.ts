@@ -1,4 +1,6 @@
-const API_ORDER_PREVIEW = 'http://localhost:3000/api/order/preview';
+import { API_BASE } from './apiConfig';
+
+const API_ORDER_PREVIEW = `${API_BASE}/order/preview`;
 
 export const CHECKOUT_PROMO_STORAGE_KEY = 'checkout_promotion_code';
 

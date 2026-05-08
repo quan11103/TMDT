@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import './AdminCategories.css';
+import { API_BASE } from '../../lib/apiConfig';
 
 interface Category {
     id: number;
@@ -32,7 +33,7 @@ const AdminCategories: React.FC = () => {
         parent_id: '' as number | '',
     });
 
-    const API_URL = 'http://localhost:3000/api/categories';
+    const API_URL = `${API_BASE}/categories`;
     const token = localStorage.getItem('access_token');
 
     const fetchCategories = async () => {

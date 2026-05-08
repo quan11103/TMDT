@@ -8,6 +8,7 @@ import "react-day-picker/dist/style.css";
 import Swal from "sweetalert2";
 import "./SignupCard.css";
 import SignupFooter from "./SignupFooter";
+import { API_BASE } from "../../lib/apiConfig";
 
 const SignupCard: React.FC = () => {
     const navigate = useNavigate();
@@ -56,7 +57,7 @@ const SignupCard: React.FC = () => {
         }
 
         try {
-            const registerRes = await axios.post('http://localhost:3000/api/auth/register', {
+            const registerRes = await axios.post(`${API_BASE}/auth/register`, {
                 email,
                 password,
                 full_name: fullName,
@@ -66,7 +67,7 @@ const SignupCard: React.FC = () => {
             });
 
             if (registerRes.status === 201 || registerRes.status === 200) {
-                const loginRes = await axios.post("http://localhost:3000/api/auth/login", { email, password });
+                const loginRes = await axios.post(`${API_BASE}/auth/login`, { email, password });
                 const { access_token, user } = loginRes.data;
 
                 localStorage.setItem("access_token", access_token);

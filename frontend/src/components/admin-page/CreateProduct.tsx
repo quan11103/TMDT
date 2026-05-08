@@ -2,8 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import type { CategoryData } from '../../types';
 import Swal from 'sweetalert2';
 import './CreateProduct.css';
-
-const API_BASE = 'http://localhost:3000/api';
+import { API_BASE } from '../../lib/apiConfig';
 
 interface ProductForm {
     name: string;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './PaymentResultPage.css';
+import { API_BASE } from '../lib/apiConfig';
 
 interface PaymentStatus {
     success: boolean;
@@ -20,7 +21,7 @@ const PaymentResultPage: React.FC = () => {
             try {
                 // Chuyển toàn bộ query params từ VNPay về Backend để xác thực
                 const query = Object.fromEntries(searchParams.entries());
-                const response = await axios.get('http://localhost:3000/api/payment/vnpay/callback', {
+                const response = await axios.get(`${API_BASE}/payment/vnpay/callback`, {
                     params: query,
                 });
 

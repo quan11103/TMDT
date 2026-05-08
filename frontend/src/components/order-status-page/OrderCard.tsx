@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import './OrderCard.css';
+import { API_BASE } from '../../lib/apiConfig';
 
 interface OrderCardProps {
     order: any;
@@ -45,7 +46,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onReload, handleViewDetail
                 });
 
                 const token = localStorage.getItem("access_token");
-                await axios.patch(`http://localhost:3000/api/order/my/${order.id}/cancel`, {}, {
+                await axios.patch(`${API_BASE}/order/my/${order.id}/cancel`, {}, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 

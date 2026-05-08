@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './FilterCategory.css';
+import { API_BASE } from '../../../lib/apiConfig';
 
 interface Category {
     id: number;
@@ -43,11 +44,11 @@ const FilterCategory: React.FC<Props> = ({ currentCategoryId, selectedCategoryId
 
                 if (currentCategoryId) {
                     // Trang Category: Lấy danh mục con của danh mục hiện tại
-                    const res = await axios.get(`http://localhost:3000/api/categories/${currentCategoryId}`, { params });
+                    const res = await axios.get(`${API_BASE}/categories/${currentCategoryId}`, { params });
                     setCategories(res.data.other_categories || []);
                 } else {
                     // Trang Search: Lấy tất cả danh mục gốc
-                    const res = await axios.get('http://localhost:3000/api/categories', { params });
+                    const res = await axios.get(`${API_BASE}/categories`, { params });
                     setCategories(res.data);
                 }
             } catch (err) {

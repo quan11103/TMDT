@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./LoginCard.css";
 import LoginFooter from "./LoginFooter";
+import { API_BASE } from "../../lib/apiConfig";
 
 const LoginCard: React.FC = () => {
     const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ const LoginCard: React.FC = () => {
         setError("");
 
         try {
-            const response = await axios.post("http://localhost:3000/api/auth/login", {
+            const response = await axios.post(`${API_BASE}/auth/login`, {
                 email,
                 password,
             });
@@ -55,11 +56,11 @@ const LoginCard: React.FC = () => {
     const handleGoogleLogin = () => {
         // Điều hướng trình duyệt đến thẳng endpoint của Backend
         // Backend NestJS sẽ tự xử lý việc chuyển sang trang chọn tài khoản Google
-        window.location.href = "http://localhost:3000/api/auth/google";
+        window.location.href = `${API_BASE}/auth/google`;
     };
 
     const handleFacebookLogin = () => {
-        window.location.href = "http://localhost:3000/api/auth/facebook";
+        window.location.href = `${API_BASE}/auth/facebook`;
     };
 
     return (

@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { mediaUrl } from "../../lib/mediaUrl";
 import { CHECKOUT_PROMO_STORAGE_KEY } from "../../lib/orderPreview";
 import type { OrderPreviewResult } from "../../lib/orderPreview";
+import { API_BASE } from "../../lib/apiConfig";
 
 interface Props {
     items: CartItem[];
@@ -81,7 +82,7 @@ const OrderSummary: React.FC<Props> = ({
             Swal.showLoading();
 
             // BƯỚC A: Gọi API tạo đơn hàng
-            const orderResponse = await fetch('http://localhost:3000/api/order', {
+            const orderResponse = await fetch(`${API_BASE}/order`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -95,7 +96,7 @@ const OrderSummary: React.FC<Props> = ({
             if (orderResponse.ok) {
                 // BƯỚC B: Gọi API tạo Payment cho đơn hàng vừa tạo
                 // Giả sử bạn chọn mặc định là VNPAY, nếu có UI chọn method thì thay bằng biến
-                const paymentResponse = await fetch('http://localhost:3000/api/payment', {
+                const paymentResponse = await fetch(`${API_BASE}/payment`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,

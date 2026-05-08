@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import type { User } from '../../types';
 import './AdminCustomers.css';
+import { API_BASE } from '../../lib/apiConfig';
 
-const API_BASE = 'http://localhost:3000/api';
 const PAGE_SIZE = 15;
 
 const AdminCustomers: React.FC = () => {

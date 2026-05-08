@@ -6,6 +6,7 @@ import { fetchStoreSettings, STORE_SETTINGS_UPDATED_EVENT } from '../lib/storeSe
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import SearchContainer from '../components/search-page/SearchContainer';
+import { API_BASE } from '../lib/apiConfig';
 
 const SearchPage: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -51,7 +52,7 @@ const SearchPage: React.FC = () => {
         if (!query && selectedIds.length === 0) return;
 
         try {
-            const productsRes = await axios.get(`http://localhost:3000/api/products`, {
+            const productsRes = await axios.get(`${API_BASE}/products`, {
                 params: {
                     search: query,
                     // CHỈNH SỬA: Gửi chuỗi ID phân cách bằng dấu phẩy

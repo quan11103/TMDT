@@ -7,6 +7,7 @@ import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import Breadcrumb from '../components/common/Breadcrumb';
 import CategoryContainer from '../components/category-page/CategoryContainer';
+import { API_BASE } from '../lib/apiConfig';
 
 const CategoryPage: React.FC = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
@@ -48,8 +49,8 @@ const CategoryPage: React.FC = () => {
             const queryCategoryId = selectedIds.length > 0 ? selectedIds.join(',') : categoryId;
 
             const [categoryRes, productsRes] = await Promise.all([
-                axios.get(`http://localhost:3000/api/categories/${categoryId}`),
-                axios.get(`http://localhost:3000/api/products`, {
+                axios.get(`${API_BASE}/categories/${categoryId}`),
+                axios.get(`${API_BASE}/products`, {
                     params: {
                         category_id: queryCategoryId,
                         min_price: min,

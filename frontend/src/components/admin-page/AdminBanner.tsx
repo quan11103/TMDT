@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './AdminBanner.css';
-
-const API_BASE = 'http://localhost:3000/api';
+import { API_BASE, apiUrl } from '../../lib/apiConfig';
 
 interface BannerApi {
     id: number;
@@ -16,8 +15,7 @@ interface BannerApi {
 
 const imgFullUrl = (imageUrl: string) => {
     if (!imageUrl) return '';
-    if (imageUrl.startsWith('http')) return imageUrl;
-    return `http://localhost:3000${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+    return apiUrl(imageUrl);
 };
 
 const AdminBanner: React.FC = () => {

@@ -1,6 +1,6 @@
 import { jwtDecode } from 'jwt-decode';
 
-const API_BASE = 'http://localhost:3000/api';
+import { API_BASE } from './apiConfig';
 
 export type ReviewSummary = {
     product_id: number;

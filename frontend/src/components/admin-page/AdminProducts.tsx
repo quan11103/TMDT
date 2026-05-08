@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import CreateProduct from './CreateProduct';
 import UpdateProduct from './UpdateProduct';
 import './AdminProducts.css';
+import { API_BASE } from '../../lib/apiConfig';
 
 const AdminProducts: React.FC = () => {
     const [products, setProducts] = useState<ProductDetail[]>([]);
@@ -14,7 +15,7 @@ const AdminProducts: React.FC = () => {
     const fetchProducts = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:3000/api/products?limit=50');
+            const response = await fetch(`${API_BASE}/products?limit=50`);
             const result = await response.json();
 
             if (response.ok) {
@@ -46,7 +47,7 @@ const AdminProducts: React.FC = () => {
         if (result.isConfirmed) {
             try {
                 const token = localStorage.getItem('access_token');
-                const response = await fetch(`http://localhost:3000/api/products/${id}`, {
+                const response = await fetch(`${API_BASE}/products/${id}`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`

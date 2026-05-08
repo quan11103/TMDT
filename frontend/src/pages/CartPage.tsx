@@ -6,6 +6,7 @@ import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import ContentWrapper from '../components/cart-page/ContentWrapper';
 import './CartPage.css';
+import { API_BASE } from '../lib/apiConfig';
 
 interface CartData {
     items: CartItem[];
@@ -19,7 +20,7 @@ const CartPage: React.FC = () => {
     const selectedItems = cartData?.items.filter(item => selectedIds.includes(item.id)) || [];
     const [error, setError] = useState("");
 
-    const API_URL = "http://localhost:3000/api/cart";
+    const API_URL = `${API_BASE}/cart`;
     const token = localStorage.getItem("access_token");
 
     // 1. Hàm lấy dữ liệu giỏ hàng

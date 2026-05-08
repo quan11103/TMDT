@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import Swal from 'sweetalert2';
 import './AdminPromotions.css';
+import { API_BASE } from '../../lib/apiConfig';
 
 type PromoDiscountType = 'PERCENT' | 'FIXED_AMOUNT';
 type PromoProductScope = 'ALL' | 'CATEGORY' | 'PRODUCT';
@@ -33,8 +34,6 @@ interface ProductItem {
     name: string;
     slug: string;
 }
-
-const API_BASE = 'http://localhost:3000/api';
 
 const formatCurrency = (val: number, type: PromoDiscountType) => {
     if (type === 'PERCENT') return `-${val}%`;

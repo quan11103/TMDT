@@ -1,4 +1,6 @@
-const API_URL = 'http://localhost:3000/api/store-settings';
+import { API_BASE } from './apiConfig';
+
+const API_URL = `${API_BASE}/store-settings`;
 
 /** Trang mua hàng lắng nghe để refetch cấu hình sau khi admin lưu */
 export const STORE_SETTINGS_UPDATED_EVENT = 'storeSettingsUpdated';

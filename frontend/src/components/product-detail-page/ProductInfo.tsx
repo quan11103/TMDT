@@ -5,6 +5,7 @@ import QuantitySelector from '../common/QuantitySelector';
 import './ProductInfo.css';
 import { mediaUrl } from '../../lib/mediaUrl';
 import type { ReviewSummary } from '../../lib/reviewsApi';
+import { API_BASE } from '../../lib/apiConfig';
 
 interface Props {
     product: ProductDetail;
@@ -34,7 +35,7 @@ const ProductInfo: React.FC<Props> = ({ product, reviewSummary }) => {
 
         try {
             await axios.post(
-                "http://localhost:3000/api/cart",
+                `${API_BASE}/cart`,
                 {
                     product_id: product.id,
                     quantity: finalQuantity

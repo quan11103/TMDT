@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Header.css';
+import { API_BASE } from '../../lib/apiConfig';
 
 interface User {
     full_name?: string | null;
@@ -23,7 +24,7 @@ const Header: React.FC = () => {
                 return;
             }
 
-            const response = await fetch('http://localhost:3000/api/cart', {
+            const response = await fetch(`${API_BASE}/cart`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

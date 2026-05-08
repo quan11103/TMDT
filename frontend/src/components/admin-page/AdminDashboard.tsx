@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './AdminDashboard.css';
+import { API_BASE } from '../../lib/apiConfig';
 
 interface OrderItem {
     total_amount: number;
@@ -34,11 +35,11 @@ const AdminDashboard: React.FC = () => {
             try {
                 const token = localStorage.getItem('access_token');
                 const [responseOrder, responseProduct] = await Promise.all([
-                    fetch('http://localhost:3000/api/order', {
+                    fetch(`${API_BASE}/order`, {
                         headers: { Authorization: `Bearer ${token}` },
                     }),
                     // API trả { data, meta } — không phải mảng; cần limit đủ lớn để đếm hết hàng
-                    fetch('http://localhost:3000/api/products?page=1&limit=5000', {
+                    fetch(`${API_BASE}/products?page=1&limit=5000`, {
                         headers: { Authorization: `Bearer ${token}` },
                     }),
                 ]);

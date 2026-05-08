@@ -3,8 +3,7 @@ import type { Order } from '../../types';
 import Swal from 'sweetalert2';
 import './AdminOrders.css';
 import { mediaUrl } from '../../lib/mediaUrl';
-
-const API_BASE = 'http://localhost:3000/api';
+import { API_BASE } from '../../lib/apiConfig';
 
 type OrderStatus = 'PENDING' | 'CONFIRMED' | 'SHIPPING' | 'DELIVERED' | 'CANCELLED';
 
