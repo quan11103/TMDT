@@ -1,0 +1,34 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Caches
+node_modules/
+.npm
+.yarn
+
+# Build & environments
+dist
+dist-ssr
+build
+out
+.env
+.env.*
+!.env.example
+
+# Git, IDE, and OS files
+.git
+.github
+.vscode
+.idea
+.DS_Store
+*.pem
+
+# Testing
+coverage/
+test-results/

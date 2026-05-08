@@ -53,7 +53,7 @@ const ProductItem: React.FC<Props> = ({ Id }) => {
     const rawImg = mainImage?.image_url;
     const image_url = rawImg ? mediaUrl(rawImg) : 'https://via.placeholder.com/300';
 
-    const { name, slug, price } = product;
+    const { name, price } = product;
     const formattedPrice = new Intl.NumberFormat('vi-VN').format(price);
 
     const handleProductClick = () => {
@@ -70,7 +70,7 @@ const ProductItem: React.FC<Props> = ({ Id }) => {
 
         try {
             console.log("Token gửi đi:", token)
-            const response = await axios.post("http://localhost:3000/api/cart", {
+            await axios.post("http://localhost:3000/api/cart", {
                 product_id: product.id, // ID sản phẩm từ dữ liệu API sản phẩm
                 quantity: 1             // Số lượng mặc định
             }, {
@@ -127,7 +127,7 @@ const ProductItem: React.FC<Props> = ({ Id }) => {
                 <button
                     className={`add-to-cart-btn ${isAdded ? 'added' : ''}`}
                     disabled={isAdded}
-                    onClick={(e) => {
+                    onClick={() => {
                         handleAddToCart();
                     }}
                 >

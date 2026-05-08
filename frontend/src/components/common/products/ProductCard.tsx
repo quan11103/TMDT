@@ -1,10 +1,10 @@
 import React from 'react';
 import './ProductCard.css';
-import type { Product } from '../../types';
+import type { Product } from '../../../types';
 import { useNavigate } from 'react-router-dom';
 
 interface ProductCardProps {
-    product: Product;
+    product: Product & { image?: string; originalPrice?: number; discountPercent?: number };
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
