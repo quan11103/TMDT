@@ -27,9 +27,11 @@ export class PaymentService {
     if (configured) {
       return configured;
     }
-    const frontend =
-      this.config.get<string>('FRONTEND_URL')?.trim() ||
-      'http://localhost:5173';
+    const frontend = this.config.get<string>('FRONTEND_URL')?.trim();
+    if (!frontend) {
+      throw new Error('FRONTEND_URL is not configured in environment variables');
+    }
+
     const base = frontend.replace(/\/+$/, '');
     return `${base}/payment-result/`;
   }

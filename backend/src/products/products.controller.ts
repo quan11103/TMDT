@@ -20,6 +20,10 @@ import { QueryProductDto } from './dto/query-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UploadProductImagesDto } from './dto/upload-product-images.dto';
+import { diskStorage } from 'multer';
+import { extname, join } from 'path';
+import { randomUUID } from 'crypto';
+import { mkdirSync } from 'fs';
 
 @Controller('products')
 export class ProductsController {
@@ -55,7 +59,25 @@ export class ProductsController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permissions('product.update')
-  @UseInterceptors(FilesInterceptor('files', 20))
+  @UseInterceptors(
+    FilesInterceptor('files', 20, {
+      storage: diskStorage({
+        destination: (req, file, cb) => {
+          const dir = join(process.cwd(), 'uploads', 'products');
+          mkdirSync(dir, { recursive: true });
+          cb(null, dir);
+        },
+        filename: (req, file, cb) => {
+          const ext = extname(file.originalname).toLowerCase();
+          const filename = `${randomUUID()}${ext}`;
+          cb(null, filename);
+        },
+      }),
+      limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB limit per file
+      },
+    }),
+  )
   @Post(':id/images')
   uploadImages(
     @Param('id') id: string,

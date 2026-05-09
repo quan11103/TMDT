@@ -351,13 +351,7 @@ export class ProductsService {
       throw new NotFoundException('Thiếu file ảnh');
     }
 
-    const uploadDir = this.ensureProductUploadDir();
-    const filenames: string[] = [];
-    for (const f of files) {
-      const filename = this.createFilename(f.originalname);
-      await fs.writeFile(join(uploadDir, filename), f.buffer);
-      filenames.push(filename);
-    }
+    const filenames = files.map((f) => f.filename);
 
     const existingMain = await this.prisma.product_images.findFirst({
       where: { product_id: productId, is_main: true },

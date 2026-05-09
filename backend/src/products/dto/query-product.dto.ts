@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsIn, IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export const PRODUCT_SORT_VALUES = [
   'newest',
@@ -38,6 +38,7 @@ export class QueryProductDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
+  @Max(100)
   limit?: number = 10;
 
   @IsOptional()
