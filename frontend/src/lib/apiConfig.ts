@@ -1,6 +1,6 @@
 export const API_ORIGIN: string = (() => {
   const raw = (import.meta as any)?.env?.VITE_API_ORIGIN as string | undefined;
-  const origin = (raw ?? 'http://localhost:3000').trim();
+  const origin = (raw ?? 'http://160.30.168.74').trim();
   return origin.endsWith('/') ? origin.slice(0, -1) : origin;
 })();
 

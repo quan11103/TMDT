@@ -84,14 +84,11 @@ services:
     environment:
       TZ: Asia/Ho_Chi_Minh
 
-    mem_limit: 128m
-    cpus: "0.25"
-
     volumes:
       - ./frontend:/app
       - /app/node_modules
 
-    command: npm run dev -- --host 0.0.0.0
+    command: npm run preview -- --host 0.0.0.0 --port 5173
 
     ports:
       - "4173:4173"
