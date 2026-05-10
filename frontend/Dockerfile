@@ -17,9 +17,8 @@ COPY . .
 # Build app
 RUN npm run build
 
-# Expose port cho dev và preview
-EXPOSE 4173
+# Expose port cho preview server
 EXPOSE 5173
 
 # Chạy preview server sau khi build
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0"]
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "5173"]

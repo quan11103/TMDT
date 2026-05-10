@@ -23,7 +23,7 @@ async function bootstrap() {
   });
 
   app.enableCors({
-    origin: ['http://localhost:5173', 'http://localhost:4173', 'http://localhost', 'http://160.30.168.74'],
+    origin: ['http://localhost:5173', 'http://localhost', 'http://160.30.168.74'],
     credentials: true,
   });
 
