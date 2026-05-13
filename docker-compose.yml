@@ -48,15 +48,6 @@ services:
 
     env_file:
       - ./backend/.env
-
-    environment:
-      DATABASE_URL: postgresql://postgres:12345@db:5432/tmdt_db
-      JWT_SECRET: secret
-      JWT_EXPIRES_IN: 1d
-      PORT: 3000
-      FRONTEND_URL: http://160.30.168.74:5173
-      ADMIN_PASSWORD: 123456
-
     mem_limit: 550m
     cpus: "1.30"
 
@@ -87,8 +78,6 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-
-    command: npm run preview -- --host 0.0.0.0 --port 5173
 
     ports:
       - "5173:5173"

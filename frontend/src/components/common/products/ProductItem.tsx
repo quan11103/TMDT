@@ -3,6 +3,7 @@ import type { Product, ProductImage } from '../../../types';
 import './ProductItem.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import { mediaUrl } from '../../../lib/mediaUrl';
 import { API_BASE } from '../../../lib/apiConfig';
 
@@ -65,12 +66,24 @@ const ProductItem: React.FC<Props> = ({ Id }) => {
         const token = localStorage.getItem("access_token");
 
         if (!token) {
-            alert("Vui lòng đăng nhập!");
+            const result = await Swal.fire({
+                title: 'Bạn chưa đăng nhập',
+                text: "Vui lòng đăng nhập để thực hiện thêm sản phẩm vào giỏ hàng!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#7b0f1a', // Tone màu đỏ đậm của bạn
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Đăng nhập ngay',
+                cancelButtonText: 'Để sau'
+            });
+
+            if (result.isConfirmed) {
+                navigate('/login'); // Chuyển hướng đến trang đăng nhập
+            }
             return;
         }
 
         try {
-            console.log("Token gửi đi:", token)
             await axios.post(`${API_BASE}/cart`, {
                 product_id: product.id, // ID sản phẩm từ dữ liệu API sản phẩm
                 quantity: 1             // Số lượng mặc định
