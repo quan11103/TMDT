@@ -10,38 +10,24 @@ interface ShippingAddressProps {
 
 const ShippingAddress: React.FC<ShippingAddressProps> = ({ address, setAddress }) => {
     const [provinces, setProvinces] = useState<any[]>([]);
-    const [districts, setDistricts] = useState<any[]>([]);
     const [wards, setWards] = useState<any[]>([]);
 
     // Lấy danh sách Tỉnh/Thành khi component mount
     useEffect(() => {
-        axios.get("https://provinces.open-api.vn/api/p/").then((res) => setProvinces(res.data));
+        axios.get("https://provinces.open-api.vn/api/v2/p/").then((res) => setProvinces(res.data));
     }, []);
 
-    // Lấy danh sách Quận/Huyện/Thành phố thuộc tỉnh khi provinceCode thay đổi
+    // Lấy danh sách Phường/Xã khi provinceCode thay đổi (Cấu trúc mới không có cấp quận)
     useEffect(() => {
         if (address.provinceCode) {
-            axios.get(`https://provinces.open-api.vn/api/p/${address.provinceCode}?depth=2`)
-                .then((res) => {
-                    setDistricts(res.data.districts || []);
-                });
-        } else {
-            setDistricts([]);
-            setWards([]);
-        }
-    }, [address.provinceCode]);
-
-    // Lấy danh sách Phường/Xã khi districtCode thay đổi
-    useEffect(() => {
-        if (address.districtCode) {
-            axios.get(`https://provinces.open-api.vn/api/d/${address.districtCode}?depth=2`)
+            axios.get(`https://provinces.open-api.vn/api/v2/p/${address.provinceCode}?depth=2`)
                 .then((res) => {
                     setWards(res.data.wards || []);
                 });
         } else {
             setWards([]);
         }
-    }, [address.districtCode]);
+    }, [address.provinceCode]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { id, value } = e.target;
@@ -58,16 +44,6 @@ const ShippingAddress: React.FC<ShippingAddressProps> = ({ address, setAddress }
                 ward: "", wardCode: ""
             }));
             // Xóa danh sách cũ để buộc re-render
-            setDistricts([]);
-            setWards([]);
-        } else if (id === "district") {
-            const selectedDistrict = districts.find(d => String(d.code) === String(value));
-            setAddress(prev => ({
-                ...prev,
-                district: selectedDistrict?.name || "",
-                districtCode: value,
-                ward: "", wardCode: ""
-            }));
             setWards([]);
         } else if (id === "ward") {
             const selectedWard = wards.find(w => String(w.code) === String(value));
@@ -136,16 +112,7 @@ const ShippingAddress: React.FC<ShippingAddressProps> = ({ address, setAddress }
                         </div>
                     </div>
 
-                    {/* Quận / Huyện / TP Thuộc Tỉnh */}
-                    <div className="field">
-                        <label className="label" htmlFor="district">Quận / Huyện <span className="req">*</span></label>
-                        <div className="selectWrap">
-                            <select id="district" className="select" value={address.districtCode} onChange={handleChange} required>
-                                <option value="">Chọn Quận/Huyện</option>
-                                {districts.map(d => <option key={d.code} value={d.code}>{d.name}</option>)}
-                            </select>
-                        </div>
-                    </div>
+
 
                     {/* Phường / Xã */}
                     <div className="field">

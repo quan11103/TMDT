@@ -227,11 +227,15 @@ async function main() {
         'Bút bi ngòi 0.7mm, mực xanh, viết trơn tru bền bỉ. Thích hợp cho học sinh và văn phòng.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=800&q=80',
+          url: 'https://product.hstatic.net/1000230347/product/artboard_6_993a955c7bc34ed983cf23d627053848.jpg',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1568205612837-017257d2310a?w=800&q=80',
+          url: 'https://product.hstatic.net/1000230347/product/artboard_11_08a7991536a1403f8ae5374e14b8a7f1.jpg',
+          is_main: false,
+        },
+        {
+          url: 'https://product.hstatic.net/1000230347/product/artboard_13_e376a63784904b7281d9acc560594660.jpg',
           is_main: false,
         },
       ],
@@ -246,11 +250,11 @@ async function main() {
         'Bút bi Nhật Bản cao cấp, ngòi 0.7mm, mực xanh đen đậm nét, thân grip cao su chống trơn.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1585336261022-680e295ce3fe?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lzbu5z7helhpf1.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/0575112a076064a6c93f8ec2cb240c66.webp',
           is_main: false,
         },
       ],
@@ -265,8 +269,16 @@ async function main() {
         'Bút bi Nhật Bản thương hiệu Pilot, viết mượt, không lem mực, nắp đậy chắc chắn.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1568205612837-017257d2310a?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/sg-11134201-7rdyo-lxyikizdy4aw38.webp',
           is_main: true,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/sg-11134201-7rdyp-lxyikjq0v55672.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/sg-11134201-7rdxj-lxyikkj5oibubc.webp',
+          is_main: false,
         },
       ],
     },
@@ -280,15 +292,15 @@ async function main() {
         'Combo 10 bút bi Thiên Long TL-027 tiết kiệm. Gồm 5 xanh, 3 đỏ, 2 đen.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-me6pi7vufx8jc2.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-me6pi7si9k3p3d.webp',
           is_main: false,
         },
         {
-          url: 'https://images.unsplash.com/photo-1585336261022-680e295ce3fe?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-me6pi7t4b6yq26.webp',
           is_main: false,
         },
       ],
@@ -305,11 +317,15 @@ async function main() {
         'Bút chì gỗ Staedtler độ cứng 2B, phù hợp vẽ kỹ thuật và phác thảo nghệ thuật.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/sg-11134201-22100-l9tuqzb857iv8c.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mg61rqo33bil3d.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mg61rkrn7cw920.webp',
           is_main: false,
         },
       ],
@@ -324,11 +340,15 @@ async function main() {
         'Bút chì kim bấm Pentel, ngòi 0.5mm, thân nhựa cao cấp, grip chống trơn.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lg34n1ob19tj8a.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lmwobkt7uy1rdc.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lmwobkt7wcm746.webp',
           is_main: false,
         },
       ],
@@ -343,15 +363,15 @@ async function main() {
         'Hộp 12 màu bút chì Faber-Castell, ruột chì mềm màu tươi sáng.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=800&q=80',
+          url: 'https://cdn1.fahasa.com/media/catalog/product/4/0/4005401158530.jpg',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=800&q=80',
+          url: 'https://cdn1.fahasa.com/media/catalog/product/4/0/4005401158530-_4_.jpg',
           is_main: false,
         },
         {
-          url: 'https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=800&q=80',
+          url: 'https://cdn1.fahasa.com/media/catalog/product/4/0/4005401158530-_6_.jpg',
           is_main: false,
         },
       ],
@@ -368,11 +388,11 @@ async function main() {
         'Bút highlight Stabilo màu vàng, mực huỳnh quang, không lem không nhòe.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1583452690553-97f7b38ba0c0?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/5a52ad28e79ab63d9baeb607a26c18f9.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/69346c5067d71dbd96af1e611090c68b.webp',
           is_main: false,
         },
       ],
@@ -387,15 +407,15 @@ async function main() {
         'Set 6 màu Stabilo Boss: vàng, xanh lá, hồng, cam, xanh dương, tím.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&q=80',
+          url: 'https://bizweb.dktcdn.net/thumb/grande/100/364/545/products/hl70-c6.jpg',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1583452690553-97f7b38ba0c0?w=800&q=80',
+          url: 'https://bizweb.dktcdn.net/100/364/545/products/hl70-1-20afa724-7245-4030-84d2-0c7f80f2ade9.jpg?v=1704860050003',
           is_main: false,
         },
         {
-          url: 'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=800&q=80',
+          url: 'https://bizweb.dktcdn.net/100/364/545/products/hl703016bee5ecb5c420cb9729f533-3d67ea50-a851-4b88-b5fb-1d0ed4115334-4d5f8daf-cb4c-4a81-b54b-eb0027666eca.jpg?v=1704860050003',
           is_main: false,
         },
       ],
@@ -412,8 +432,16 @@ async function main() {
         'Bút lông viết bảng trắng Artline, mực dễ xóa, ngòi đầu tròn 3mm.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1577375729152-4c8b5fcda381?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-mb52t301uva0cd.webp',
           is_main: true,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-mb52t30bugns33.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-mb52t30buggn2d.webp',
+          is_main: false,
         },
       ],
     },
@@ -426,11 +454,11 @@ async function main() {
       description: 'Set 4 bút lông bảng Artline 577: đen, xanh, đỏ, xanh lá.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1577375729152-4c8b5fcda381?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lze5u2kr0ty980.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1583452690553-97f7b38ba0c0?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lze5xsf75m7586.webp',
           is_main: false,
         },
       ],
@@ -447,11 +475,19 @@ async function main() {
         'Vở học sinh Hồng Hà 200 trang, giấy trắng kẻ ngang, bìa cứng chống thấm.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-81ztc-mlbqis6tj7603f.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-81ztc-ml76rfkiv5kybe.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mesa755szc3kb0.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mesaew8fxmo504.webp',
           is_main: false,
         },
       ],
@@ -466,8 +502,20 @@ async function main() {
         'Vở ô ly Hồng Hà 100 trang, dành cho học sinh tiểu học, giấy trắng mịn.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=800&q=80',
+          url: 'https://bizweb.dktcdn.net/thumb/1024x1024/100/334/874/products/vo-4-ly-ngang-hong-ha-0751-4.jpg?v=1741319909060',
           is_main: true,
+        },
+        {
+          url: 'https://bizweb.dktcdn.net/100/334/874/products/tap-4-ly-ngang-100-hong-ha-dinh-luong-58gsm-0751-3.jpg?v=1741319909060',
+          is_main: false,
+        },
+        {
+          url: 'https://bizweb.dktcdn.net/100/334/874/products/tap-4-ly-ngang-100-hong-ha-dinh-luong-58gsm-0751-5.jpg?v=1741319909060',
+          is_main: false,
+        },
+        {
+          url: 'https://bizweb.dktcdn.net/100/334/874/products/tap-4-ly-ngang-100-hong-ha-dinh-luong-58gsm-0751-6.jpg?v=1741319909060',
+          is_main: false,
         },
       ],
     },
@@ -483,15 +531,15 @@ async function main() {
         'Sổ tay A5 120 trang, bìa cứng chống thấm, giấy dày 80gsm không thấm mực.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1589998059171-988d887df646?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mgrq1c0ykj6625.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1517842645767-c639042777db?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mgenh3mih2bs70.webp',
           is_main: false,
         },
         {
-          url: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mgenh3qjb6dl46.webp',
           is_main: false,
         },
       ],
@@ -506,11 +554,15 @@ async function main() {
         'Sổ kế hoạch 2026, layout ngày/tuần/tháng đầy đủ, bìa da PU cao cấp.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1517842645767-c639042777db?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mj50ossvw1s0a9.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1589998059171-988d887df646?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mgew5flliiobd7.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mfwdpofq39ccf3.webp',
           is_main: false,
         },
       ],
@@ -525,15 +577,19 @@ async function main() {
         'Sổ bullet journal A5 dotted 160 trang, giấy dày 120gsm, bìa cứng.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1506784365847-bbad939e9335?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-mas6no1t9pefd4.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1517842645767-c639042777db?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lxm9f7v3cqu3d8.webp',
           is_main: false,
         },
         {
-          url: 'https://images.unsplash.com/photo-1589998059171-988d887df646?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/4777489c0e0a2cef4a030235fbb69764.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/9bb1d057526033bfb7417a7271ecb5ad.webp',
           is_main: false,
         },
       ],
@@ -550,8 +606,20 @@ async function main() {
         'Giấy in Double A A4 định lượng 70gsm, 500 tờ/ream, độ trắng cao.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lkxub0nryhfv62.webp',
           is_main: true,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/3a250c6318ec8ae5c4c69c79b4adf9dc.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/9adafdd3a63ec3f38f140dd796fd1ba2.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/sg-11134253-824ho-mfr0gager6ku23.webp',
+          is_main: false,
         },
       ],
     },
@@ -565,11 +633,15 @@ async function main() {
         'Giấy in IK Yellow A4 định lượng 80gsm, 500 tờ/ream, độ trắng 96%.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/8bb66e4e861981771f45798d6e35b27e.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/f3ed6d15be6f2380fb5a7a6635d4917a.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/56afdc270059a53ff0365d4964c1d635.webp',
           is_main: false,
         },
       ],
@@ -585,11 +657,23 @@ async function main() {
       description: 'Bấm kim Deli dùng kim số 10, bấm được 20 tờ cùng lúc.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-m0jpb5t6sxd903.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lz5xqldxs97la5.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lz5xqlerr13h79.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lz5xql3y6v65aa.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lz5xql4s5nbh38.webp',
           is_main: false,
         },
       ],
@@ -604,8 +688,20 @@ async function main() {
         'Kéo inox Deli 21cm, lưỡi sắc bén không gỉ, cán nhựa nhám êm tay.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lmwkpt22hfbzb4.webp',
           is_main: true,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-ljcrsxyplp76ea.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-ljcrsxypkamqb3.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-ljcrsxypiw2a17.webp',
+          is_main: false,
         },
       ],
     },
@@ -619,8 +715,16 @@ async function main() {
         'Băng keo trong 3M Scotch 18mm x 33m, dính chắc, trong suốt.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-ltxmbjgdj5shb7.webp',
           is_main: true,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-ltxmbjg38c9rd1.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-ltxmbjgdhr8142.webp',
+          is_main: false,
         },
       ],
     },
@@ -633,11 +737,19 @@ async function main() {
       description: 'Hộp 1000 ghim bấm Deli số 10, thép không gỉ, không kẹt.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/sg-11134201-22120-u6ngxbow0flvce.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/sg-11134201-22120-h16mh8nw0flvb1.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/sg-11134201-22120-79ffrcow0flvaa.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/sg-11134201-22120-qkaitaow0flvb4.webp',
           is_main: false,
         },
       ],
@@ -654,11 +766,11 @@ async function main() {
         'Hộp mực in Canon 325 chính hãng, dùng cho Canon LBP6000/6030.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=800&q=80',
+          url: 'https://lh3.googleusercontent.com/Y5vv9fyO79raLm4peCxuM3McsWLGY-wCZTw9XZHJ_2IAz6EtM8dpXXY_h-OaOQIo9D8qlsXTo2IOan51E-k=rw',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800&q=80',
+          url: 'https://lh3.googleusercontent.com/uLChMZwkp7OxUp5BtK-wMkBmN6liPM-brDQKDVWQvk6dM8_mNn3xEFb7tUSn-TNAmDEwRIcDjxJzowLxQ4o=rw',
           is_main: false,
         },
       ],
@@ -673,11 +785,19 @@ async function main() {
         'Hộp mực HP 85A CE285A chính hãng, dùng cho HP LaserJet P1102.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mf0zvn8t4ufjbc.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-metjx6to80eefc.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-81ztc-mmn0mvpxw0lf82.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-81ztc-mmn0mvpxxf5v30.webp',
           is_main: false,
         },
       ],
@@ -694,15 +814,19 @@ async function main() {
         'Balo Herschel 20L, chất liệu canvas cao cấp, ngăn laptop 15 inch.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-820l4-miwilagh4gzp75.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-m7x79i6rp2f669.webp',
           is_main: false,
         },
         {
-          url: 'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-m7x78dezfsqs18.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/vn-11134207-7ra0g-m7x78dezczlwe1.webp',
           is_main: false,
         },
       ],
@@ -716,11 +840,19 @@ async function main() {
       description: 'Túi đựng bút canvas nhiều ngăn, sức chứa 20-30 bút.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/72a05dac88e0067d0fc2ac040ea78160.webp',
           is_main: true,
         },
         {
-          url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80',
+          url: 'https://down-vn.img.susercontent.com/file/f855cc98280ecf27da57c3949d3fbc86.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/0651ba7170bbecd8ef3c61e4c45cb797.webp',
+          is_main: false,
+        },
+        {
+          url: 'https://down-vn.img.susercontent.com/file/b0917dcf3918648cd5d044cb38c5c28a.webp',
           is_main: false,
         },
       ],
@@ -740,21 +872,19 @@ async function main() {
       create: productData,
     });
 
-    // Chỉ tạo images nếu chưa có (tránh duplicate khi seed lại)
-    const existingImages = await prisma.product_images.count({
+    // Xóa ảnh cũ và tạo ảnh mới để cập nhật theo dữ liệu seed mới nhất
+    await prisma.product_images.deleteMany({
       where: { product_id: product.id },
     });
 
-    if (existingImages === 0) {
-      await prisma.product_images.createMany({
-        data: images.map((img) => ({
-          product_id: product.id,
-          image_url: img.url,
-          is_main: img.is_main,
-        })),
-      });
-      imageCount += images.length;
-    }
+    await prisma.product_images.createMany({
+      data: images.map((img) => ({
+        product_id: product.id,
+        image_url: img.url,
+        is_main: img.is_main,
+      })),
+    });
+    imageCount += images.length;
 
     productCount++;
   }

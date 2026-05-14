@@ -15,7 +15,7 @@ import * as fs from 'fs/promises';
 
 @Injectable()
 export class ProductsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   private getSortOrder(sort?: ProductSort) {
     const selected = sort ?? 'newest';
@@ -56,6 +56,172 @@ export class ProductsService {
   private toDiskPathFromPublicUrl(imageUrl: string) {
     // Expect image_url like "/uploads/products/<file>"
     return join(process.cwd(), imageUrl.replace(/^\//, ''));
+  }
+
+  // Lấy danh sách sản phẩm nổi bật
+  async getFeaturedProducts(limit: number) {
+    const featuredReviews = await this.prisma.product_reviews.groupBy({
+      by: ['product_id'],
+      _avg: {
+        rating: true,
+      },
+      orderBy: {
+        _avg: {
+          rating: 'desc',
+        },
+      },
+      take: limit,
+    });
+
+    const productIds = featuredReviews.map((item) => item.product_id);
+
+    // Nếu không đủ limit sản phẩm, lấy thêm các sản phẩm Mới (NewArrivals)
+    if (productIds.length < limit) {
+      const remainingCount = limit - productIds.length;
+      const newestProducts = await this.prisma.products.findMany({
+        where: {
+          id: { notIn: productIds.length > 0 ? productIds : [-1] },
+          is_active: true,
+        },
+        orderBy: { created_at: 'desc' },
+        take: remainingCount,
+        select: { id: true },
+      });
+      productIds.push(...newestProducts.map((p) => p.id));
+    }
+
+    if (productIds.length === 0) {
+      return {
+        data: [],
+        meta: {
+          total: 0,
+          page: 1,
+          limit,
+          total_page: 0,
+        },
+      };
+    }
+
+    const dataUnsorted = await this.prisma.products.findMany({
+      where: {
+        id: { in: productIds },
+        is_active: true,
+      },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        slug: true,
+        description: true,
+        stock: true,
+        categories: {
+          select: { id: true, name: true },
+        },
+        product_images: {
+          where: { is_main: true },
+          select: { image_url: true },
+          take: 1,
+        },
+      },
+    });
+
+    const orderIndex = new Map(productIds.map((id, idx) => [id, idx]));
+    const data = dataUnsorted.sort(
+      (a, b) => (orderIndex.get(a.id) ?? 0) - (orderIndex.get(b.id) ?? 0),
+    );
+
+    return {
+      data,
+      meta: {
+        total: data.length,
+        page: 1,
+        limit,
+        total_page: 1,
+      },
+    };
+  }
+
+  // Lấy danh sách sản phẩm bán chạy nhất
+  async getBestSellers(limit: number) {
+    const bestSellers = await this.prisma.order_items.groupBy({
+      by: ['product_id'],
+      _sum: {
+        quantity: true,
+      },
+      orderBy: {
+        _sum: {
+          quantity: 'desc',
+        },
+      },
+      take: limit,
+    });
+
+    const productIds = bestSellers.map((item) => item.product_id);
+
+    // Nếu không đủ 18 (hoặc limit) sản phẩm, lấy thêm các sản phẩm Mới (NewArrivals)
+    if (productIds.length < limit) {
+      const remainingCount = limit - productIds.length;
+      const newestProducts = await this.prisma.products.findMany({
+        where: {
+          id: { notIn: productIds.length > 0 ? productIds : [-1] },
+          is_active: true,
+        },
+        orderBy: { created_at: 'desc' },
+        take: remainingCount,
+        select: { id: true },
+      });
+      productIds.push(...newestProducts.map((p) => p.id));
+    }
+
+    if (productIds.length === 0) {
+      return {
+        data: [],
+        meta: {
+          total: 0,
+          page: 1,
+          limit,
+          total_page: 0,
+        },
+      };
+    }
+
+    const dataUnsorted = await this.prisma.products.findMany({
+      where: {
+        id: { in: productIds },
+        is_active: true,
+      },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        slug: true,
+        description: true,
+        stock: true,
+        categories: {
+          select: { id: true, name: true },
+        },
+        product_images: {
+          where: { is_main: true },
+          select: { image_url: true },
+          take: 1,
+        },
+      },
+    });
+
+    const orderIndex = new Map(productIds.map((id, idx) => [id, idx]));
+    const data = dataUnsorted.sort(
+      (a, b) => (orderIndex.get(a.id) ?? 0) - (orderIndex.get(b.id) ?? 0),
+    );
+
+    return {
+      data,
+      meta: {
+        total: data.length,
+        page: 1,
+        limit,
+        total_page: 1,
+      },
+    };
   }
 
   // Search sản phẩm

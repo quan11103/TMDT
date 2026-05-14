@@ -48,7 +48,7 @@ const OrderSummary: React.FC<Props> = ({
 
     const handleConfirmOrder = async () => {
         // 1. Kiểm tra validation địa chỉ
-        if (!email || !fullName || !phone || !province || !district || !ward || !street) {
+        if (!email || !fullName || !phone || !province || !ward || !street) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Thông tin chưa đầy đủ',

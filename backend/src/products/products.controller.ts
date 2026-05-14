@@ -27,13 +27,25 @@ import { mkdirSync } from 'fs';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) { }
 
   //---PUBLIC ROUTES-------------------------
 
   @Get()
   findAll(@Query() query: QueryProductDto) {
     return this.productsService.findAll(query);
+  }
+
+  @Get('bestsellers')
+  getBestSellers(@Query('limit') limitStr?: string) {
+    const limit = parseInt(limitStr) || 18;
+    return this.productsService.getBestSellers(limit);
+  }
+
+  @Get('featured')
+  getFeatured(@Query('limit') limitStr?: string) {
+    const limit = parseInt(limitStr) || 18;
+    return this.productsService.getFeaturedProducts(limit);
   }
 
   @Get(':id')

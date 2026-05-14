@@ -17,6 +17,8 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import PaymentResultPage from './pages/PaymentResultPage';
 import ProfilePage from './pages/ProfilePage';
 import ChatWidget from './components/common/ChatWidget';
+import NewArrivalsPage from './pages/NewArrivalsPage';
+import BestSellerPage from './pages/BestSellerPage';
 
 function App() {
 
@@ -71,6 +73,8 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/forgot-password/" element={<ForgotPasswordPage />} />
         <Route path="/search/" element={<SearchPage />} />
+        <Route path="/new-arrivals/" element={<NewArrivalsPage />} />
+        <Route path="/bestseller/" element={<BestSellerPage />} />
         <Route path="/product/:productId" element={<ProductDetailPage />} />
         <Route path="/category/:categoryId" element={<CategoryPage />} />
         <Route path="/cart/" element={<CartPage />} />
