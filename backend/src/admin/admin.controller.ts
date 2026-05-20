@@ -14,4 +14,10 @@ export class AdminController {
   getAllOrders() {
     return this.adminService.getAllOrders();
   }
+
+  @Get('dashboard')
+  @Permissions('order.read')
+  getDashboardStats() {
+    return this.adminService.getDashboardStats();
+  }
 }

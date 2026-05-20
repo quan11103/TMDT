@@ -10,10 +10,16 @@ interface Props {
 }
 
 const ItemDetail: React.FC<Props> = ({ item, onChangeQuantity, onRemoveItem }) => {
-    const { name, price, stock } = item.products;
+    const { name, price, stock, sale_price, discount_percent } = item.products as any;
     const { quantity } = item;
 
     const productUrl = `/product/${item.products.id}`;
+
+    const hasSale = typeof discount_percent === 'number' && discount_percent > 0;
+    const displayPrice = hasSale ? sale_price! : price;
+
+    const formattedPrice = displayPrice.toLocaleString();
+    const formattedOriginalPrice = price.toLocaleString();
 
     return (
         <div className="item-detail-container">
@@ -47,15 +53,30 @@ const ItemDetail: React.FC<Props> = ({ item, onChangeQuantity, onRemoveItem }) =
                 </div>
 
                 <div className="item-unit-price">
-                    <p className="cart-price-wrapper">
-                        <span className="price-num">{price.toLocaleString()}</span>
-                        <span className="price-unit"> VND</span>
+                    <p className="cart-price-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        {hasSale ? (
+                            <>
+                                <span className="price-original" style={{ textDecoration: 'line-through', color: '#999', fontSize: '13px' }}>
+                                    {formattedOriginalPrice}
+                                </span>
+                                <span className="price-num" style={{ fontWeight: 'bold' }}>{formattedPrice}</span>
+                                <span className="price-unit" style={{ fontSize: '12px' }}> VND</span>
+                                <span className="discount-tag" style={{ fontWeight: 'bold', fontSize: '15px' }}>
+                                    (-{discount_percent}%)
+                                </span>
+                            </>
+                        ) : (
+                            <>
+                                <span className="price-num">{formattedPrice}</span>
+                                <span className="price-unit"> VND</span>
+                            </>
+                        )}
                     </p>
                 </div>
 
                 <div className="item-quantity-section">
                     <CartItemQuantity
-                        price={price}
+                        price={displayPrice}
                         quantity={quantity}
                         stock={stock}
                         onChangeQuantity={onChangeQuantity}

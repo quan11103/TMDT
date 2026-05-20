@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards, Headers } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { CreatePaymentDto } from './dto/create-payment-dto';
 import { PaymentService } from './payment.service';
@@ -10,8 +10,12 @@ export class PaymentController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  createPayment(@CurrentUser() user, @Body() dto: CreatePaymentDto) {
-    return this.paymentService.createPayment(user.id as number, dto);
+  createPayment(
+    @CurrentUser() user,
+    @Body() dto: CreatePaymentDto,
+    @Headers('origin') origin?: string,
+  ) {
+    return this.paymentService.createPayment(user.id as number, dto, origin);
   }
 
   @Get('vnpay/callback')

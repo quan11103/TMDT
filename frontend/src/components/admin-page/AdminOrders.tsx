@@ -155,7 +155,7 @@ const AdminOrders: React.FC = () => {
     };
 
     return (
-        <div className="admin-section">
+        <div className="admin-order-section">
             <div className="section-header admin-orders-header">
                 <div>
                     <h2 className="section-title mb-24">Quản lý đơn hàng</h2>
@@ -172,17 +172,27 @@ const AdminOrders: React.FC = () => {
                 <div className="loading-state">Đang tải dữ liệu đơn hàng...</div>
             ) : (
                 <div className="admin-orders-table-wrap">
-                    <table className="muji-table">
+                    <table className="muji-table admin-orders-table">
+                        <colgroup>
+                            <col className="col-w-id" />
+                            <col className="col-w-date" />
+                            <col className="col-w-customer" />
+                            <col className="col-w-phone" />
+                            <col className="col-w-payment" />
+                            <col className="col-w-total" />
+                            <col className="col-w-status" />
+                            <col className="col-w-actions" />
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th>Mã</th>
                                 <th>Ngày</th>
                                 <th>Khách</th>
                                 <th>SĐT</th>
-                                <th>Thanh toán</th>
+                                <th className="col-payment">Thanh toán</th>
                                 <th>Tổng</th>
                                 <th>Trạng thái</th>
-                                <th>Thao tác</th>
+                                <th className="col-actions">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -205,12 +215,12 @@ const AdminOrders: React.FC = () => {
                                             <td className="text-small muted">
                                                 {o.created_at
                                                     ? new Date(o.created_at).toLocaleString('vi-VN', {
-                                                          day: '2-digit',
-                                                          month: '2-digit',
-                                                          year: 'numeric',
-                                                          hour: '2-digit',
-                                                          minute: '2-digit',
-                                                      })
+                                                        day: '2-digit',
+                                                        month: '2-digit',
+                                                        year: 'numeric',
+                                                        hour: '2-digit',
+                                                        minute: '2-digit',
+                                                    })
                                                     : '—'}
                                             </td>
                                             <td className="customer">
@@ -218,7 +228,7 @@ const AdminOrders: React.FC = () => {
                                                 <div className="text-small muted">{o.users?.email || ''}</div>
                                             </td>
                                             <td className="text-small">{o.phone || '—'}</td>
-                                            <td>
+                                            <td className="col-payment">
                                                 <span className={`method-tag ${pay.tagClass}`}>{pay.label}</span>
                                             </td>
                                             <td className="price-cell">
@@ -237,7 +247,7 @@ const AdminOrders: React.FC = () => {
                                                     {statusInfo.label}
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td className="col-actions">
                                                 <div className="order-actions-cell">
                                                     <button
                                                         type="button"

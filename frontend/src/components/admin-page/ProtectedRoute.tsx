@@ -16,7 +16,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
     // 1. Nếu chưa đăng nhập: Chuyển hướng về trang Login
     if (!token) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
+        return <Navigate to="/login/" state={{ from: location }} replace />;
     }
 
     // 2. Nếu đã đăng nhập nhưng KHÔNG phải Admin

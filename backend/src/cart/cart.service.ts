@@ -7,10 +7,14 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AddToCartDto } from './dto/add-to-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
+import { ProductsService } from '../products/products.service';
 
 @Injectable()
 export class CartService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private productsService: ProductsService,
+  ) {}
 
   async addToCart(userId: number, dto: AddToCartDto) {
     const product = await this.prisma.products.findUnique({
@@ -71,6 +75,7 @@ export class CartService {
             name: true,
             price: true,
             stock: true,
+            category_id: true,
             product_images: {
               where: { is_main: true },
               select: { image_url: true },
@@ -81,14 +86,27 @@ export class CartService {
       },
     });
 
-    const totalAmount = items.reduce((sum, item) => {
-      return sum + Number(item.products.price) * item.quantity;
+    // Apply sales to products
+    const productsWithSale = await this.productsService.applySalesToProducts(
+      items.map((item) => item.products),
+    );
+
+    // Map products back into items and compute totalAmount
+    const itemsWithSale = items.map((item, index) => {
+      return {
+        ...item,
+        products: productsWithSale[index],
+      };
+    });
+
+    const totalAmount = itemsWithSale.reduce((sum, item) => {
+      return sum + Number(item.products.sale_price) * item.quantity;
     }, 0);
 
     return {
-      items,
+      items: itemsWithSale,
       totalAmount,
-      totalItems: items.length,
+      totalItems: itemsWithSale.length,
     };
   }
 

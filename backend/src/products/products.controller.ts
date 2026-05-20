@@ -114,6 +114,16 @@ export class ProductsController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions('product.update')
+  @Post(':id/image-urls')
+  addImageUrls(
+    @Param('id') id: string,
+    @Body() body: { urls: string[] },
+  ) {
+    return this.productsService.addImageUrls(+id, body.urls);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permissions('product.delete')
   @Delete(':id')
   delete(@Param('id') id: string) {

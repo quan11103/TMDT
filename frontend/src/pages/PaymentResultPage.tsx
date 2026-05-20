@@ -92,7 +92,7 @@ const PaymentResultPage: React.FC = () => {
 
                 <div className="result-actions">
                     {isSuccess ? (
-                        <button className="btn-secondary" onClick={() => navigate('/order-status')}>
+                        <button className="btn-secondary" onClick={() => navigate('/order-status/')}>
                             Xem đơn hàng
                         </button>
                     ) : (

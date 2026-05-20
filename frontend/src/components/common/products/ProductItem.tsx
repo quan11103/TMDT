@@ -55,8 +55,12 @@ const ProductItem: React.FC<Props> = ({ Id }) => {
     const rawImg = mainImage?.image_url;
     const image_url = rawImg ? mediaUrl(rawImg) : 'https://via.placeholder.com/300';
 
-    const { name, price } = product;
-    const formattedPrice = new Intl.NumberFormat('vi-VN').format(price);
+    const { name, price, sale_price, discount_percent } = product;
+    const hasSale = typeof discount_percent === 'number' && discount_percent > 0;
+    const displayPrice = hasSale ? sale_price! : price;
+
+    const formattedPrice = new Intl.NumberFormat('vi-VN').format(displayPrice);
+    const formattedOriginalPrice = new Intl.NumberFormat('vi-VN').format(price);
 
     const handleProductClick = () => {
         navigate(`/product/${product.id}`);
@@ -124,17 +128,48 @@ const ProductItem: React.FC<Props> = ({ Id }) => {
             <div className="product-info-container" >
                 {/* Tên sản phẩm */}
                 <p className="product-name" onClick={handleProductClick}>
-                    <a title={name}>
+                    <a title={name} style={{ margin: '0 0 4px 0' }}>
                         {name}
                     </a>
                 </p>
 
+                {/* Dòng ưu đãi (luôn render nhưng ẩn nếu không có sale để giữ layout thẳng hàng) */}
+                <div
+                    className="product-sale-badge"
+                    style={{
+                        color: '#999',
+                        fontSize: '13px',
+                        fontWeight: 'normal',
+                        lineHeight: '16px',
+                        height: '16px',
+                        marginBottom: '4px',
+                        textAlign: 'center',
+                        visibility: hasSale ? 'visible' : 'hidden'
+                    }}
+                >
+                    Ưu đãi <span style={{ color: '#7f0019', fontWeight: 'bold' }}>{discount_percent}%</span>
+                </div>
+
                 {/* Giá */}
-                <div className="product-price-wishlist">
-                    <div className="product-price">
-                        <span className="amount">{formattedPrice}</span>
-                        <span className="currency">{currency}</span>
-                    </div>
+                <div className="product-price-wishlist" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', minHeight: '24px', marginBottom: '12px' }}>
+                    {hasSale ? (
+                        <>
+                            {/* Giá gốc đứng trước, không có VND, có gạch ngang */}
+                            <span className="product-original-price" style={{ textDecoration: 'line-through', color: '#999', fontSize: '13px' }}>
+                                {formattedOriginalPrice}
+                            </span>
+                            {/* Giá ưu đãi đứng sau, có VND */}
+                            <div className="product-price" style={{ display: 'inline-flex', alignItems: 'baseline', color: '#7f0019' }}>
+                                <span className="amount" style={{ fontSize: '15px', fontWeight: '700' }}>{formattedPrice}</span>
+                                <span className="currency" style={{ fontSize: '11px', fontWeight: '400', marginLeft: '4px' }}>{currency}</span>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="product-price">
+                            <span className="amount">{formattedPrice}</span>
+                            <span className="currency">{currency}</span>
+                        </div>
+                    )}
                 </div>
 
                 {/* Nút Mua Hàng */}

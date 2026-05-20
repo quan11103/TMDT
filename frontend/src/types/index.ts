@@ -9,6 +9,8 @@ export interface Product {
     is_active: boolean;
     created_at: string;
     updated_at: string;
+    sale_price?: number;
+    discount_percent?: number;
 }
 
 export interface ProductImage {
@@ -31,6 +33,8 @@ export interface ProductDetail {
         name: string;
         slug: string;
     };
+    sale_price?: number;
+    discount_percent?: number;
 }
 
 export interface CartItem {

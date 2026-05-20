@@ -22,7 +22,11 @@ export class PaymentService {
    * URL VNPay chuyển hướng trình duyệt sau khi khách thanh toán — phải là trang FE
    * (ví dụ http://localhost:5173/payment-result/) để có UI và gọi lại API xác thực.
    */
-  private resolveVnpayReturnUrl(): string {
+  private resolveVnpayReturnUrl(origin?: string): string {
+    if (origin) {
+      const base = origin.replace(/\/+$/, '');
+      return `${base}/payment-result/`;
+    }
     const configured = this.config.get<string>('VNPAY_RETURN_URL')?.trim();
     if (configured) {
       return configured;
@@ -36,7 +40,7 @@ export class PaymentService {
     return `${base}/payment-result/`;
   }
 
-  async createPayment(userId: number, dto: CreatePaymentDto) {
+  async createPayment(userId: number, dto: CreatePaymentDto, origin?: string) {
     const order = await this.prisma.orders.findFirst({
       where: { user_id: userId, id: dto.order_id },
       select: { id: true, user_id: true, status: true, total_amount: true },
@@ -58,7 +62,7 @@ export class PaymentService {
         return this.createCodPayment(order.id);
 
       case payment_method.VNPAY:
-        return this.createVnPayPayment(order);
+        return this.createVnPayPayment(order, origin);
 
       // case payment_method.MOMO:
       //   return this.createMomoPayment(order);
@@ -105,7 +109,10 @@ export class PaymentService {
     });
   }
 
-  private async createVnPayPayment(order: { id: number; total_amount: any }) {
+  private async createVnPayPayment(
+    order: { id: number; total_amount: any },
+    origin?: string,
+  ) {
     const payment = await this.prisma.payments.create({
       data: {
         order_id: order.id,
@@ -119,7 +126,7 @@ export class PaymentService {
     const tmnCode = this.config.getOrThrow('VNPAY_TMN_CODE');
     const hashSecret = this.config.getOrThrow('VNPAY_HASH_SECRET');
     const baseUrl = this.config.getOrThrow('VNPAY_PAYMENT_URL');
-    const returnUrl = this.resolveVnpayReturnUrl();
+    const returnUrl = this.resolveVnpayReturnUrl(origin);
 
     const amountVnd = Math.round(Number(order.total_amount));
     const vnpAmount = String(amountVnd * 100);

@@ -37,7 +37,12 @@ const OrderSummary: React.FC<Props> = ({
     const { email, fullName, phone, province, district, ward, street } = shippingInfo;
     const itemCount = items.reduce((acc, it) => acc + (it.quantity || 0), 0);
     const computedSubtotal = items.reduce(
-        (acc, item) => acc + Number(item.products.price) * item.quantity,
+        (acc, item) => {
+            const prod = item.products as any;
+            const hasSale = typeof prod.discount_percent === 'number' && prod.discount_percent > 0;
+            const displayPrice = hasSale ? prod.sale_price! : Number(prod.price);
+            return acc + displayPrice * item.quantity;
+        },
         0
     );
     const subtotal = preview ? preview.subtotal : computedSubtotal;
@@ -173,8 +178,32 @@ const OrderSummary: React.FC<Props> = ({
                             <div className="os-meta">
                                 <span className="muted">Số lượng:</span> {it.quantity}
                             </div>
-                            <div className="os-price">
-                                {fmt(it.products.price)} <span className="vnd">VND</span>
+                            <div className="os-price" style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                {(() => {
+                                    const prod = it.products as any;
+                                    const hasSale = typeof prod.discount_percent === 'number' && prod.discount_percent > 0;
+                                    if (hasSale) {
+                                        return (
+                                            <>
+                                                <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '12px' }}>
+                                                    {fmt(Number(prod.price))}
+                                                </span>
+                                                <span style={{ fontWeight: 'bold' }}>
+                                                    {fmt(prod.sale_price)}
+                                                </span>
+                                                <span className="vnd">VND</span>
+                                                <span style={{ fontWeight: 'bold', fontSize: '14px' }}>
+                                                    (-{prod.discount_percent}%)
+                                                </span>
+                                            </>
+                                        );
+                                    }
+                                    return (
+                                        <>
+                                            {fmt(Number(prod.price))} <span className="vnd">VND</span>
+                                        </>
+                                    );
+                                })()}
                             </div>
                         </div>
                     </div>

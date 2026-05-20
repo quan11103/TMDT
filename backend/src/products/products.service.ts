@@ -58,6 +58,66 @@ export class ProductsService {
     return join(process.cwd(), imageUrl.replace(/^\//, ''));
   }
 
+  async applySalesToProducts(products: any[]) {
+    if (!products.length) return products;
+    
+    const now = new Date();
+    const activeSales = await this.prisma.sales.findMany({
+      where: {
+        status: true,
+        start_date: { lte: now },
+        end_date: { gte: now },
+      },
+      orderBy: { discount_percent: 'desc' },
+    });
+
+    const categories = await this.prisma.categories.findMany({
+      select: { id: true, parent_id: true },
+    });
+    const parentMap = new Map<number, number | null>();
+    for (const c of categories) {
+      parentMap.set(c.id, c.parent_id);
+    }
+
+    const getAncestors = (catId: number): number[] => {
+      const ancestors: number[] = [catId];
+      let current = parentMap.get(catId);
+      let depth = 0;
+      while (current && depth < 20) {
+        ancestors.push(current);
+        current = parentMap.get(current);
+        depth++;
+      }
+      return ancestors;
+    };
+
+    return products.map(productInfo => {
+      let applicableSale = activeSales.find((s) => s.apply_type === 'PRODUCT' && s.target_id === productInfo.id);
+      const catId = productInfo.category_id || productInfo.categories?.id;
+      if (!applicableSale && catId) {
+        const ancestors = getAncestors(catId);
+        applicableSale = activeSales.find((s) => s.apply_type === 'CATEGORY' && ancestors.includes(s.target_id));
+      }
+      if (!applicableSale) {
+        applicableSale = activeSales.find((s) => s.apply_type === 'ALL');
+      }
+
+      let discount_percent = 0;
+      let sale_price = Number(productInfo.price);
+
+      if (applicableSale) {
+        discount_percent = applicableSale.discount_percent;
+        sale_price = Number(productInfo.price) * (1 - discount_percent / 100);
+      }
+
+      return {
+        ...productInfo,
+        discount_percent,
+        sale_price,
+      };
+    });
+  }
+
   // Lấy danh sách sản phẩm nổi bật
   async getFeaturedProducts(limit: number) {
     const featuredReviews = await this.prisma.product_reviews.groupBy({
@@ -131,7 +191,7 @@ export class ProductsService {
     );
 
     return {
-      data,
+      data: await this.applySalesToProducts(data),
       meta: {
         total: data.length,
         page: 1,
@@ -214,7 +274,7 @@ export class ProductsService {
     );
 
     return {
-      data,
+      data: await this.applySalesToProducts(data),
       meta: {
         total: data.length,
         page: 1,
@@ -304,7 +364,7 @@ export class ProductsService {
       ]);
 
       return {
-        data,
+        data: await this.applySalesToProducts(data),
         meta: {
           total,
           page,
@@ -383,7 +443,7 @@ export class ProductsService {
     );
 
     return {
-      data,
+      data: await this.applySalesToProducts(data),
       meta: {
         total,
         page,
@@ -415,7 +475,8 @@ export class ProductsService {
     if (!productInfo || !productInfo.is_active)
       throw new NotFoundException(`Không tìm thấy sản phẩm ${id}`);
 
-    return productInfo;
+    const [productWithSale] = await this.applySalesToProducts([productInfo]);
+    return productWithSale;
   }
 
   // CREATE: Admin tạo sản phẩm
@@ -604,5 +665,38 @@ export class ProductsService {
     return {
       message: 'Đã xóa ảnh',
     };
+  }
+
+  async addImageUrls(productId: number, urls: string[]) {
+    const product = await this.prisma.products.findUnique({
+      where: { id: productId },
+      select: { id: true, is_active: true },
+    });
+    if (!product || !product.is_active) {
+      throw new NotFoundException(`Không tìm thấy sản phẩm ${productId}`);
+    }
+
+    if (!urls || urls.length === 0) {
+      return [];
+    }
+
+    const existingMain = await this.prisma.product_images.findFirst({
+      where: { product_id: productId, is_main: true },
+      select: { id: true },
+    });
+
+    await this.prisma.product_images.createMany({
+      data: urls.map((url, idx) => ({
+        product_id: productId,
+        image_url: url,
+        is_main: idx === 0 && !existingMain,
+      })),
+    });
+
+    return this.prisma.product_images.findMany({
+      where: { product_id: productId },
+      select: { id: true, image_url: true, is_main: true, created_at: true },
+      orderBy: { is_main: 'desc' },
+    });
   }
 }

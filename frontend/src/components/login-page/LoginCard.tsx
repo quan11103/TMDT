@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import "./LoginCard.css";
 import LoginFooter from "./LoginFooter";
@@ -13,6 +13,7 @@ const LoginCard: React.FC = () => {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     const togglePassword = () => {
         setShowPassword(!showPassword);
@@ -39,11 +40,18 @@ const LoginCard: React.FC = () => {
                 localStorage.setItem("user", JSON.stringify(user));
             }
 
-            // 3. Chuyển hướng về trang chủ
-            navigate("/");
-
-            // 4. Reload nhẹ trang để Header nhận state mới (hoặc dùng Context)
-            window.location.reload();
+            // 3. Chuyển hướng về trang trước đó (ví dụ /admin) nếu có, ngược lại về trang chủ
+            // Dùng window.location.href để vừa điều hướng vừa reload trang một cách đồng bộ và chắc chắn
+            const from = (location.state as any)?.from;
+            let targetPath = "/";
+            if (from) {
+                if (typeof from === "string") {
+                    targetPath = from;
+                } else if (from.pathname) {
+                    targetPath = `${from.pathname}${from.search || ""}${from.hash || ""}`;
+                }
+            }
+            window.location.href = targetPath;
 
         } catch (err: any) {
             const message = err.response?.data?.message || "Đã có lỗi xảy ra. Vui lòng thử lại.";

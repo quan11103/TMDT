@@ -1,20 +1,76 @@
 .dashboard-container {
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 24px;
 }
 
-.stat-grid {
+.dashboard-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.dashboard-loading {
+    color: #666;
+    margin: 0;
+}
+
+.dashboard-error {
+    color: #b91c1c;
+    margin: 0;
+    padding: 12px 16px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.dashboard-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 24px;
+    gap: 20px;
+}
+
+.dashboard-row--panels {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.dashboard-row--stats {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.dashboard-row--tables {
+    grid-template-columns: 2fr 1fr;
+}
+
+@media (max-width: 1100px) {
+    .dashboard-row--panels {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-row--stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-row--tables {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-row--stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+.section-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
 }
 
 .stat-card {
     background-color: #ffffff;
     border: 1px solid #e5e5e5;
-    /* Viền mỏng thay vì đổ bóng */
-    padding: 24px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -27,7 +83,202 @@
 
 .stat-value {
     margin: 0;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     color: #000;
+    word-break: break-word;
+}
+
+.dashboard-panel {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.dashboard-panel--wide {
+    min-width: 0;
+}
+
+.revenue-chart {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 8px;
+    height: 160px;
+    padding-top: 8px;
+}
+
+.revenue-chart__col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    height: 100%;
+    min-width: 0;
+}
+
+.revenue-chart__bar {
+    width: 100%;
+    max-width: 40px;
+    background: #111;
+    border-radius: 2px 2px 0 0;
+    margin-top: auto;
+    transition: height 0.3s ease;
+}
+
+.revenue-chart__label {
+    font-size: 11px;
+    color: #666;
+}
+
+.revenue-chart__orders {
+    font-size: 10px;
+    color: #999;
+}
+
+.status-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.status-list__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+}
+
+.status-list__count {
+    font-weight: 600;
+}
+
+.status-list__meta {
+    font-size: 13px;
+    color: #555;
+    text-align: right;
+}
+
+.status-list__empty {
+    color: #888;
+    font-size: 14px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+.status-badge--pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge--confirmed {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-badge--shipping {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.status-badge--delivered {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge--cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.dashboard-table th,
+.dashboard-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.dashboard-table th {
+    font-weight: 600;
+    color: #555;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.table-empty {
+    text-align: center;
+    color: #888;
+    padding: 24px !important;
+}
+
+.top-products-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.top-products-list__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.top-products-list__rank {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #111;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 50%;
+}
+
+.top-products-list__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.top-products-list__name {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.top-products-list__meta {
+    font-size: 12px;
+    color: #666;
 }

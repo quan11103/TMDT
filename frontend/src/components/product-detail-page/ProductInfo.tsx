@@ -17,7 +17,10 @@ const ProductInfo: React.FC<Props> = ({ product, reviewSummary }) => {
     const [quantity, setQuantity] = useState<number | string>(1);
     const [isAdded, setIsAdded] = useState(false);
 
-    const formattedPrice = new Intl.NumberFormat('vi-VN').format(product.price);
+    const hasSale = typeof product.discount_percent === 'number' && product.discount_percent > 0;
+    const displayPrice = hasSale ? product.sale_price! : product.price;
+    const formattedPrice = new Intl.NumberFormat('vi-VN').format(displayPrice);
+    const formattedOriginalPrice = new Intl.NumberFormat('vi-VN').format(product.price);
     const mainGallerySrc = product.product_images[activeIndex]?.image_url;
 
     const reviewCount = reviewSummary?.count ?? 0;
@@ -92,24 +95,50 @@ const ProductInfo: React.FC<Props> = ({ product, reviewSummary }) => {
                     </div>
                 </div>
 
-                <div className="product-rating" aria-label="Điểm đánh giá">
-                    <div className="rating-stars" aria-hidden>
-                        {[1, 2, 3, 4, 5].map((n) => (
-                            <span key={n} className={n <= roundedStars ? 'star-on' : 'star-off'}>
-                                ★
-                            </span>
-                        ))}
+                {reviewCount > 0 ? (
+                    <div className="product-rating" aria-label="Điểm đánh giá">
+                        <div className="rating-stars" aria-hidden>
+                            {[1, 2, 3, 4, 5].map((n) => (
+                                <span key={n} className={n <= roundedStars ? 'star-on' : 'star-off'}>
+                                    ★
+                                </span>
+                            ))}
+                        </div>
+                        <strong className="review-score">
+                            {avgRating.toFixed(1)}
+                            <span className="score-max">/ 5</span>
+                        </strong>
+                        <div className="review-count">({reviewCount} đánh giá)</div>
                     </div>
-                    <strong className="review-score">
-                        {reviewCount > 0 ? avgRating.toFixed(1) : '—'}
-                        <span className="score-max">/ 5</span>
-                    </strong>
-                    <div className="review-count">({reviewCount} đánh giá)</div>
-                </div>
+                ) : (
+                    <div className="product-rating product-rating--empty">
+                        Chưa có đánh giá nào
+                    </div>
+                )}
 
-                <div className="product-price">
-                    <span className="price-value">{formattedPrice}</span>
-                    <span className="price-currency">VND</span>
+                <div className="product-price" style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
+                    {hasSale ? (
+                        <>
+                            {/* Giá gốc hiển thị trước: màu xám, gạch ngang, không có chữ VND */}
+                            <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '18px', fontWeight: 'normal' }}>
+                                {formattedOriginalPrice}
+                            </span>
+                            
+                            {/* Giá ưu đãi hiển thị sau: màu đỏ đậm, cỡ to, có chữ VND */}
+                            <span className="price-value" style={{ color: '#7f0019', fontSize: '28px', fontWeight: 'bold' }}>{formattedPrice}</span>
+                            <span className="price-currency" style={{ color: '#7f0019', fontSize: '15px', fontWeight: 'normal' }}>VND</span>
+                            
+                            {/* Phần trăm giảm: không bị gạch ngang, trong ngoặc */}
+                            <span style={{ color: '#7f0019', fontWeight: 'bold', fontSize: '18px', marginLeft: '5px' }}>
+                                (-{product.discount_percent}%)
+                            </span>
+                        </>
+                    ) : (
+                        <>
+                            <span className="price-value">{formattedPrice}</span>
+                            <span className="price-currency">VND</span>
+                        </>
+                    )}
                 </div>
 
                 {/* --- PHẦN MÔ TẢ ĐƯỢC CHUYỂN TỪ TABS SANG --- */}

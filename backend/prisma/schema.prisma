@@ -247,3 +247,22 @@ enum payment_method {
   VNPAY
   MOMO
 }
+
+model sales {
+  id               Int                 @id @default(autoincrement())
+  name             String              @db.VarChar(255)
+  discount_percent Int
+  start_date       DateTime            @db.Timestamp(6)
+  end_date         DateTime            @db.Timestamp(6)
+  status           Boolean             @default(true)
+  apply_type       sale_apply_type     @default(ALL)
+  target_id        Int?
+  created_at       DateTime            @default(now()) @db.Timestamp(6)
+  updated_at       DateTime            @updatedAt
+}
+
+enum sale_apply_type {
+  ALL
+  CATEGORY
+  PRODUCT
+}

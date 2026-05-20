@@ -108,10 +108,31 @@ textarea:focus {
     border: 1px solid #f5c6cb;
 }
 
+.file-input-container {
+    width: 100%;
+    height: 98px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    background-color: #fff;
+}
+
 .file-input-native {
-    padding: 8px 0;
-    border: none;
+    cursor: pointer;
     font-size: 14px;
+    display: inline-block !important;
+    width: auto !important;
+    max-width: 100%;
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 .field-hint {
@@ -134,21 +155,59 @@ textarea:focus {
     align-items: center;
     gap: 6px;
     cursor: pointer;
-    width: 100px;
+    width: 140px;
+    position: relative;
 }
 
-.image-preview-card input[type='radio'] {
+.image-preview-card .main-radio {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    background-color: #fff;
+    outline: none;
+    cursor: pointer;
     margin: 0;
-    accent-color: #7f0019;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+    transform: scale(1.1);
+}
+
+.image-preview-card .main-radio:checked {
+    border-color: #7f0019;
+    background-color: #fff;
+}
+
+.image-preview-card .main-radio:checked::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #7f0019;
+    display: block;
 }
 
 .image-preview-card img {
-    width: 100px;
-    height: 100px;
+    width: 140px;
+    height: 140px;
     object-fit: cover;
     border: 2px solid #e0e0e0;
     border-radius: 4px;
     display: block;
+}
+
+.image-preview-card input[type="radio"],
+.radio-container input[type="radio"] {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    margin: 4px 0 0;
+    transform: scale(0.9);
+    accent-color: #7f0019;
 }
 
 .image-preview-card:has(input:checked) img {
@@ -160,4 +219,160 @@ textarea:focus {
     font-size: 11px;
     color: #666;
     text-align: center;
+}
+
+.preview-label.main-image-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #7f0019;
+    margin-top: 4px;
+}
+
+/* Các styles bổ sung cho quản lý ảnh */
+.image-selection-group label.group-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.image-selection-group .field-hint-danger {
+    font-size: 12px;
+    color: #7f0019;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.image-preview-card.add-new {
+    justify-content: center;
+    border: 2px dashed #ccc;
+    background: #fafafa;
+    width: 140px;
+    height: 140px;
+}
+
+.image-preview-card.add-new span {
+    font-size: 20px;
+    color: #888;
+}
+
+.radio-container {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-delete-img {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+/* Modal Popup cho việc thêm ảnh */
+.image-upload-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.image-upload-modal {
+    background: #fff;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.image-upload-modal-head {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.image-upload-modal-head h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.image-upload-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    line-height: 1;
+}
+
+.image-upload-modal-close:hover {
+    color: #000;
+}
+
+.image-upload-modal-body {
+    padding: 20px;
+}
+
+.image-source-options {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.image-source-options label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.image-source-options input[type='radio'] {
+    accent-color: #7f0019;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.image-upload-modal-body textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.image-upload-modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }

@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PromotionsService } from 'src/promotions/promotions.service';
+import { ProductsService } from 'src/products/products.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import {
   OrderStatus,
@@ -71,6 +72,7 @@ export class OrderService {
   constructor(
     private prisma: PrismaService,
     private promotionsService: PromotionsService,
+    private productsService: ProductsService,
   ) {}
 
   private async loadAndValidateCartItemsForOrder(
@@ -102,7 +104,20 @@ export class OrderService {
         );
       }
     }
-    return cartItems as CartItemWithProduct[];
+
+    // Apply sales to products
+    const productsWithSale = await this.productsService.applySalesToProducts(
+      cartItems.map((item) => item.products),
+    );
+
+    const cartItemsWithSale = cartItems.map((item, index) => {
+      return {
+        ...item,
+        products: productsWithSale[index],
+      };
+    });
+
+    return cartItemsWithSale as CartItemWithProduct[];
   }
 
   private async computePricingFromCart(
@@ -110,7 +125,9 @@ export class OrderService {
     promotionCode?: string,
   ) {
     const lines = cartItems.map((item) => ({
-      unitPrice: Number(item.products.price),
+      unitPrice: typeof (item.products as any).sale_price === 'number'
+        ? (item.products as any).sale_price
+        : Number(item.products.price),
       quantity: item.quantity,
       product_id: item.products.id,
       category_id: item.products.category_id,
@@ -186,7 +203,9 @@ export class OrderService {
         data: cartItems.map((item) => ({
           order_id: order.id,
           product_id: item.products.id,
-          price_at_time: item.products.price,
+          price_at_time: typeof (item.products as any).sale_price === 'number'
+            ? (item.products as any).sale_price
+            : item.products.price,
           quantity: item.quantity,
         })),
       });

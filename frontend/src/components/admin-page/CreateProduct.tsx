@@ -54,6 +54,8 @@ const CreateProduct: React.FC = () => {
 
     const [imageFiles, setImageFiles] = useState<File[]>([]);
     const [mainImageIndex, setMainImageIndex] = useState(0);
+    const [imageSource, setImageSource] = useState<'file' | 'url'>('file');
+    const [imageUrls, setImageUrls] = useState<string>('');
 
     const previewUrls = useMemo(
         () => imageFiles.map((f) => URL.createObjectURL(f)),
@@ -120,6 +122,8 @@ const CreateProduct: React.FC = () => {
         setFormData({ name: '', slug: '', price: '', category_id: '', description: '', stock: '' });
         setImageFiles([]);
         setMainImageIndex(0);
+        setImageSource('file');
+        setImageUrls('');
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -171,7 +175,9 @@ const CreateProduct: React.FC = () => {
 
             const productId = result.id as number;
 
-            if (imageFiles.length > 0) {
+            let hasUploadedImages = false;
+
+            if (imageSource === 'file' && imageFiles.length > 0) {
                 const mainIdx = Math.min(mainImageIndex, imageFiles.length - 1);
                 const fd = new FormData();
                 imageFiles.forEach((f) => fd.append('files', f));
@@ -197,15 +203,45 @@ const CreateProduct: React.FC = () => {
                     setLoading(false);
                     return;
                 }
+                hasUploadedImages = true;
+            } else if (imageSource === 'url') {
+                const urls = imageUrls
+                    .split(/[\n,]+/)
+                    .map((u) => u.trim())
+                    .filter(Boolean);
+
+                if (urls.length > 0) {
+                    const imgRes = await fetch(`${API_BASE}/products/${productId}/image-urls`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ urls }),
+                    });
+                    const imgJson = await imgRes.json().catch(() => ({}));
+                    if (!imgRes.ok) {
+                        const msg = imgJson?.message || 'Không upload được link ảnh';
+                        await Swal.fire({
+                            icon: 'warning',
+                            title: 'Sản phẩm đã tạo',
+                            text: `${msg}. Bạn có thể thêm ảnh khi sửa sản phẩm (ID: ${productId}).`,
+                            confirmButtonColor: '#7f0019',
+                        });
+                        resetForm();
+                        setLoading(false);
+                        return;
+                    }
+                    hasUploadedImages = true;
+                }
             }
 
             await Swal.fire({
                 icon: 'success',
                 title: 'Thành công',
-                text:
-                    imageFiles.length > 0
-                        ? 'Sản phẩm và ảnh đã được lưu.'
-                        : 'Sản phẩm đã được thêm. Bạn có thể bổ sung ảnh khi sửa sản phẩm.',
+                text: hasUploadedImages
+                    ? 'Sản phẩm và ảnh đã được lưu.'
+                    : 'Sản phẩm đã được thêm. Bạn có thể bổ sung ảnh khi sửa sản phẩm.',
                 timer: 2200,
                 showConfirmButton: false,
             });
@@ -281,36 +317,92 @@ const CreateProduct: React.FC = () => {
                         value={formData.description}
                         onChange={handleChange}
                         rows={5}
-                        placeholder="Nhập mô tả sản phẩm..."
                     />
                 </div>
 
-                <div className="form-group">
-                    <label>Hình ảnh (tùy chọn, tối đa 20)</label>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        className="file-input-native"
-                        onChange={handleImagesChange}
-                    />
-                    <p className="field-hint">Chọn một hoặc nhiều ảnh. Đánh dấu ảnh chính hiển thị trên danh sách.</p>
+                <div className="form-group image-selection-group">
+                    <label style={{ fontWeight: 600, marginBottom: '8px', display: 'block' }}>Hình ảnh sản phẩm</label>
 
-                    {imageFiles.length > 0 && (
-                        <div className="image-previews">
-                            {imageFiles.map((_, idx) => (
-                                <label key={`${previewUrls[idx]}-${idx}`} className="image-preview-card">
-                                    <input
-                                        type="radio"
-                                        name="main_image"
-                                        checked={mainImageIndex === idx}
-                                        onChange={() => setMainImageIndex(idx)}
-                                    />
-                                    <img src={previewUrls[idx]} alt="" />
-                                    <span className="preview-label">{mainImageIndex === idx ? 'Ảnh chính' : `Ảnh ${idx + 1}`}</span>
-                                </label>
-                            ))}
-                        </div>
+                    {/* Radio buttons for selecting image source */}
+                    <div className="image-source-options" style={{ display: 'flex', gap: '20px', marginBottom: '12px' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '14px', whiteSpace: 'nowrap' }}>
+                            <input
+                                className='main-radio'
+                                type="radio"
+                                name="image_source"
+                                value="file"
+                                checked={imageSource === 'file'}
+                                onChange={() => setImageSource('file')}
+                            />
+                            Sử dụng ảnh trên thiết bị
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '14px', whiteSpace: 'nowrap' }}>
+                            <input
+                                type="radio"
+                                name="image_source"
+                                value="url"
+                                checked={imageSource === 'url'}
+                                onChange={() => setImageSource('url')}
+                            />
+                            Sử dụng link ảnh
+                        </label>
+                    </div>
+
+                    {imageSource === 'file' ? (
+                        <>
+                            <div className="file-input-container">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    multiple
+                                    className="file-input-native"
+                                    onChange={handleImagesChange}
+                                />
+                            </div>
+                            <p className="field-hint" style={{ fontSize: '14px', color: '#333', marginTop: '6px', fontWeight: '500' }}>
+                                Chọn một hoặc nhiều ảnh. Đánh dấu ảnh chính hiển thị trên danh sách.
+                            </p>
+
+                            {imageFiles.length > 0 && (
+                                <div className="image-previews" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '10px' }}>
+                                    {imageFiles.map((_, idx) => (
+                                        <label key={`${previewUrls[idx]}-${idx}`} className="image-preview-card">
+                                            <input
+                                                type="radio"
+                                                name="main_image"
+                                                checked={mainImageIndex === idx}
+                                                onChange={() => setMainImageIndex(idx)}
+                                            />
+                                            <img src={previewUrls[idx]} alt="" />
+                                            {mainImageIndex === idx ? (
+                                                <span className="preview-label main-image-label">Ảnh chính</span>
+                                            ) : null}
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <textarea
+                                value={imageUrls}
+                                onChange={(e) => setImageUrls(e.target.value)}
+                                rows={4}
+                                placeholder="Nhập các link ảnh, cách nhau bằng dấu phẩy hoặc dòng mới..."
+                                style={{
+                                    width: '100%',
+                                    padding: '10px',
+                                    border: '1px solid #ccc',
+                                    borderRadius: '4px',
+                                    fontSize: '14px',
+                                    fontFamily: 'inherit',
+                                    boxSizing: 'border-box'
+                                }}
+                            />
+                            <p className="field-hint" style={{ fontSize: '14px', color: 'rgb(51, 51, 51)', fontWeight: 600, marginTop: '6px' }}>
+                                Ảnh đầu tiên sẽ được chọn làm ảnh chính hiển thị trên danh sách.
+                            </p>
+                        </>
                     )}
                 </div>
 

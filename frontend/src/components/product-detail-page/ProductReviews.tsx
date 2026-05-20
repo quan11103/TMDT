@@ -34,7 +34,8 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
     const [loading, setLoading] = useState(true);
     const [listError, setListError] = useState('');
 
-    const [rating, setRating] = useState(5);
+    const [rating, setRating] = useState(0);
+    const [hoverRating, setHoverRating] = useState<number | null>(null);
     const [comment, setComment] = useState('');
     const [submitting, setSubmitting] = useState(false);
     const [formError, setFormError] = useState('');
@@ -61,7 +62,8 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
 
     useEffect(() => {
         setPage(1);
-        setRating(5);
+        setRating(0);
+        setHoverRating(null);
         setComment('');
         setFormError('');
         setFormSuccess('');
@@ -91,7 +93,11 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
         if (row) {
             setRating(row.rating);
             setComment(row.comment || '');
+        } else {
+            setRating(0);
+            setComment('');
         }
+        setHoverRating(null);
     }, [list, myId]);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -100,6 +106,10 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
         setFormSuccess('');
         if (!token) {
             navigate('/login/');
+            return;
+        }
+        if (rating < 1) {
+            setFormError('Vui lòng chọn số sao đánh giá.');
             return;
         }
         setSubmitting(true);
@@ -134,6 +144,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
     const starsForSummary = count > 0 ? Math.round(avg) : 0;
 
     const mine = myId != null ? list.find((r) => r.users?.id === myId) : undefined;
+    const activeStars = hoverRating ?? rating;
 
     return (
         <div className="product-reviews-container">
@@ -142,12 +153,14 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
                     Đánh giá <span className="count">({count})</span>
                 </h3>
 
-                <div className="summary-rating">
-                    {renderStars(starsForSummary)}
-                    <strong className="score-text">
-                        {displayAvg} <span className="max-score">/ 5</span>
-                    </strong>
-                </div>
+                {count > 0 && (
+                    <div className="summary-rating">
+                        {renderStars(starsForSummary)}
+                        <strong className="score-text">
+                            {displayAvg} <span className="max-score">/ 5</span>
+                        </strong>
+                    </div>
+                )}
             </div>
 
             <div className="review-compose">
@@ -163,14 +176,20 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
                         <p className="review-form-title">{mine ? 'Cập nhật đánh giá' : 'Viết đánh giá'}</p>
                         <div className="review-form-row">
                             <span className="review-form-label">Chọn sao</span>
-                            <div className="star-picker" role="group" aria-label="Điểm đánh giá">
+                            <div
+                                className="star-picker"
+                                role="group"
+                                aria-label="Điểm đánh giá"
+                                onMouseLeave={() => setHoverRating(null)}
+                            >
                                 {[1, 2, 3, 4, 5].map((n) => (
                                     <button
                                         key={n}
                                         type="button"
-                                        className={`star-pick ${n <= rating ? 'on' : ''}`}
+                                        className={`star-pick ${n <= activeStars ? 'on' : ''}`}
                                         onClick={() => setRating(n)}
-                                        aria-pressed={n <= rating}
+                                        onMouseEnter={() => setHoverRating(n)}
+                                        aria-pressed={rating > 0 && n <= rating}
                                     >
                                         ★
                                     </button>

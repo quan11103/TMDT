@@ -27,6 +27,12 @@
     gap: 10px;
 }
 
+.summary-rating--empty {
+    color: #999;
+    font-size: 14px;
+    font-style: italic;
+}
+
 .score-text {
     font-size: 18px;
     color: #333;
@@ -186,8 +192,7 @@
     transition: color 0.15s ease, transform 0.15s ease;
 }
 
-.star-pick.on,
-.star-pick:hover {
+.star-pick.on {
     color: #c4a574;
 }
 

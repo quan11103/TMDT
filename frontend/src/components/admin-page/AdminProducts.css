@@ -109,3 +109,21 @@
 .font-medium {
     font-weight: 500;
 }
+
+/* Actions in the section header */
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* Button style for CSV upload */
+.btn-upload-csv {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Hidden elements */
+.hidden-file-input {
+    display: none;
+}

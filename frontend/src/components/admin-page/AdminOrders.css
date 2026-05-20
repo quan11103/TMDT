@@ -29,8 +29,7 @@
 }
 
 /* Container & Header */
-.admin-section {
-    padding: 20px;
+.admin-order-section {
     background-color: #fff;
     border-radius: 8px;
 }
@@ -55,6 +54,37 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+}
+
+.admin-orders-table-wrap {
+    width: 100%;
+    max-width: 100%;
+}
+
+.admin-orders-table-wrap .admin-orders-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.admin-orders-table-wrap .col-w-id { width: 5%; }
+.admin-orders-table-wrap .col-w-date { width: 11%; }
+.admin-orders-table-wrap .col-w-customer { width: 17%; }
+.admin-orders-table-wrap .col-w-phone { width: 10%; }
+.admin-orders-table-wrap .col-w-payment { width: 12%; }
+.admin-orders-table-wrap .col-w-total { width: 11%; }
+.admin-orders-table-wrap .col-w-status { width: 12%; }
+.admin-orders-table-wrap .col-w-actions { width: 22%; }
+
+.admin-orders-table-wrap .muji-table th,
+.admin-orders-table-wrap .muji-table td {
+    padding: 12px 8px;
+}
+
+.admin-orders-table-wrap .muji-table td.customer .font-medium,
+.admin-orders-table-wrap .muji-table td.customer .text-small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .muji-table th {
@@ -115,13 +145,25 @@
     color: #c92a2a;
 }
 
+/* Payment & actions columns — single line, fit within table */
+.admin-orders-table-wrap .col-payment,
+.admin-orders-table-wrap .col-actions {
+    white-space: nowrap;
+}
+
 /* Payment Method Tags */
 .method-tag {
-    padding: 2px 8px;
+    display: inline-block;
+    max-width: 100%;
+    padding: 2px 6px;
     border-radius: 4px;
     font-size: 11px;
     font-weight: bold;
     border: 1px solid;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
 }
 
 .tag-cod {
@@ -192,9 +234,6 @@
     font-size: 14px;
 }
 
-.admin-orders-table-wrap {
-    overflow-x: auto;
-}
 
 .empty-cell {
     text-align: center;
@@ -204,9 +243,18 @@
 
 .order-actions-cell {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex-wrap: nowrap;
+    gap: 4px;
     align-items: center;
+    max-width: 100%;
+}
+
+.admin-orders-table-wrap .order-actions-cell .btn-action {
+    flex: 0 1 auto;
+    min-width: 0;
+    padding: 5px 8px;
+    font-size: 12px;
+    white-space: nowrap;
 }
 
 .btn-action.ship {
