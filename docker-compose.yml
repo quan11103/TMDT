@@ -8,7 +8,7 @@ services:
 
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 12345
+      POSTGRES_PASSWORD: abc123
       POSTGRES_DB: tmdt_db
 
     command: postgres -c shared_buffers=128MB -c max_connections=20

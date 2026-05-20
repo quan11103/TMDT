@@ -18,6 +18,7 @@ import { StoreSettingsModule } from './store-settings/store-settings.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { ChatbotModule } from './chatbot/chatbot.module';
 import { SalesModule } from './sales/sales.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { SalesModule } from './sales/sales.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    CommonModule,
     UsersModule,
     AuthModule,
     PrismaModule,
@@ -45,4 +47,4 @@ import { SalesModule } from './sales/sales.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

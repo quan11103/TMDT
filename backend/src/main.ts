@@ -1,12 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { HttpAdapterHost } from '@nestjs/core';
+import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const logger = new Logger('Bootstrap');
+  const httpAdapterHost = app.get(HttpAdapterHost);
+
+  // Global exception filter for error logging
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapterHost));
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -37,7 +44,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
 
-  await app.listen(process.env.PORT ?? 3000);
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port);
+  logger.log(`Application running on port ${port}`);
 }
 bootstrap().catch((error) => {
   console.error('Error starting the application:', error);
