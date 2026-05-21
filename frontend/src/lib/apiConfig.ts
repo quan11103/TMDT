@@ -1,7 +1,14 @@
 export const API_ORIGIN: string = (() => {
   const raw = (import.meta as any)?.env?.VITE_API_ORIGIN as string | undefined;
-  const origin = (raw ?? 'http://localhost:3000').trim();
-  return origin.endsWith('/') ? origin.slice(0, -1) : origin;
+  if (raw) {
+    const origin = raw.trim();
+    return origin.endsWith('/') ? origin.slice(0, -1) : origin;
+  }
+  // Nếu không có env, tự động lấy domain hiện tại của web (chạy trên trình duyệt)
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    return window.location.origin;
+  }
+  return 'http://localhost:3000';
 })();
 
 export const API_BASE = `${API_ORIGIN}/api`;
