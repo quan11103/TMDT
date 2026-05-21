@@ -54,6 +54,8 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+      # Giữ file upload (banner/sản phẩm) khi redeploy container
+      - backend_uploads:/app/uploads
 
     command: sh -c "npx prisma db push && npm run start"
 
@@ -113,6 +115,8 @@ services:
 volumes:
   postgres_data:
     name: tmdt_postgres_data
+  backend_uploads:
+    name: tmdt_backend_uploads
 
 networks:
   tmdt_network:
