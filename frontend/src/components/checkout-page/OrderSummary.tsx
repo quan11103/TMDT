@@ -1,6 +1,6 @@
 import React from "react";
 import type { CartItem, ShippingInfo } from "../../types";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import "./OrderSummary.css";
 import Swal from "sweetalert2";
 import { mediaUrl } from "../../lib/mediaUrl";
@@ -99,6 +99,7 @@ const OrderSummary: React.FC<Props> = ({
             const orderResult = await orderResponse.json();
 
             if (orderResponse.ok) {
+                localStorage.removeItem('checkout_items');
                 // BƯỚC B: Gọi API tạo Payment cho đơn hàng vừa tạo
                 // Giả sử bạn chọn mặc định là VNPAY, nếu có UI chọn method thì thay bằng biến
                 const paymentResponse = await fetch(`${API_BASE}/payment`, {
@@ -162,19 +163,23 @@ const OrderSummary: React.FC<Props> = ({
             <div className="os-list">
                 {items.map((it) => (
                     <div key={it.id} className="os-item">
-                        <div className="os-imgWrap">
-                            <img
-                                className="os-img"
-                                src={
-                                    it.products.product_images[0]?.image_url
-                                        ? mediaUrl(it.products.product_images[0].image_url)
-                                        : 'https://via.placeholder.com/80'
-                                }
-                                alt={it.products.name}
-                            />
-                        </div>
+                        <Link to={`/product/${it.products.id}`} className="os-imgLink">
+                            <div className="os-imgWrap">
+                                <img
+                                    className="os-img"
+                                    src={
+                                        it.products.product_images[0]?.image_url
+                                            ? mediaUrl(it.products.product_images[0].image_url)
+                                            : 'https://via.placeholder.com/80'
+                                    }
+                                    alt={it.products.name}
+                                />
+                            </div>
+                        </Link>
                         <div className="os-info">
-                            <div className="os-name">{it.products.name}</div>
+                            <Link to={`/product/${it.products.id}`} className="os-nameLink">
+                                <div className="os-name">{it.products.name}</div>
+                            </Link>
                             <div className="os-meta">
                                 <span className="muted">Số lượng:</span> {it.quantity}
                             </div>

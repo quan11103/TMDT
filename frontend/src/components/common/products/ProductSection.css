@@ -51,10 +51,6 @@ h2.section-title {
 
 /* Responsive cho Tablet và Desktop */
 @media (min-width: 768px) {
-    .section-container {
-        gap: 48px;
-        /* md:gap-12 */
-    }
 
     .section-header,
     .section-content {

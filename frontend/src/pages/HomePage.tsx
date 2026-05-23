@@ -58,6 +58,7 @@ const HomePage: React.FC = () => {
                             title="Sản Phẩm Mới Về"
                             productsId={newestIds}
                             productsPerRow={productsPerRow}
+                            viewMoreLink="/new-arrivals/"
                         />
                     )}
 
@@ -66,6 +67,7 @@ const HomePage: React.FC = () => {
                             title="Sản Phẩm Nổi Bật"
                             productsId={featuredIds}
                             productsPerRow={productsPerRow}
+                            viewMoreLink="/featured/"
                         />
                     )}
 
@@ -74,6 +76,7 @@ const HomePage: React.FC = () => {
                             title="Sản Phẩm Bán Chạy"
                             productsId={bestSellerIds}
                             productsPerRow={productsPerRow}
+                            viewMoreLink="/bestseller/"
                         />
                     )}
                 </div>

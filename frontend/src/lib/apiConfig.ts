@@ -5,8 +5,10 @@ export const API_ORIGIN: string = (() => {
     return origin.endsWith('/') ? origin.slice(0, -1) : origin;
   }
   // Nếu không có env, tự động lấy domain hiện tại của web (chạy trên trình duyệt)
-  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
-    return window.location.origin;
+  if (typeof window !== 'undefined') {
+    if (window.location.hostname !== 'localhost' || !window.location.port) {
+      return window.location.origin;
+    }
   }
   return 'http://localhost:3000';
 })();

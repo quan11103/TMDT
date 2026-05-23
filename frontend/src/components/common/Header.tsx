@@ -139,6 +139,7 @@ const Header: React.FC = () => {
                         <ul className="nav-menu" dir="ltr">
                             <li><a title="Hàng Mới" className="nav-link" href="/new-arrivals" onClick={(e) => { e.preventDefault(); navigate('/new-arrivals'); }}>Hàng Mới</a></li>
                             <li><a title="Bán chạy" className="nav-link" href="/bestseller" onClick={(e) => { e.preventDefault(); navigate('/bestseller'); }}>Bán chạy</a></li>
+                            <li><a title="Nổi bật" className="nav-link" href="/featured" onClick={(e) => { e.preventDefault(); navigate('/featured'); }}>Nổi bật</a></li>
                             <li>
                                 <button className="nav-button" onClick={() => handleCategoryClick(1)}>
                                     <a className="category-link" title="Bút viết" href="/category/1">Bút viết</a>

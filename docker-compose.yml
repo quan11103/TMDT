@@ -48,6 +48,8 @@ services:
 
     env_file:
       - ./backend/.env
+    environment:
+      - DATABASE_URL=postgresql://postgres:abc123@db:5432/tmdt_db
     mem_limit: 550m
     cpus: "1.30"
 

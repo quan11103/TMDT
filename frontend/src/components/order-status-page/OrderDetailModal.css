@@ -125,6 +125,13 @@
     /* Nền xanh lá nhạt */
 }
 
+.payment-status-tag.status-failed {
+    color: #dc3545;
+    /* Màu đỏ đậm */
+    background: rgba(220, 53, 69, 0.1);
+    /* Nền đỏ nhạt */
+}
+
 .price-row.total-row {
     margin-top: 10px;
     padding-top: 10px;
@@ -172,6 +179,22 @@
     font-size: 13.5px;
     font-weight: 500;
     margin: 0;
+    transition: color 0.15s ease;
+}
+
+.prod-img-link {
+    display: block;
+    cursor: pointer;
+}
+
+.prod-name-link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.prod-name-link:hover .prod-name-sm {
+    color: #7b0f1a;
 }
 
 .prod-qty-sm {
@@ -288,4 +311,35 @@
         border-left: none;
         padding-left: 0;
     }
+}
+
+.repay-btn-container {
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.btn-repay {
+    width: 100%;
+    height: 40px;
+    background-color: #7b0f1a;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14.5px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.08s ease, box-shadow 0.12s ease;
+    box-shadow: 0 2px 4px rgba(123, 15, 26, 0.15);
+}
+
+.btn-repay:hover {
+    background-color: #921422;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(123, 15, 26, 0.25);
+}
+
+.btn-repay:active {
+    transform: translateY(0);
 }

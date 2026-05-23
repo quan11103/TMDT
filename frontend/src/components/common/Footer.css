@@ -97,6 +97,8 @@
     font-size: 13px;
     margin: 0;
     box-sizing: border-box;
+    background-color: #fff;
+    color: #000;
 }
 
 .subscribe-button {

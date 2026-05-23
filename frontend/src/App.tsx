@@ -19,6 +19,7 @@ import ProfilePage from './pages/ProfilePage';
 import ChatWidget from './components/common/ChatWidget';
 import NewArrivalsPage from './pages/NewArrivalsPage';
 import BestSellerPage from './pages/BestSellerPage';
+import FeaturedPage from './pages/FeaturedPage';
 
 function App() {
 
@@ -75,6 +76,7 @@ function App() {
         <Route path="/search/" element={<SearchPage />} />
         <Route path="/new-arrivals/" element={<NewArrivalsPage />} />
         <Route path="/bestseller/" element={<BestSellerPage />} />
+        <Route path="/featured/" element={<FeaturedPage />} />
         <Route path="/product/:productId" element={<ProductDetailPage />} />
         <Route path="/category/:categoryId" element={<CategoryPage />} />
         <Route path="/cart/" element={<CartPage />} />

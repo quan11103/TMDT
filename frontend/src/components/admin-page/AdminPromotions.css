@@ -353,14 +353,74 @@
 
 /* Thu nhỏ DayPicker để phù hợp với Admin panel */
 .rdp {
-    --rdp-cell-size: 32px;
-    --rdp-accent-color: #7f0019;
-    /* Màu đỏ Muji */
+    --rdp-cell-size: 36px;
+    --rdp-accent-color: #fde8ec;
+    --rdp-accent-color-dark: #fde8ec;
+    --rdp-background-color: #fde8ec;
     margin: 0;
+}
+
+/* Đảm bảo cell wrapper hình vuông */
+.rdp-day,
+.rdp td {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    max-width: 36px !important;
+    max-height: 36px !important;
+    padding: 0 !important;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .rdp-day_button {
     font-size: 12px;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    aspect-ratio: 1 / 1;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Ngày được chọn — hình tròn đầy màu đỏ nhạt */
+.rdp-day_button[aria-selected="true"],
+.rdp-selected .rdp-day_button,
+[data-selected] .rdp-day_button {
+    background-color: #fde8ec !important;
+    color: #7f0019 !important;
+    font-weight: 700 !important;
+    border-radius: 50% !important;
+    border: 2px solid #e8a0b0 !important;
+    box-shadow: 0 0 0 2px rgba(127, 0, 25, 0.12);
+    width: 36px !important;
+    height: 36px !important;
+    aspect-ratio: 1 / 1;
+}
+
+/* Hover cho ngày bình thường */
+.rdp-day_button:hover:not([disabled]):not([aria-selected="true"]) {
+    background-color: #fdf0f3 !important;
+    border-radius: 50% !important;
+    color: #7f0019;
+}
+
+/* Ngày hôm nay (chưa chọn) */
+.rdp-today .rdp-day_button:not([aria-selected="true"]) {
+    border: 1.5px solid #e8a0b0 !important;
+    color: #7f0019;
+    font-weight: 600;
+    border-radius: 50% !important;
+    width: 36px !important;
+    height: 36px !important;
+    aspect-ratio: 1 / 1;
 }
 
 input::-webkit-outer-spin-button,

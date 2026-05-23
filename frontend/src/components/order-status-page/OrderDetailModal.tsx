@@ -1,6 +1,10 @@
 import React, { useMemo } from 'react';
 import './OrderDetailModal.css';
 import { mediaUrl } from '../../lib/mediaUrl';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { API_BASE } from '../../lib/apiConfig';
+import { Link } from 'react-router-dom';
 
 interface OrderDetailModalProps {
     isOpen: boolean;
@@ -21,6 +25,63 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, or
         }
         return 'Khách hàng';
     }, []);
+
+    const handleRepay = async () => {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            Swal.fire('Lỗi', 'Phiên đăng nhập hết hạn, vui lòng đăng nhập lại', 'error');
+            return;
+        }
+
+        const paymentMethod = order.payments?.[0]?.method || 'VNPAY';
+
+        try {
+            Swal.fire({
+                title: 'Đang xử lý...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            const paymentResponse = await axios.post(`${API_BASE}/payment`, {
+                order_id: order.id,
+                method: paymentMethod.toUpperCase()
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const paymentResult = paymentResponse.data;
+            Swal.close();
+
+            if (paymentMethod.toUpperCase() === 'VNPAY') {
+                if (paymentResult.payment_url) {
+                    window.location.href = paymentResult.payment_url;
+                } else {
+                    throw new Error('Không nhận được liên kết thanh toán từ VNPay');
+                }
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Đặt hàng thành công!',
+                    text: 'Yêu cầu thanh toán của bạn đã được ghi nhận.',
+                    confirmButtonColor: '#7b0f1a'
+                }).then(() => {
+                    if (onClose) onClose();
+                });
+            }
+        } catch (error: any) {
+            console.error("Lỗi thanh toán lại:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Thanh toán thất bại',
+                text: error.response?.data?.message || error.message || 'Có lỗi xảy ra khi khởi tạo thanh toán',
+                confirmButtonColor: '#7b0f1a'
+            });
+        }
+    };
 
     if (!isOpen || !order) return null;
 
@@ -72,7 +133,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, or
                                 <div className="info-item">
                                     <span className="info-label">Trạng thái:</span>
                                     <span className="info-value">
-                                        <span className={`payment-status-tag ${order.payments?.[0]?.status === 'SUCCESS' ? 'status-success' : ''}`}>
+                                        <span className={`payment-status-tag ${order.payments?.[0]?.status === 'SUCCESS' ? 'status-success' : order.payments?.[0]?.status === 'FAILED' ? 'status-failed' : ''}`}>
                                             {order.payments?.[0]?.status || 'Chưa thanh toán'}
                                         </span>
                                     </span>
@@ -88,6 +149,14 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, or
                                     <span className="final-price">{Number(order.total_amount).toLocaleString()}đ</span>
                                 </div>
                             </div>
+
+                            {order.payments?.[0]?.status === 'FAILED' && (
+                                <div className="repay-btn-container">
+                                    <button className="btn-repay" onClick={handleRepay}>
+                                        Thanh toán
+                                    </button>
+                                </div>
+                            )}
                         </section>
                     </div>
 
@@ -99,17 +168,21 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, or
                             <div className="product-list-scrollable">
                                 {order.order_items.map((item: any) => (
                                     <div key={item.id} className="product-row-item">
-                                        <img
-                                            src={
-                                                item.products.product_images?.[0]?.image_url
-                                                    ? mediaUrl(item.products.product_images[0].image_url)
-                                                    : 'https://via.placeholder.com/60'
-                                            }
-                                            alt={item.products.name}
-                                            className="prod-thumb-sm"
-                                        />
+                                        <Link to={`/product/${item.products.id}`} className="prod-img-link">
+                                            <img
+                                                src={
+                                                    item.products.product_images?.[0]?.image_url
+                                                        ? mediaUrl(item.products.product_images[0].image_url)
+                                                        : 'https://via.placeholder.com/60'
+                                                }
+                                                alt={item.products.name}
+                                                className="prod-thumb-sm"
+                                            />
+                                        </Link>
                                         <div className="prod-info-sm">
-                                            <p className="prod-name-sm">{item.products.name}</p>
+                                            <Link to={`/product/${item.products.id}`} className="prod-name-link">
+                                                <p className="prod-name-sm">{item.products.name}</p>
+                                            </Link>
                                             <p className="prod-qty-sm">x{item.quantity}</p>
                                         </div>
                                         <div className="prod-price-sm">

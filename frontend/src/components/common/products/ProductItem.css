@@ -136,7 +136,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
     min-height: 38px;
     background-color: #ffffff;
     color: #333333;
@@ -147,6 +146,7 @@
     cursor: pointer;
     transition: all 0.2s;
     box-sizing: border-box;
+    margin: 0px -8px;
 }
 
 .add-to-cart-btn:hover {

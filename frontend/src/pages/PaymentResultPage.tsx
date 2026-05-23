@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import './PaymentResultPage.css';
 import { API_BASE } from '../lib/apiConfig';
 
@@ -15,6 +16,63 @@ const PaymentResultPage: React.FC = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [result, setResult] = useState<PaymentStatus | null>(null);
+
+    const handleRetryPayment = async () => {
+        const orderIdStr = searchParams.get('vnp_OrderInfo');
+        const orderId = orderIdStr ? Number(orderIdStr) : result?.order_id;
+
+        if (!orderId) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Không tìm thấy thông tin đơn hàng để thanh toán lại.',
+                confirmButtonColor: '#7b0f1a'
+            });
+            return;
+        }
+
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            Swal.fire('Lỗi', 'Phiên đăng nhập hết hạn, vui lòng đăng nhập lại', 'error');
+            navigate('/login');
+            return;
+        }
+
+        try {
+            Swal.fire({
+                title: 'Đang chuẩn bị thanh toán...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            const response = await axios.post(`${API_BASE}/payment`, {
+                order_id: orderId,
+                method: 'VNPAY'
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            Swal.close();
+
+            if (response.data.payment_url) {
+                window.location.href = response.data.payment_url;
+            } else {
+                throw new Error('Không nhận được liên kết thanh toán từ VNPay');
+            }
+        } catch (error: any) {
+            console.error("Lỗi khi thanh toán lại:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Thất bại',
+                text: error.response?.data?.message || error.message || 'Có lỗi xảy ra khi tạo liên kết thanh toán',
+                confirmButtonColor: '#7b0f1a'
+            });
+        }
+    };
 
     useEffect(() => {
         const verifyPayment = async () => {
@@ -92,11 +150,11 @@ const PaymentResultPage: React.FC = () => {
 
                 <div className="result-actions">
                     {isSuccess ? (
-                        <button className="btn-secondary" onClick={() => navigate('/order-status/')}>
+                        <button className="btn-secondary" onClick={() => navigate('/order-status/', { state: { activeTab: 'CONFIRMED' } })}>
                             Xem đơn hàng
                         </button>
                     ) : (
-                        <button className="btn-secondary" onClick={() => navigate('/checkout')}>
+                        <button className="btn-secondary" onClick={handleRetryPayment}>
                             Thử lại
                         </button>
                     )}

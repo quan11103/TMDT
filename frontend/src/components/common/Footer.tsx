@@ -25,13 +25,13 @@ const Footer: React.FC = () => {
                     {/* Cột 2: Các danh mục Menu */}
                     <div className="footer-menu-grid">
                         <div className="footer-menu-column">
-                            <p className="menu-title">About MUJI</p>
+                            <p className="menu-title">About VPP21</p>
                             <ul>
-                                <li><a href="/en/page/about">What is MUJI?</a></li>
+                                <li><a href="/en/page/about">What is VPP21?</a></li>
                                 <li><a href="/en/page/notice">Notice</a></li>
                                 <li><a href="/en/page/careers">Careers</a></li>
                                 <li><a href="/en/page/faq">FAQ</a></li>
-                                <li><a href="https://drive.google.com/..." target="_blank">MUJI Household Catalog</a></li>
+                                <li><a href="https://drive.google.com/..." target="_blank">VPP21 Catalog</a></li>
                             </ul>
                         </div>
 
@@ -58,7 +58,7 @@ const Footer: React.FC = () => {
 
                     {/* Cột 3: Đăng ký & Mạng xã hội */}
                     <div className="footer-actions">
-                        <p className="subscribe-title">Subscribe newsletters from MUJI</p>
+                        <p className="subscribe-title">Subscribe newsletters from VPP21</p>
                         <form className="subscribe-form">
                             <input
                                 type="email"
@@ -80,15 +80,11 @@ const Footer: React.FC = () => {
 
                 {/* Phần dưới: Thông tin bản quyền & Công ty */}
                 <div className="footer-bottom">
-                    <p className="copyright-italic">Copyright © Ryohin Keikaku Co., Ltd.</p>
                     <div className="company-info">
-                        <p><strong>MUJI RETAIL (VIETNAM) CO., LTD.</strong></p>
-                        <p>Business Registration Number: 0315855270 issued by the Department of Planning and Investment of Ho Chi Minh City on August 20th, 2019</p>
-                        <p>Head Office: Unit No. 09-00, 9th Floor, Tower No. 9-11 Ton Duc Thang Street, Saigon Ward, Ho Chi Minh City, Vietnam</p>
-                        <p>Head Office Number: 028 7108 8388</p>
+                        <p><strong>VPP21 RETAIL (VIETNAM) CO., LTD.</strong></p>
+                        <p>Head Office: No. 1, Tran Phu Street, Ha Dong Ward, Ha Noi, Vietnam</p>
+                        <p>Head Office Number: 012 3456 7890</p>
                         <p>Working Hours: Monday to Friday, from 8:00 AM to 5:00 PM</p>
-                        <p>Store Customer Service: <a href="https://www.muji.com.vn/en/page/store-location">https://www.muji.com.vn/en/page/store-location</a></p>
-                        <p>E-commerce Customer Service: 1900 2555 79, Email: <a href="mailto:ec.sale@muji.vn">ec.sale@muji.vn</a></p>
                     </div>
                 </div>
             </div>

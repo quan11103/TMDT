@@ -103,6 +103,23 @@
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    transition: color 0.15s ease;
+}
+
+.os-imgLink {
+    display: block;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.os-nameLink {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.os-nameLink:hover .os-name {
+    color: #7b0f1a;
 }
 
 .os-meta {

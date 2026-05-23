@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 import "./LoginCard.css";
 import LoginFooter from "./LoginFooter";
@@ -12,7 +12,6 @@ const LoginCard: React.FC = () => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const navigate = useNavigate();
     const location = useLocation();
 
     const togglePassword = () => {

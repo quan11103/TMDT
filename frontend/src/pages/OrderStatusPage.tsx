@@ -7,6 +7,7 @@ import './OrderStatusPage.css';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import { API_BASE } from '../lib/apiConfig';
+import { useLocation } from 'react-router-dom';
 
 export const OrderStatusEnum = {
     PENDING: "PENDING",
@@ -19,7 +20,13 @@ export const OrderStatusEnum = {
 export type OrderStatusType = typeof OrderStatusEnum[keyof typeof OrderStatusEnum];
 
 const OrderStatus: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<OrderStatusType>(OrderStatusEnum.PENDING);
+    const location = useLocation();
+    const [activeTab, setActiveTab] = useState<OrderStatusType>(() => {
+        if (location.state && (location.state as any).activeTab) {
+            return (location.state as any).activeTab;
+        }
+        return OrderStatusEnum.PENDING;
+    });
     const [allOrders, setAllOrders] = useState<any[]>([]); // Lưu toàn bộ đơn hàng
     const [filteredOrders, setFilteredOrders] = useState<any[]>([]); // Lưu đơn hàng sau khi lọc
     const [selectedOrder, setSelectedOrder] = useState<any>(null);

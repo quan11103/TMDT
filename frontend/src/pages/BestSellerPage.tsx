@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import type { PaginationMeta } from '../types';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import CategoryContainer from '../components/category-page/CategoryContainer';
@@ -12,7 +11,6 @@ const BestSellerPage: React.FC = () => {
     const [maxPrice, setMaxPrice] = useState<number>(1000000);
 
     const [productIds, setProductIds] = useState<number[]>([]);
-    const [paginationMeta, setPaginationMeta] = useState<PaginationMeta | undefined>();
     const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
     const [error, setError] = useState<string | null>(null);
 

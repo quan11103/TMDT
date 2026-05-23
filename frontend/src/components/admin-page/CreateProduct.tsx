@@ -57,6 +57,9 @@ const CreateProduct: React.FC = () => {
     const [imageSource, setImageSource] = useState<'file' | 'url'>('file');
     const [imageUrls, setImageUrls] = useState<string>('');
 
+    // --- State quản lý lỗi validation ---
+    const [errors, setErrors] = useState<Record<string, string>>({});
+
     const previewUrls = useMemo(
         () => imageFiles.map((f) => URL.createObjectURL(f)),
         [imageFiles],
@@ -78,6 +81,26 @@ const CreateProduct: React.FC = () => {
         };
         fetchCategories();
     }, []);
+
+    const scrollToFirstError = (errorObj: Record<string, string>) => {
+        const fieldOrder = ['name', 'slug', 'price', 'stock', 'category_id', 'images'];
+        const firstErrorField = fieldOrder.find((field) => errorObj[field]);
+        if (firstErrorField) {
+            setTimeout(() => {
+                const element = document.querySelector(`[name="${firstErrorField}"], #${firstErrorField}`);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    if (
+                        element instanceof HTMLInputElement ||
+                        element instanceof HTMLSelectElement ||
+                        element instanceof HTMLTextAreaElement
+                    ) {
+                        element.focus({ preventScroll: true });
+                    }
+                }
+            }, 100);
+        }
+    };
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const name = e.target.value;
@@ -124,12 +147,72 @@ const CreateProduct: React.FC = () => {
         setMainImageIndex(0);
         setImageSource('file');
         setImageUrls('');
+        setErrors({});
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setMessage(null);
+        setErrors({});
+
+        // --- Client-side validation ---
+        const localErrors: Record<string, string> = {};
+
+        if (!formData.name.trim()) {
+            localErrors.name = 'Vui lòng nhập tên sản phẩm.';
+        }
+
+        if (!formData.slug.trim()) {
+            localErrors.slug = 'Vui lòng nhập đường dẫn (slug).';
+        }
+
+        // Kiểm tra Giá bán (Phải điền, phải >= 0 và phải là số nguyên)
+        if (!formData.price.trim()) {
+            localErrors.price = 'Vui lòng nhập giá bán.';
+        } else {
+            const priceNum = Number(formData.price);
+            if (isNaN(priceNum) || priceNum < 0) {
+                localErrors.price = 'Giá bán phải là số lớn hơn hoặc bằng 0.';
+            } else if (!Number.isInteger(priceNum)) {
+                localErrors.price = 'Giá bán phải là số nguyên.';
+            }
+        }
+
+        if (!formData.stock.trim()) {
+            localErrors.stock = 'Vui lòng nhập số lượng.';
+        } else {
+            const stockNum = Number(formData.stock);
+            if (isNaN(stockNum) || stockNum < 0) {
+                localErrors.stock = 'Số lượng phải là số lớn hơn hoặc bằng 0.';
+            } else if (!Number.isInteger(stockNum)) {
+                localErrors.stock = 'Số lượng phải là số nguyên.';
+            }
+        }
+
+        if (!formData.category_id) {
+            localErrors.category_id = 'Vui lòng chọn danh mục sản phẩm.';
+        }
+
+        let urls: string[] = [];
+        if (imageSource === 'file' && imageFiles.length === 0) {
+            localErrors.images = 'Vui lòng chọn ít nhất một hình ảnh từ thiết bị.';
+        } else if (imageSource === 'url') {
+            urls = imageUrls
+                .split(/[\n,]+/)
+                .map((u) => u.trim())
+                .filter(Boolean);
+            if (urls.length === 0) {
+                localErrors.images = 'Vui lòng nhập ít nhất một đường dẫn (link) hình ảnh.';
+            }
+        }
+
+        if (Object.keys(localErrors).length > 0) {
+            setErrors(localErrors);
+            scrollToFirstError(localErrors);
+            setLoading(false);
+            return;
+        }
 
         const payload = {
             ...formData,
@@ -163,12 +246,63 @@ const CreateProduct: React.FC = () => {
             const result = await response.json();
 
             if (!response.ok) {
-                await Swal.fire({
-                    icon: 'error',
-                    title: 'Lỗi...',
-                    text: result.message || 'Slug đã tồn tại hoặc dữ liệu không hợp lệ',
-                    confirmButtonColor: '#7f0019',
-                });
+                const errorResponse = result.message;
+                const newFieldErrors: Record<string, string> = {};
+
+                const translateError = (msg: string) => {
+                    const m = msg.toLowerCase();
+                    if (m.includes("name")) return "Tên sản phẩm không hợp lệ hoặc đã tồn tại.";
+                    if (m.includes("slug")) return "Đường dẫn (slug) đã tồn tại hoặc không hợp lệ.";
+                    if (m.includes("price")) return "Giá bán phải là số nguyên hợp lệ >= 0.";
+                    if (m.includes("stock")) return "Số lượng phải là số nguyên hợp lệ >= 0.";
+                    if (m.includes("category")) return "Vui lòng chọn danh mục hợp lệ.";
+                    return msg;
+                };
+
+                const messages: string[] = Array.isArray(errorResponse)
+                    ? errorResponse
+                    : typeof errorResponse === "string"
+                        ? [errorResponse]
+                        : [];
+
+                if (messages.length > 0) {
+                    messages.forEach((msg: string) => {
+                        const translated = translateError(msg);
+                        const m = msg.toLowerCase();
+                        if (m.includes("name")) {
+                            newFieldErrors.name = translated;
+                        } else if (m.includes("slug")) {
+                            newFieldErrors.slug = translated;
+                        } else if (m.includes("price")) {
+                            newFieldErrors.price = translated;
+                        } else if (m.includes("stock")) {
+                            newFieldErrors.stock = translated;
+                        } else if (m.includes("category")) {
+                            newFieldErrors.category_id = translated;
+                        } else {
+                            newFieldErrors.general = translated;
+                        }
+                    });
+
+                    setErrors(newFieldErrors);
+                    scrollToFirstError(newFieldErrors);
+
+                    if (newFieldErrors.general) {
+                        await Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi...',
+                            text: newFieldErrors.general,
+                            confirmButtonColor: '#7f0019',
+                        });
+                    }
+                } else {
+                    await Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi...',
+                        text: result.message || 'Slug đã tồn tại hoặc dữ liệu không hợp lệ',
+                        confirmButtonColor: '#7f0019',
+                    });
+                }
                 setLoading(false);
                 return;
             }
@@ -205,11 +339,6 @@ const CreateProduct: React.FC = () => {
                 }
                 hasUploadedImages = true;
             } else if (imageSource === 'url') {
-                const urls = imageUrls
-                    .split(/[\n,]+/)
-                    .map((u) => u.trim())
-                    .filter(Boolean);
-
                 if (urls.length > 0) {
                     const imgRes = await fetch(`${API_BASE}/products/${productId}/image-urls`, {
                         method: 'POST',
@@ -254,28 +383,35 @@ const CreateProduct: React.FC = () => {
         }
     };
 
+    const renderError = (field: string) => (
+        errors[field] ? <span className="error-text">{errors[field]}</span> : null
+    );
+
     return (
         <div className="create-product-container">
             {message && (
                 <div className={`alert ${message.type}`}>{message.text}</div>
             )}
 
-            <form onSubmit={handleSubmit} className="product-form">
+            <form onSubmit={handleSubmit} className="product-form" noValidate>
                 <div className="form-group">
-                    <label>Tên sản phẩm</label>
-                    <input type="text" name="name" value={formData.name} onChange={handleNameChange} required />
+                    <label htmlFor="name">Tên sản phẩm *</label>
+                    <input type="text" id="name" name="name" value={formData.name} onChange={handleNameChange} required />
+                    {renderError('name')}
                 </div>
 
                 <div className="form-group">
-                    <label>Slug (Đường dẫn)</label>
-                    <input type="text" name="slug" value={formData.slug} onChange={handleChange} required />
+                    <label htmlFor="slug">Slug (Đường dẫn) *</label>
+                    <input type="text" id="slug" name="slug" value={formData.slug} onChange={handleChange} required />
+                    {renderError('slug')}
                 </div>
 
                 <div className="form-row">
                     <div className="form-group">
-                        <label>Giá bán (VNĐ)</label>
+                        <label htmlFor="price">Giá bán (VNĐ) *</label>
                         <input
                             type="number"
+                            id="price"
                             name="price"
                             value={formData.price}
                             onChange={handleChange}
@@ -283,24 +419,28 @@ const CreateProduct: React.FC = () => {
                             step="1"
                             required
                         />
+                        {renderError('price')}
                     </div>
 
                     <div className="form-group">
-                        <label>Số lượng</label>
+                        <label htmlFor="stock">Số lượng *</label>
                         <input
                             type="number"
+                            id="stock"
                             name="stock"
                             value={formData.stock}
                             onChange={handleChange}
                             min="0"
+                            step="1"
                             required
                         />
+                        {renderError('stock')}
                     </div>
                 </div>
 
                 <div className="form-group">
-                    <label>Danh mục</label>
-                    <select name="category_id" value={formData.category_id} onChange={handleChange} required>
+                    <label htmlFor="category_id">Danh mục *</label>
+                    <select id="category_id" name="category_id" value={formData.category_id} onChange={handleChange} required>
                         <option value="">-- Chọn danh mục --</option>
                         {categories.map((cat) => (
                             <option key={cat.id} value={cat.id}>
@@ -308,6 +448,7 @@ const CreateProduct: React.FC = () => {
                             </option>
                         ))}
                     </select>
+                    {renderError('category_id')}
                 </div>
 
                 <div className="form-group">
@@ -320,8 +461,8 @@ const CreateProduct: React.FC = () => {
                     />
                 </div>
 
-                <div className="form-group image-selection-group">
-                    <label style={{ fontWeight: 600, marginBottom: '8px', display: 'block' }}>Hình ảnh sản phẩm</label>
+                <div className="form-group image-selection-group" id="images">
+                    <label style={{ fontWeight: 600, marginBottom: '8px', display: 'block' }}>Hình ảnh sản phẩm *</label>
 
                     {/* Radio buttons for selecting image source */}
                     <div className="image-source-options" style={{ display: 'flex', gap: '20px', marginBottom: '12px' }}>
@@ -404,6 +545,7 @@ const CreateProduct: React.FC = () => {
                             </p>
                         </>
                     )}
+                    {renderError('images')}
                 </div>
 
                 <div className="form-actions">

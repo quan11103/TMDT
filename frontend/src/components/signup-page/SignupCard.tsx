@@ -31,6 +31,22 @@ const SignupCard: React.FC = () => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    const scrollToFirstError = (errorObj: Record<string, string>) => {
+        const fieldOrder = ["email", "password", "phone", "fullName", "dob", "terms"];
+        const firstErrorField = fieldOrder.find((field) => errorObj[field]);
+        if (firstErrorField) {
+            setTimeout(() => {
+                const element = document.querySelector(`[name="${firstErrorField}"], #${firstErrorField}`);
+                if (element) {
+                    element.scrollIntoView({ behavior: "smooth", block: "center" });
+                    if (element instanceof HTMLInputElement) {
+                        element.focus({ preventScroll: true });
+                    }
+                }
+            }, 100);
+        }
+    };
+
     // --- Xử lý Submit Form ---
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -39,19 +55,51 @@ const SignupCard: React.FC = () => {
 
         // 1. Lấy dữ liệu từ form
         const formData = new FormData(e.currentTarget);
-        const email = formData.get("email") as string;
-        const password = formData.get("password") as string;
-        const fullName = formData.get("fullName") as string;
+        const email = (formData.get("email") as string || "").trim();
+        const password = formData.get("password") as string || "";
+        const fullName = (formData.get("fullName") as string || "").trim();
+        const phone = (formData.get("phone") as string || "").trim();
+        const gender = formData.get("gender") as string || "";
+        const dob = formData.get("dob") as string || "";
+        const terms = formData.get("terms") as string;
 
-        // (Tùy chọn) Lấy các trường khác nếu sau này backend cần
-        const phone = formData.get("phone") as string;
-        const gender = formData.get("gender") as string;
-        const dob = formData.get("dob") as string;
+        // 2. Validate phía Client bằng giao diện lỗi tự xây dựng
+        const localErrors: Record<string, string> = {};
+        if (!email) {
+            localErrors.email = "Vui lòng nhập email.";
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            localErrors.email = "Địa chỉ email không hợp lệ.";
+        }
 
-        if (/\d/.test(fullName)) {
-            setErrors({
-                fullName: "Họ và tên không được chứa chữ số."
-            });
+        if (!password) {
+            localErrors.password = "Vui lòng nhập mật khẩu.";
+        } else if (password.length < 8) {
+            localErrors.password = "Mật khẩu phải có ít nhất 8 ký tự.";
+        }
+
+        if (!phone) {
+            localErrors.phone = "Vui lòng nhập số điện thoại.";
+        } else if (!/^\d+$/.test(phone)) {
+            localErrors.phone = "Số điện thoại phải là chữ số.";
+        }
+
+        if (!fullName) {
+            localErrors.fullName = "Vui lòng nhập họ và tên.";
+        } else if (/\d/.test(fullName)) {
+            localErrors.fullName = "Họ và tên không được chứa chữ số.";
+        }
+
+        if (!dob) {
+            localErrors.dob = "Vui lòng chọn ngày sinh.";
+        }
+
+        if (!terms) {
+            localErrors.terms = "Vui lòng đồng ý với Điều khoản và Điều kiện.";
+        }
+
+        if (Object.keys(localErrors).length > 0) {
+            setErrors(localErrors);
+            scrollToFirstError(localErrors);
             setIsLoading(false);
             return;
         }
@@ -104,19 +152,43 @@ const SignupCard: React.FC = () => {
                 return "Thông tin không hợp lệ.";
             };
 
-            if (Array.isArray(errorResponse)) {
-                errorResponse.forEach((msg: string) => {
+            const messages: string[] = Array.isArray(errorResponse)
+                ? errorResponse
+                : typeof errorResponse === "string"
+                    ? [errorResponse]
+                    : [];
+
+            if (messages.length > 0) {
+                messages.forEach((msg: string) => {
                     const translated = translateError(msg);
-                    if (msg.includes("email")) newFieldErrors.email = translated;
-                    else if (msg.includes("password")) newFieldErrors.password = translated;
-                    else if (msg.includes("phone")) newFieldErrors.phone = translated;
-                    else if (msg.includes("full_name")) newFieldErrors.fullName = translated;
+                    if (msg.includes("email") || msg.includes("Email")) {
+                        newFieldErrors.email = translated;
+                    } else if (msg.includes("password") || msg.includes("Password")) {
+                        newFieldErrors.password = translated;
+                    } else if (msg.includes("phone") || msg.includes("Phone")) {
+                        newFieldErrors.phone = translated;
+                    } else if (msg.includes("full_name") || msg.includes("fullName") || msg.includes("Họ và tên") || msg.includes("full_name")) {
+                        newFieldErrors.fullName = translated;
+                    } else {
+                        newFieldErrors.general = translated;
+                    }
                 });
                 setErrors(newFieldErrors);
+                scrollToFirstError(newFieldErrors);
+
+                if (newFieldErrors.general) {
+                    Swal.fire({
+                        title: 'Thất bại',
+                        text: newFieldErrors.general,
+                        icon: 'error',
+                        confirmButtonColor: '#333',
+                        width: '380px'
+                    });
+                }
             } else {
                 Swal.fire({
                     title: 'Thất bại',
-                    text: errorResponse || "Có lỗi xảy ra khi đăng ký!",
+                    text: "Có lỗi xảy ra khi đăng ký!",
                     icon: 'error',
                     confirmButtonColor: '#333',
                     width: '380px'
@@ -133,7 +205,7 @@ const SignupCard: React.FC = () => {
 
     return (
         <div className="signup-card">
-            <form className="signup-form" onSubmit={handleSubmit}>
+            <form className="signup-form" onSubmit={handleSubmit} noValidate>
                 {/* Email */}
                 <div className="form-group">
                     <label htmlFor="email">Địa Chỉ Email *</label>
@@ -236,11 +308,12 @@ const SignupCard: React.FC = () => {
                     </label>
 
                     <label className="checkbox-item">
-                        <input type="checkbox" name="terms" required />
+                        <input type="checkbox" name="terms" />
                         <span>
                             Tôi trên 16 tuổi và đồng ý với <a href="/terms">Điều khoản và Điều kiện</a>
                         </span>
                     </label>
+                    {renderError("terms")}
                 </div>
 
                 <p className="privacy-note">

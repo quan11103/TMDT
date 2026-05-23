@@ -6,7 +6,7 @@ import CategoryContainer from '../components/category-page/CategoryContainer';
 import { API_BASE } from '../lib/apiConfig';
 import { fetchStoreSettings, STORE_SETTINGS_UPDATED_EVENT } from '../lib/storeSettings';
 
-const NewArrivalsPage: React.FC = () => {
+const FeaturedPage: React.FC = () => {
     const [minPrice, setMinPrice] = useState<number>(0);
     const [maxPrice, setMaxPrice] = useState<number>(1000000);
 
@@ -38,21 +38,39 @@ const NewArrivalsPage: React.FC = () => {
 
     const fetchData = useCallback(async (min: number = minPrice, max: number = maxPrice, selectedIds: number[] = selectedCategoryIds) => {
         try {
-            const queryCategoryId = selectedIds.length > 0 ? selectedIds.join(',') : undefined;
-
-            const productsRes = await axios.get(`${API_BASE}/products`, {
+            // Lấy danh sách sản phẩm nổi bật, cho phép lấy nhiều hơn (ví dụ 100 sản phẩm) để lọc client-side tốt hơn
+            const productsRes = await axios.get(`${API_BASE}/products/featured`, {
                 params: {
-                    category_id: queryCategoryId,
-                    min_price: min,
-                    max_price: max,
-                    limit: productsPerPage,
-                    page: 1, // Luôn lấy trang đầu tiên
-                    sort: 'newest'
+                    limit: 100,
                 }
             });
 
-            setProductIds(productsRes.data.data.map((p: any) => p.id));
-            // Không set paginationMeta để ẩn phân trang
+            let filteredProducts = productsRes.data.data;
+
+            // Lọc sản phẩm ở client-side vì API /products/featured không hỗ trợ filter category/price ở backend
+            if (selectedIds.length > 0) {
+                filteredProducts = filteredProducts.filter((p: any) => 
+                    p.categories && selectedIds.includes(p.categories.id)
+                );
+            }
+
+            if (min !== undefined) {
+                filteredProducts = filteredProducts.filter((p: any) => {
+                    const price = p.sale_price !== undefined ? Number(p.sale_price) : Number(p.price);
+                    return price >= min;
+                });
+            }
+
+            if (max !== undefined) {
+                filteredProducts = filteredProducts.filter((p: any) => {
+                    const price = p.sale_price !== undefined ? Number(p.sale_price) : Number(p.price);
+                    return price <= max;
+                });
+            }
+
+            // Giới hạn hiển thị tối đa 18 sản phẩm sau khi lọc
+            const sliced = filteredProducts.slice(0, productsPerPage);
+            setProductIds(sliced.map((p: any) => p.id));
             setError(null);
         } catch (err) {
             console.error("Lỗi khi lấy dữ liệu:", err);
@@ -86,12 +104,12 @@ const NewArrivalsPage: React.FC = () => {
         <>
             <Header />
             <div className="category-page">
-                {/* Breadcrumb đơn giản cho trang Hàng mới */}
+                {/* Breadcrumb đơn giản cho trang Nổi bật */}
                 <div style={{ padding: '16px 20px', fontSize: '14px', color: '#555' }} className="container">
-                    <span>Trang chủ</span> <span style={{ margin: '0 8px' }}>/</span> <span>Hàng mới</span>
+                    <span>Trang chủ</span> <span style={{ margin: '0 8px' }}>/</span> <span>Nổi bật</span>
                 </div>
                 <CategoryContainer
-                    title="Hàng Mới"
+                    title="Sản Phẩm Nổi Bật"
                     totalItems={productIds.length}
                     productIds={productIds}
                     currentCategoryId={undefined}
@@ -108,4 +126,4 @@ const NewArrivalsPage: React.FC = () => {
     );
 };
 
-export default NewArrivalsPage;
+export default FeaturedPage;
