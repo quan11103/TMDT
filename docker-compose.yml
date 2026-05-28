@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
 
   # ─── POSTGRESQL DATABASE ─────────────────────────────────
@@ -11,7 +13,8 @@ services:
       POSTGRES_PASSWORD: abc123
       POSTGRES_DB: tmdt_db
 
-    command: postgres -c shared_buffers=128MB -c max_connections=20
+    # Tối ưu: Hạ shared_buffers xuống 64MB để tương thích với dung lượng RAM của container
+    command: postgres -c shared_buffers=64MB -c max_connections=20
 
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
@@ -19,10 +22,12 @@ services:
       timeout: 5s
       retries: 5
 
-    mem_limit: 128m
+    # Tối ưu: Tăng giới hạn RAM lên 256m để Postgres có không gian xử lý các connection
+    mem_limit: 256m
     cpus: "0.30"
 
-    # Không public DB nếu không cần
+    # Lưu ý: Nếu thực sự không cần kết nối DB từ app ngoài (như DBeaver/TablePlus) ở máy host, 
+    # bạn có thể comment block ports này lại để bảo mật hơn.
     ports:
       - "5432:5432"
 
@@ -48,9 +53,14 @@ services:
 
     env_file:
       - ./backend/.env
+
     environment:
       - DATABASE_URL=postgresql://postgres:abc123@db:5432/tmdt_db
-    mem_limit: 550m
+      # SỬA LỖI: Cấp 1GB RAM cho cơ chế dọn rác (Garbage Collection) của Node.js
+      - NODE_OPTIONS=--max-old-space-size=1024
+
+    # SỬA LỖI: Nới rộng trần RAM container lên 1.5GB để NestJS compile thoải mái không lo bị Docker chém
+    mem_limit: 1500m
     cpus: "1.30"
 
     volumes:

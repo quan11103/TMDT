@@ -75,6 +75,7 @@ const AdminPromotions: React.FC = () => {
     const [saleEditingId, setSaleEditingId] = useState<number | null>(null);
     const [saleSaving, setSaleSaving] = useState<boolean>(false);
     const [saleIsActive, setSaleIsActive] = useState<boolean>(true);
+    const [saleSendEmail, setSaleSendEmail] = useState<boolean>(true);
 
     const [isSaleFormOpen, setIsSaleFormOpen] = useState(false);
     const [saleName, setSaleName] = useState('');
@@ -374,6 +375,7 @@ const AdminPromotions: React.FC = () => {
         setSaleSelectedStart(new Date());
         setSaleSelectedEnd(undefined);
         setSaleIsActive(true);
+        setSaleSendEmail(true);
     };
 
     const saleScopeLabel = (sale: any) => {
@@ -419,6 +421,7 @@ const AdminPromotions: React.FC = () => {
             start_date: saleSelectedStart.toISOString(),
             end_date: saleSelectedEnd.toISOString(),
             status: saleIsActive,
+            send_email: saleSendEmail,
         };
 
         try {
@@ -1090,6 +1093,17 @@ const AdminPromotions: React.FC = () => {
                                         <option value="true">Đang chạy</option>
                                         <option value="false">Vô hiệu</option>
                                     </select>
+                                </div>
+                                <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={saleSendEmail}
+                                            onChange={(e) => setSaleSendEmail(e.target.checked)}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                        <span>Gửi email thông báo tới khách hàng</span>
+                                    </label>
                                 </div>
                             </div>
                             <div className="form-actions">

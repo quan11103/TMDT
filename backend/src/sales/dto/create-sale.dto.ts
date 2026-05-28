@@ -44,4 +44,8 @@ export class CreateSaleDto {
   @IsOptional()
   @IsBoolean()
   status?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  send_email?: boolean;
 }
