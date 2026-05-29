@@ -69,7 +69,7 @@ services:
       # Giữ file upload (banner/sản phẩm) khi redeploy container
       - backend_uploads:/app/uploads
 
-    command: sh -c "npx prisma db push && npm run start"
+    command: sh -c "npx prisma db push && npm run start:dev"
 
     ports:
       - "3000:3000"

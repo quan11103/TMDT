@@ -1094,19 +1094,17 @@ const AdminPromotions: React.FC = () => {
                                         <option value="false">Vô hiệu</option>
                                     </select>
                                 </div>
-                                <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                                        <input
-                                            type="checkbox"
-                                            checked={saleSendEmail}
-                                            onChange={(e) => setSaleSendEmail(e.target.checked)}
-                                            style={{ cursor: 'pointer' }}
-                                        />
-                                        <span>Gửi email thông báo tới khách hàng</span>
-                                    </label>
-                                </div>
                             </div>
-                            <div className="form-actions">
+                            <div className="form-actions sale-actions-row">
+                                <label className="sale-email-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={saleSendEmail}
+                                        onChange={(e) => setSaleSendEmail(e.target.checked)}
+                                        className="sale-email-checkbox"
+                                    />
+                                    <span>Gửi email thông báo tới khách hàng</span>
+                                </label>
                                 <button className="btn-primary" onClick={onSaleSubmit} disabled={saleSaving}>
                                     {saleSaving ? 'Đang lưu...' : (saleMode === 'edit' ? 'CẬP NHẬT CHƯƠNG TRÌNH' : 'TẠO CHƯƠNG TRÌNH SALE')}
                                 </button>
